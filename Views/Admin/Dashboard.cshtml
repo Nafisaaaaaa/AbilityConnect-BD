@@ -1,0 +1,208 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var adminName = ViewBag.AdminName ?? "Administrator";
+    var recentActivities = ViewBag.RecentActivities as IEnumerable<dynamic>;
+    var totalUsers = ViewBag.TotalUsers ?? 0;
+    var totalVolunteers = ViewBag.TotalVolunteers ?? 0;
+    var totalOrganizations = ViewBag.TotalOrganizations ?? 0;
+    var communityPostsCount = ViewBag.CommunityPostsCount ?? 0;
+    var pendingVolunteers = ViewBag.PendingVolunteers ?? 0;
+    var pendingOrganizations = ViewBag.PendingOrganizations ?? 0;
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar admin-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile admin-profile">
+                    <img src="/images/admin-avatar.png" alt="Admin" class="profile-img" />
+                    <h5>@adminName</h5>
+                    <span class="badge bg-danger">Administrator</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li class="active"><a href="/Admin/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Admin/ManageUsers"><i class="fas fa-users"></i> Manage Users</a></li>
+                    <li><a href="/Admin/VerifyOrganizations"><i class="fas fa-building"></i> Verify Organizations</a></li>
+                    <li><a href="/Admin/ManageVolunteers"><i class="fas fa-hand-holding-heart"></i> Manage Volunteers</a></li>
+                    <li><a href="/Admin/HealthcareProviders"><i class="fas fa-user-md"></i> Healthcare Providers</a></li>
+                    <li><a href="/Admin/DoctorAppointments"><i class="fas fa-calendar-check"></i> Doctor Appointments</a></li>
+                    <li><a href="/Admin/CommunityModeration"><i class="fas fa-comments"></i> Community Moderation</a></li>
+                    <li><a href="/Admin/LearningHub"><i class="fas fa-book-reader"></i> Learning Hub</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="welcome-card admin-welcome">
+                <div>
+                    <h3>Welcome, @adminName! 👋</h3>
+                    <p>You have full control over the AbilityConnect BD platform.</p>
+                </div>
+                <div class="welcome-date">
+                    <i class="fas fa-calendar-alt"></i> @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+                </div>
+            </div>
+
+            <div class="row g-4 stats-grid">
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number-db">@totalUsers</span>
+                            <span class="stat-label">Total Users</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary" style="background-color: #2563EB !important;">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number-db">@totalOrganizations</span>
+                            <span class="stat-label">Verified Organizations</span>
+                            @if (pendingOrganizations > 0)
+                            {
+                                <span class="stat-pending">@pendingOrganizations pending</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary" style="background-color: #3B82F6 !important;">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number-db">@totalVolunteers</span>
+                            <span class="stat-label">Verified Volunteers</span>
+                            @if (pendingVolunteers > 0)
+                            {
+                                <span class="stat-pending">@pendingVolunteers pending</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <a href="/Admin/CommunityModeration" class="text-decoration-none text-dark">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-primary" style="background-color: #1D4ED8 !important;">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number-db">@communityPostsCount</span>
+                                <span class="stat-label">Community Posts</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="dashboard-section">
+                <h4><i class="fas fa-clock"></i> Recent Activity</h4>
+                <div class="activity-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (recentActivities != null && recentActivities.Any())
+                            {
+                                foreach (var activity in recentActivities)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="/images/default-avatar.png" class="user-avatar-sm" />
+                                            @activity.User
+                                        </td>
+                                        <td>@activity.Action</td>
+                                        <td><span class="badge @activity.StatusClass">@activity.Status</span></td>
+                                        <td>@activity.Date</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No recent activities</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .admin-sidebar .sidebar-nav li.active a {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .admin-welcome {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+            .admin-welcome .welcome-date {
+                background: rgba(255,255,255,0.2);
+                padding: 8px 16px;
+                border-radius: var(--radius-sm);
+                font-size: 0.9rem;
+            }
+
+        .stat-number-db {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-info .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .stat-pending {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--warning-color);
+            background: #FEFCBF;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 4px;
+        }
+
+        .user-avatar-sm {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+    </style>
+}
