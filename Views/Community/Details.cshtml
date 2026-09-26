@@ -1,0 +1,203 @@
+@model SDP1.Models.CommunityPostItemViewModel
+@{
+    ViewData["Title"] = "Post Details";
+    var userRole = ViewBag.CurrentUserRole as string ?? "";
+    var dashboardUrl = userRole switch
+    {
+        "Disability" => "/Disability/Dashboard",
+        "Volunteer" => "/Volunteer/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        "Admin" => "/Admin/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div class="d-flex gap-2">
+            <a href="@dashboardUrl" class="btn btn-outline-primary fw-semibold rounded-pill px-4">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+            <a href="/Community" class="btn btn-outline-secondary fw-semibold rounded-pill px-4">
+                <i class="fas fa-comments me-1"></i> Community Feed
+            </a>
+        </div>
+        @if (userRole == "Admin")
+        {
+            <a href="/Community/Moderation" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                <i class="fas fa-shield-alt me-1"></i> Community Moderation
+            </a>
+        }
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: #FFFFFF;">
+                @if (Model.IsHidden)
+                {
+                    <div class="bg-warning text-dark px-3 py-1 small fw-bold rounded-top-4">
+                        <i class="fas fa-eye-slash me-1"></i> Hidden by Moderator (Visible to Admin only)
+                    </div>
+                }
+
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background-color: #EAF4FF; color: #2563EB; font-weight: bold; font-size: 20px;">
+                                @if (!string.IsNullOrEmpty(Model.AuthorAvatar))
+                                {
+                                    <img src="@Model.AuthorAvatar" alt="@Model.AuthorName" class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <span>@Model.AuthorName.Substring(0, 1).ToUpper()</span>
+                                }
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold fs-6 text-dark">
+                                    @Model.AuthorName
+                                    <span class="badge @(Model.UserRole == "Admin" ? "bg-danger" : Model.UserRole == "Volunteer" ? "bg-primary" : Model.UserRole == "Organization" ? "bg-info" : "bg-primary") ms-1 small">
+                                        @Model.UserRole
+                                    </span>
+                                </h5>
+                                <small class="text-muted">
+                                    <i class="far fa-clock me-1"></i> @Model.CreatedAt.ToLocalTime().ToString("MMMM dd, yyyy 'at' hh:mm tt")
+                                    @if (Model.UpdatedAt.HasValue)
+                                    {
+                                        <span class="ms-1 text-muted">(edited)</span>
+                                    }
+                                </small>
+                            </div>
+                        </div>
+
+                        @if (Model.CanEditOrDelete || userRole == "Admin")
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light rounded-circle" type="button" data-bs-toggle="dropdown" style="width: 32px; height: 32px;">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                    @if (Model.CanEditOrDelete)
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" href="/Community/EditPost/@Model.Id">
+                                                <i class="fas fa-edit text-primary me-2"></i> Edit Post
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <form asp-controller="Community" asp-action="DeletePost" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Delete this post?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="fas fa-trash-alt me-2"></i> Delete Post
+                                                </button>
+                                            </form>
+                                        </li>
+                                    }
+                                    @if (userRole == "Admin")
+                                    {
+                                        <li>
+                                            <form asp-controller="Community" asp-action="ToggleHidePost" asp-route-id="@Model.Id" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="dropdown-item text-warning">
+                                                    <i class="fas @(Model.IsHidden ? "fa-eye" : "fa-eye-slash") me-2"></i> @(Model.IsHidden ? "Unhide" : "Hide")
+                                                </button>
+                                            </form>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+
+                    <p class="card-text text-dark fs-6 mb-3" style="white-space: pre-line; line-height: 1.7;">
+                        @Model.Content
+                    </p>
+
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <div class="mb-4 text-center rounded-3 overflow-hidden bg-light border">
+                            <img src="@Model.ImagePath" alt="Post attachment" class="img-fluid rounded-3" style="max-height: 520px; width: auto; object-fit: contain;" />
+                        </div>
+                    }
+
+                    <div class="d-flex align-items-center justify-content-between pt-3 border-top mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <form asp-controller="Community" asp-action="ToggleLike" asp-route-postId="@Model.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm @(Model.IsLikedByCurrentUser ? "btn-primary" : "btn-outline-primary") rounded-pill px-3" style="@(Model.IsLikedByCurrentUser ? "background-color: #2563EB; border-color: #2563EB;" : "")">
+                                    <i class="@(Model.IsLikedByCurrentUser ? "fas" : "far") fa-thumbs-up me-1"></i>
+                                    Like (@Model.LikeCount)
+                                </button>
+                            </form>
+                            <span class="text-muted small">
+                                <i class="far fa-comment me-1"></i> @Model.CommentCount Comments
+                            </span>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-3"><i class="fas fa-comments text-primary me-2"></i>Comments (@Model.CommentCount)</h6>
+
+                    @if (Model.Comments.Any())
+                    {
+                        <div class="d-flex flex-column gap-2 mb-4">
+                            @foreach (var comment in Model.Comments)
+                            {
+                                <div class="p-3 rounded-3" style="background-color: #F8FAFC; border-left: 3px solid #2563EB;">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <strong class="text-dark small">@comment.AuthorName</strong>
+                                            <span class="badge @(comment.UserRole == "Admin" ? "bg-danger" : comment.UserRole == "Volunteer" ? "bg-primary" : comment.UserRole == "Organization" ? "bg-info" : "bg-primary") ms-1 small" style="font-size: 0.7rem;">
+                                                @comment.UserRole
+                                            </span>
+                                            <span class="text-muted ms-2 small" style="font-size: 0.75rem;">
+                                                @comment.CreatedAt.ToLocalTime().ToString("MMM dd, hh:mm tt")
+                                            </span>
+                                        </div>
+                                        @if (comment.CanDelete)
+                                        {
+                                            <form asp-controller="Community" asp-action="DeleteComment" asp-route-id="@comment.Id" method="post" onsubmit="return confirm('Delete this comment?');" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-1 text-decoration-none" title="Delete comment">
+                                                    <i class="fas fa-trash-alt" style="font-size: 0.75rem;"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                    <p class="mb-0 mt-1 text-dark small" style="white-space: pre-line;">@comment.Content</p>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted small fst-italic mb-4">No comments yet on this post.</p>
+                    }
+
+                    <form asp-controller="Community" asp-action="AddComment" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="PostId" value="@Model.Id" />
+                        <div class="input-group">
+                            <input type="text"
+                                   name="Content"
+                                   class="form-control rounded-start-pill px-3"
+                                   placeholder="Write a supportive comment..."
+                                   required
+                                   maxlength="1000" />
+                            <button class="btn btn-primary rounded-end-pill px-4" type="submit" style="background-color: #2563EB; border-color: #2563EB;">
+                                <i class="fas fa-paper-plane me-1"></i> Comment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

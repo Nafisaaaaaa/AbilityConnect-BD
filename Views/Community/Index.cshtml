@@ -1,0 +1,437 @@
+@model SDP1.Models.CommunityFeedViewModel
+@{
+    ViewData["Title"] = "Community Forum";
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(135deg, #EAF4FF 0%, #FFFFFF 100%); border-left: 5px solid #2563EB !important;">
+        <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px; background-color: #2563EB; color: #fff; font-size: 24px;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div>
+                    <h2 class="h3 fw-bold mb-1" style="color: #1E293B;">Community Forum</h2>
+                    <p class="text-muted mb-0">Connect, share experiences, ask advice, and support fellow members of AbilityConnect BD.</p>
+                </div>
+            </div>
+            @{
+                var userDashboardUrl = Model.CurrentUserRole switch
+                {
+                    "Disability" => "/Disability/Dashboard",
+                    "Volunteer" => "/Volunteer/Dashboard",
+                    "Organization" => "/Organization/Dashboard",
+                    "Admin" => "/Admin/Dashboard",
+                    _ => "/"
+                };
+            }
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <a href="@userDashboardUrl" class="btn btn-outline-primary fw-semibold px-3 py-2 rounded-pill">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                @if (Model.CurrentUserRole == "Admin")
+                {
+                    <a href="/Community/Moderation" class="btn btn-outline-primary fw-semibold px-3 py-2 rounded-pill">
+                        <i class="fas fa-shield-alt me-1"></i> Community Moderation
+                    </a>
+                }
+                <a href="#createPostSection" class="btn btn-primary fw-semibold px-4 py-2 rounded-pill" style="background-color: #2563EB; border-color: #2563EB;">
+                    <i class="fas fa-pen me-1"></i> Create Post
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 mb-4" id="createPostSection" style="background-color: #FFFFFF;">
+                <div class="card-body p-4">
+                    @if (Model.CanCreatePost)
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px; background-color: #EAF4FF; color: #2563EB; font-weight: bold;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <strong class="text-dark">@Model.CurrentUserName</strong>
+                                <span class="badge bg-primary ms-1">@Model.CurrentUserRole</span>
+                            </div>
+                        </div>
+
+                        <form asp-controller="Community" asp-action="CreatePost" method="post" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <div class="mb-3">
+                                <textarea name="Content"
+                                          rows="3"
+                                          class="form-control rounded-3 border-light-subtle p-3"
+                                          placeholder="What's on your mind? Share an achievement, ask a question, or seek advice..."
+                                          required
+                                          minlength="3"
+                                          maxlength="3000"></textarea>
+                            </div>
+
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-2 border-top">
+                                <div class="d-flex align-items-center">
+                                    <label class="btn btn-sm btn-outline-secondary rounded-pill px-3 mb-0" for="postImageInput" style="cursor: pointer;">
+                                        <i class="fas fa-image text-success me-1"></i> Add Photo
+                                    </label>
+                                    <input type="file" id="postImageInput" name="PostImage" accept="image/*" class="d-none" onchange="previewImage(this)" />
+                                    <span id="imageFileName" class="ms-2 small text-muted text-truncate" style="max-width: 200px;"></span>
+                                </div>
+                                <button type="submit" class="btn btn-primary px-4 fw-semibold rounded-pill" style="background-color: #2563EB; border-color: #2563EB;">
+                                    <i class="fas fa-paper-plane me-1"></i> Post
+                                </button>
+                            </div>
+                            <div id="imagePreviewContainer" class="mt-3 d-none">
+                                <img id="imagePreview" src="#" alt="Preview" class="img-fluid rounded-3 border" style="max-height: 200px;" />
+                                <button type="button" class="btn btn-sm btn-outline-danger ms-2 rounded-circle" onclick="clearImagePreview()" title="Remove image">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="p-3 rounded-3 text-center" style="background-color: #EAF4FF;">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Logged in as <strong>@Model.CurrentUserRole</strong>. You can like, participate in discussions, and comment on any community post below!
+                        </div>
+                    }
+                </div>
+            </div>
+
+            
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h4 class="h5 fw-bold text-dark mb-0">Community Discussions (@Model.TotalPostsCount)</h4>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="/Community" class="btn btn-sm @(string.IsNullOrEmpty(Model.Filter) && Context.Request.Query["sort"] != "popular" ? "btn-primary" : "btn-outline-secondary") rounded-pill px-3">
+                        Latest
+                    </a>
+                    <a href="/Community?sort=popular" class="btn btn-sm @(Context.Request.Query["sort"] == "popular" ? "btn-primary" : "btn-outline-secondary") rounded-pill px-3">
+                        Most Popular
+                    </a>
+                    <a href="/Community?filter=myposts" class="btn btn-sm @(Model.Filter == "myposts" ? "btn-primary" : "btn-outline-secondary") rounded-pill px-3">
+                        <i class="fas fa-user me-1"></i> My Posts
+                    </a>
+                </div>
+            </div>
+
+            @if (Model.Posts.Any())
+            {
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="card border-0 shadow-sm rounded-4 mb-4" id="post-@post.Id" style="background-color: #FFFFFF;">
+                        @if (post.IsHidden)
+                        {
+                            <div class="bg-warning text-dark px-3 py-1 small fw-bold rounded-top-4">
+                                <i class="fas fa-eye-slash me-1"></i> Hidden by Moderator (Visible to Admin only)
+                            </div>
+                        }
+
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 46px; height: 46px; background-color: #EAF4FF; color: #2563EB; font-weight: bold; font-size: 18px;">
+                                        @if (!string.IsNullOrEmpty(post.AuthorAvatar))
+                                        {
+                                            <img src="@post.AuthorAvatar" alt="@post.AuthorName" class="rounded-circle" style="width: 46px; height: 46px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <span>@post.AuthorName.Substring(0, 1).ToUpper()</span>
+                                        }
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0 fw-bold fs-6 text-dark">
+                                            @post.AuthorName
+                                            <span class="badge @(post.UserRole == "Admin" ? "bg-danger" : post.UserRole == "Volunteer" ? "bg-primary" : post.UserRole == "Organization" ? "bg-info" : "bg-primary") ms-1 small">
+                                                @post.UserRole
+                                            </span>
+                                        </h5>
+                                        <small class="text-muted">
+                                            <i class="far fa-clock me-1"></i> @post.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy 'at' hh:mm tt")
+                                            @if (post.UpdatedAt.HasValue)
+                                            {
+                                                <span class="ms-1 text-muted">(edited)</span>
+                                            }
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                        @if (post.CanEditOrDelete)
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="/Community/EditPost/@post.Id">
+                                                    <i class="fas fa-edit text-primary me-2"></i> Edit Post
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <form asp-controller="Community" asp-action="DeletePost" asp-route-id="@post.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="fas fa-trash-alt me-2"></i> Delete Post
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        }
+                                        @if (Model.CurrentUserRole == "Admin")
+                                        {
+                                            <li>
+                                                <form asp-controller="Community" asp-action="ToggleHidePost" asp-route-id="@post.Id" method="post">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="dropdown-item text-warning">
+                                                        <i class="fas @(post.IsHidden ? "fa-eye" : "fa-eye-slash") me-2"></i> @(post.IsHidden ? "Unhide Post" : "Hide Post")
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        }
+                                        <li>
+                                            <a class="dropdown-item" href="/Community/Details/@post.Id">
+                                                <i class="fas fa-external-link-alt text-primary me-2"></i> View Details
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="dropdown-item" onclick="openReportModal(@post.Id, null)">
+                                                <i class="fas fa-flag text-secondary me-2"></i> Report Post
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="card-text text-dark fs-6 mb-3" style="white-space: pre-line; line-height: 1.6;">
+                                @post.Content
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(post.ImagePath))
+                            {
+                                <div class="mb-3 text-center rounded-3 overflow-hidden bg-light border">
+                                    <img src="@post.ImagePath" alt="Post attachment" class="img-fluid rounded-3" style="max-height: 480px; width: auto; object-fit: contain;" />
+                                </div>
+                            }
+
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                <div class="d-flex align-items-center gap-3">
+                                    <form asp-controller="Community" asp-action="ToggleLike" asp-route-postId="@post.Id" method="post" class="d-inline like-form" data-post-id="@post.Id">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm @(post.IsLikedByCurrentUser ? "btn-primary" : "btn-outline-primary") rounded-pill px-3 d-flex align-items-center gap-1" style="@(post.IsLikedByCurrentUser ? "background-color: #2563EB; border-color: #2563EB;" : "border-color: #BFDBFE;")">
+                                            <i class="@(post.IsLikedByCurrentUser ? "fas" : "far") fa-thumbs-up"></i>
+                                            <span class="like-label">Like</span>
+                                            <span class="badge bg-white text-primary ms-1 like-count">@post.LikeCount</span>
+                                        </button>
+                                    </form>
+
+                                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 d-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#comments-@post.Id" aria-expanded="true">
+                                        <i class="far fa-comment"></i>
+                                        <span>Comments</span>
+                                        <span class="badge bg-secondary ms-1">@post.CommentCount</span>
+                                    </button>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <a href="/Community/Details/@post.Id" class="btn btn-sm btn-link text-primary text-decoration-none">
+                                        <i class="fas fa-eye me-1"></i> Details
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-link text-muted text-decoration-none" onclick="openReportModal(@post.Id, null)">
+                                        <i class="far fa-flag me-1"></i> Report
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="collapse show mt-3 pt-3 border-top" id="comments-@post.Id">
+                                @if (post.Comments.Any())
+                                {
+                                    <div class="comments-list d-flex flex-column gap-2 mb-3">
+                                        @foreach (var comment in post.Comments)
+                                        {
+                                            <div class="p-3 rounded-3 position-relative" style="background-color: #F8FAFC; border-left: 3px solid #BFDBFE;">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <strong class="text-dark small">@comment.AuthorName</strong>
+                                                        <span class="badge @(comment.UserRole == "Admin" ? "bg-danger" : comment.UserRole == "Volunteer" ? "bg-primary" : comment.UserRole == "Organization" ? "bg-info" : "bg-primary") ms-1 text-xs" style="font-size: 0.7rem;">
+                                                            @comment.UserRole
+                                                        </span>
+                                                        <span class="text-muted ms-2" style="font-size: 0.75rem;">
+                                                            @comment.CreatedAt.ToLocalTime().ToString("MMM dd, hh:mm tt")
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="d-flex align-items-center gap-1">
+                                                        @if (comment.CanDelete)
+                                                        {
+                                                            <form asp-controller="Community" asp-action="DeleteComment" asp-route-id="@comment.Id" method="post" onsubmit="return confirm('Delete this comment?');" class="d-inline">
+                                                                @Html.AntiForgeryToken()
+                                                                <button type="submit" class="btn btn-sm btn-link text-danger p-0 ms-1 text-decoration-none" title="Delete comment">
+                                                                    <i class="fas fa-trash-alt" style="font-size: 0.75rem;"></i>
+                                                                </button>
+                                                            </form>
+                                                        }
+                                                        <button type="button" class="btn btn-sm btn-link text-muted p-0 ms-1 text-decoration-none" onclick="openReportModal(null, @comment.Id)" title="Report comment">
+                                                            <i class="far fa-flag" style="font-size: 0.75rem;"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 mt-1 text-dark small" style="white-space: pre-line;">@comment.Content</p>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="text-muted small mb-2 fst-italic">No comments yet. Start the conversation!</p>
+                                }
+
+                                <form asp-controller="Community" asp-action="AddComment" method="post" class="mt-2">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="PostId" value="@post.Id" />
+                                    <div class="input-group">
+                                        <input type="text"
+                                               name="Content"
+                                               class="form-control form-control-sm rounded-start-pill px-3"
+                                               placeholder="Write a supportive comment..."
+                                               required
+                                               maxlength="1000" />
+                                        <button class="btn btn-sm btn-primary rounded-end-pill px-3" type="submit" style="background-color: #2563EB; border-color: #2563EB;">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <div class="text-muted mb-3" style="font-size: 48px;">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">No community posts yet</h5>
+                    <p class="text-muted">Be the first to share an experience, ask advice, or post a discussion topic!</p>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: #FFFFFF;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-dark mb-3">
+                        <i class="fas fa-heart text-danger me-2"></i> Community Guidelines
+                    </h5>
+                    <ul class="list-unstyled small text-secondary d-flex flex-column gap-2 mb-0">
+                        <li><i class="fas fa-check text-success me-2"></i> <strong>Be Respectful & Kind:</strong> Treat everyone with dignity and empathy.</li>
+                        <li><i class="fas fa-check text-success me-2"></i> <strong>Share Knowledge:</strong> Exchange tips on accessibility, education, and career.</li>
+                        <li><i class="fas fa-check text-success me-2"></i> <strong>No Hate Speech or Spam:</strong> Inappropriate posts or harassment will be removed immediately.</li>
+                        <li><i class="fas fa-check text-success me-2"></i> <strong>Report Content:</strong> Help keep our community safe by reporting spam or offensive items.</li>
+                    </ul>
+                </div>
+            </div>
+
+            
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form asp-controller="Community" asp-action="ReportContent" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="reportType" name="ReportType" value="Post" />
+                <input type="hidden" id="reportPostId" name="PostId" value="" />
+                <input type="hidden" id="reportCommentId" name="CommentId" value="" />
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark" id="reportModalLabel">
+                        <i class="fas fa-flag text-danger me-2"></i> Report Content
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <p class="small text-muted mb-3">Please help our moderation team understand what is wrong with this post or comment.</p>
+
+                    <div class="mb-3">
+                        <label for="reportReason" class="form-label fw-semibold small text-dark">Reason for reporting:</label>
+                        <select id="reportReason" name="Reason" class="form-select rounded-3" required>
+                            <option value="Spam">Spam</option>
+                            <option value="Inappropriate Content">Inappropriate Content</option>
+                            <option value="Harassment">Harassment</option>
+                            <option value="Misleading Information">Misleading Information</option>
+                            <option value="Other">Other (please specify below)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="reportDetails" class="form-label fw-semibold small text-dark">Additional specification (optional):</label>
+                        <textarea id="reportDetails" name="Details" rows="3" class="form-control rounded-3" placeholder="Provide extra details to help admin review..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-semibold">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(input) {
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const previewImg = document.getElementById('imagePreview');
+            const fileNameSpan = document.getElementById('imageFileName');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.classList.remove('d-none');
+                    fileNameSpan.textContent = input.files[0].name;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearImagePreview() {
+            const input = document.getElementById('postImageInput');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const previewImg = document.getElementById('imagePreview');
+            const fileNameSpan = document.getElementById('imageFileName');
+
+            input.value = '';
+            previewImg.src = '#';
+            previewContainer.classList.add('d-none');
+            fileNameSpan.textContent = '';
+        }
+
+        function openReportModal(postId, commentId) {
+            document.getElementById('reportType').value = commentId ? 'Comment' : 'Post';
+            document.getElementById('reportPostId').value = postId || '';
+            document.getElementById('reportCommentId').value = commentId || '';
+            document.getElementById('reportDetails').value = '';
+            document.getElementById('reportReason').value = 'Spam';
+
+            const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+            modal.show();
+        }
+    </script>
+}

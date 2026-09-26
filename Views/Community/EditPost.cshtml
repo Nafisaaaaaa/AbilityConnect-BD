@@ -1,0 +1,63 @@
+@model SDP1.Models.EditPostInputModel
+@{
+    ViewData["Title"] = "Edit Post";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4" style="background-color: #FFFFFF;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background-color: #EAF4FF; color: #2563EB; font-size: 20px;">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div>
+                            <h3 class="h4 fw-bold mb-0 text-dark">Edit Community Post</h3>
+                            <p class="text-muted small mb-0">Update your post message or image.</p>
+                        </div>
+                    </div>
+
+                    <form asp-controller="Community" asp-action="EditPost" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ExistingImagePath" />
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label fw-semibold text-dark">Post Content:</label>
+                            <textarea asp-for="Content" rows="6" class="form-control rounded-3 p-3" required minlength="3" maxlength="3000"></textarea>
+                            <span asp-validation-for="Content" class="text-danger small"></span>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ExistingImagePath))
+                        {
+                            <div class="mb-3 p-3 rounded-3 bg-light border">
+                                <label class="form-label fw-semibold text-dark d-block">Current Image:</label>
+                                <img src="@Model.ExistingImagePath" alt="Existing post image" class="img-fluid rounded-3 mb-2" style="max-height: 200px;" />
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" asp-for="RemoveExistingImage" id="chkRemoveImage">
+                                    <label class="form-check-label text-danger small" for="chkRemoveImage">
+                                        Remove this image from post
+                                    </label>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark">Replace or Add Image (Optional):</label>
+                            <input type="file" asp-for="NewImage" accept="image/*" class="form-control rounded-3" />
+                            <small class="text-muted">Allowed types: JPG, PNG, WEBP, GIF (Max 5MB)</small>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                            <a href="/Community" class="btn btn-light rounded-pill px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold" style="background-color: #2563EB; border-color: #2563EB;">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
