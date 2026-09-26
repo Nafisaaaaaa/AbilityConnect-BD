@@ -1,0 +1,133 @@
+@model List<SDP1.Models.HealthcareProvider>
+@{
+    ViewData["Title"] = "Manage Healthcare Providers";
+    var adminName = ViewBag.AdminName ?? "Administrator";
+    var currentType = ViewBag.CurrentType as string ?? "All";
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #E8F0FE 0%, #FFFFFF 100%); border-left: 5px solid #4A90D9 !important; border-radius: 12px;">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <span class="badge bg-primary px-3 py-1 mb-2">Admin Control Panel</span>
+                    <h3 class="fw-bold mb-1" style="color: #2D3748;">Healthcare & Therapy Provider Management</h3>
+                    <p class="text-secondary mb-0">Add, edit, view, and manage healthcare and therapy professionals, clinic listings, and consultations.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="/Healthcare/Create" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Add Provider
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6">
+            <div class="card border-0 shadow-sm p-3" style="border-radius: 12px; border-left: 4px solid #4A90D9 !important;">
+                <span class="text-muted small">Total Healthcare Providers</span>
+                <h4 class="fw-bold text-dark mb-0">@ViewBag.TotalCount</h4>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <a href="/Admin/DoctorAppointments" class="text-decoration-none">
+                <div class="card border-0 shadow-sm p-3" style="border-radius: 12px; border-left: 4px solid #48BB78 !important;">
+                    <span class="text-muted small">Total Consultations & Appointments</span>
+                    <h4 class="fw-bold text-success mb-0">@ViewBag.TotalAppointments <small class="text-muted fs-6 ms-1">(View All &rarr;)</small></h4>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm p-3 mb-4" style="border-radius: 12px;">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-8">
+                <select name="type" class="form-select form-select-sm">
+                    <option value="All" selected="@(currentType == "All")">All Provider Types</option>
+                    <option value="Doctor" selected="@(currentType == "Doctor")">Doctor</option>
+                    <option value="Physiotherapist" selected="@(currentType == "Physiotherapist")">Physiotherapist</option>
+                    <option value="Speech Therapist" selected="@(currentType == "Speech Therapist")">Speech Therapist</option>
+                    <option value="Rehabilitation Center" selected="@(currentType == "Rehabilitation Center")">Rehabilitation Center</option>
+                    <option value="Eye Specialist" selected="@(currentType == "Eye Specialist")">Eye Specialist</option>
+                    <option value="Mental Health Specialist" selected="@(currentType == "Mental Health Specialist")">Mental Health Specialist</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-outline-primary btn-sm">Filter</button>
+            </div>
+            <div class="col-md-2 d-grid">
+                <a href="/Admin/HealthcareProviders" class="btn btn-outline-secondary btn-sm">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body p-4">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-user-md-slash fa-3x mb-2" style="opacity: 0.4;"></i>
+                    <p class="mb-0">No healthcare providers found matching the selected criteria.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Provider Name</th>
+                                <th>Type & Clinic</th>
+                                <th>Specialization & Location</th>
+                                <th>Activity</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-dark">@p.Name</div>
+                                        <small class="text-muted"><i class="fas fa-envelope me-1"></i> @p.Email &nbsp;|&nbsp; <i class="fas fa-phone me-1"></i> @p.Phone</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-primary border mb-1">@p.ProviderType</span>
+                                        <small class="text-muted d-block">@p.OrganizationOrClinic</small>
+                                    </td>
+                                    <td>
+                                        <div class="small fw-semibold text-secondary">@p.Specialization</div>
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt text-danger me-1"></i> @p.City, @p.District</small>
+                                    </td>
+                                    <td>
+                                        <a href="/Admin/DoctorAppointments?providerId=@p.Id" class="text-decoration-none">
+                                            <small class="d-block text-primary fw-semibold"><i class="fas fa-calendar-check me-1"></i> @p.Appointments.Count appts</small>
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end gap-1">
+                                            <a href="/Healthcare/Details/@p.Id" class="btn btn-sm btn-outline-primary" title="View Details">
+                                                <i class="fas fa-eye"></i> Details
+                                            </a>
+                                            <a href="/Healthcare/Edit/@p.Id" class="btn btn-sm btn-outline-secondary" title="Edit Provider">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <form asp-action="DeleteHealthcareProvider" method="post" class="d-inline" onsubmit="return confirm('Delete provider @p.Name?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@p.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Provider">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

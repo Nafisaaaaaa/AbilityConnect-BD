@@ -1,0 +1,178 @@
+@model IEnumerable<SDP1.Models.LearningVideo>
+@{
+    ViewData["Title"] = "Manage Learning Hub";
+    var adminName = ViewBag.AdminName ?? "Administrator";
+    var categories = ViewBag.Categories as string[] ?? Array.Empty<string>();
+    var selectedCat = ViewBag.Category as string;
+    var search = ViewBag.Search as string;
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar admin-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile admin-profile">
+                    <img src="/images/admin-avatar.png" alt="Admin" class="profile-img" />
+                    <h5>@adminName</h5>
+                    <span class="badge bg-danger">Administrator</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Admin/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Admin/ManageUsers"><i class="fas fa-users"></i> Manage Users</a></li>
+                    <li><a href="/Admin/VerifyOrganizations"><i class="fas fa-building"></i> Verify Organizations</a></li>
+                    <li><a href="/Admin/ManageVolunteers"><i class="fas fa-hand-holding-heart"></i> Manage Volunteers</a></li>
+                    <li><a href="/Admin/HealthcareProviders"><i class="fas fa-user-md"></i> Healthcare Providers</a></li>
+                    <li><a href="/Admin/JobsAndPrograms"><i class="fas fa-briefcase"></i> Jobs & Programs</a></li>
+                    <li><a href="/Admin/CommunityModeration"><i class="fas fa-comments"></i> Community Moderation</a></li>
+                    <li class="active"><a href="/Admin/LearningHub"><i class="fas fa-book-reader"></i> Learning Hub</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="fas fa-book-reader text-primary me-2"></i> Manage Learning Hub Lessons</h2>
+                    <p class="text-muted mb-0">Curate and maintain accessible YouTube video tutorials across all 5 core categories.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/LearningHub" target="_blank" class="btn btn-outline-secondary">
+                        <i class="fas fa-external-link-alt me-1"></i> Public Hub
+                    </a>
+                    <a href="/Admin/CreateLearningVideo" class="btn btn-primary shadow-sm">
+                        <i class="fas fa-plus-circle me-1"></i> Add Video Lesson
+                    </a>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-3">
+                    <form method="get" class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" name="search" value="@search" class="form-control border-start-0" placeholder="Search by title or description..." />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="category" class="form-select">
+                                <option value="">All Categories</option>
+                                @foreach (var cat in categories)
+                                {
+                                    <option value="@cat" selected="@(selectedCat == cat)">@cat</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i> Filter</button>
+                            <a href="/Admin/LearningHub" class="btn btn-outline-secondary"><i class="fas fa-redo"></i></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="card border-0 shadow-sm">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Lesson</th>
+                                    <th>Category</th>
+                                    <th>YouTube URL / Preview</th>
+                                    <th>Duration</th>
+                                    <th>Visibility</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var videoId = SDP1.Models.YouTubeHelper.ExtractVideoId(item.YouTubeUrl);
+                                    var thumbUrl = SDP1.Models.YouTubeHelper.GetThumbnailUrl(item.YouTubeUrl);
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div style="width: 70px; aspect-ratio: 16/9; overflow: hidden; border-radius: 4px;" class="bg-dark flex-shrink-0">
+                                                    @if (!string.IsNullOrEmpty(thumbUrl))
+                                                    {
+                                                        <img src="@thumbUrl" alt="" class="w-100 h-100 object-fit-cover" />
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">@item.Title</div>
+                                                    <small class="text-muted">Added: @item.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border">@item.Category</span>
+                                        </td>
+                                        <td>
+                                            <a href="@item.YouTubeUrl" target="_blank" rel="noopener noreferrer" class="small text-danger text-decoration-none">
+                                                <i class="fab fa-youtube me-1"></i> @(item.YouTubeUrl.Length > 35 ? item.YouTubeUrl.Substring(0, 32) + "..." : item.YouTubeUrl)
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted"><i class="fas fa-clock me-1"></i> @(item.Duration ?? "N/A")</small>
+                                        </td>
+                                        <td>
+                                            @if (item.IsPublished)
+                                            {
+                                                <span class="badge bg-success">Published</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Hidden</span>
+                                            }
+                                        </td>
+                                        <td class="text-end">
+                                            <form method="post" action="/Admin/TogglePublishLearningVideo/@item.Id" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm @(item.IsPublished ? "btn-outline-warning" : "btn-outline-success") me-1" title="@(item.IsPublished ? "Hide from Users" : "Publish to Hub")">
+                                                    <i class="fas @(item.IsPublished ? "fa-eye-slash" : "fa-eye")"></i>
+                                                </button>
+                                            </form>
+                                            <a href="/Admin/EditLearningVideo/@item.Id" class="btn btn-sm btn-outline-secondary me-1" title="Edit Lesson">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="post" action="/Admin/DeleteLearningVideo/@item.Id" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this video lesson?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Lesson">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm text-center py-5">
+                    <div class="card-body">
+                        <i class="fas fa-book-reader fa-4x text-muted mb-3"></i>
+                        <h4 class="fw-bold">No Lessons Found</h4>
+                        <p class="text-muted mb-4">No video lessons match your filter criteria.</p>
+                        <a href="/Admin/CreateLearningVideo" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-1"></i> Add Your First Video Lesson
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
