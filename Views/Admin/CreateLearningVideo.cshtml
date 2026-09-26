@@ -1,0 +1,109 @@
+@model SDP1.Models.LearningVideoFormViewModel
+@{
+    ViewData["Title"] = "Add Learning Hub Lesson";
+    var adminName = ViewBag.AdminName ?? "Administrator";
+    var categories = ViewBag.Categories as string[] ?? Array.Empty<string>();
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar admin-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile admin-profile">
+                    <img src="/images/admin-avatar.png" alt="Admin" class="profile-img" />
+                    <h5>@adminName</h5>
+                    <span class="badge bg-danger">Administrator</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Admin/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Admin/ManageUsers"><i class="fas fa-users"></i> Manage Users</a></li>
+                    <li><a href="/Admin/VerifyOrganizations"><i class="fas fa-building"></i> Verify Organizations</a></li>
+                    <li><a href="/Admin/ManageVolunteers"><i class="fas fa-hand-holding-heart"></i> Manage Volunteers</a></li>
+                    <li><a href="/Admin/HealthcareProviders"><i class="fas fa-user-md"></i> Healthcare Providers</a></li>
+                    <li><a href="/Admin/JobsAndPrograms"><i class="fas fa-briefcase"></i> Jobs & Programs</a></li>
+                    <li><a href="/Admin/CommunityModeration"><i class="fas fa-comments"></i> Community Moderation</a></li>
+                    <li class="active"><a href="/Admin/LearningHub"><i class="fas fa-book-reader"></i> Learning Hub</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="mb-4">
+                <a href="/Admin/LearningHub" class="btn btn-outline-secondary btn-sm mb-2">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Lessons List
+                </a>
+                <h2 class="fw-bold"><i class="fas fa-plus-circle text-primary me-2"></i> Add New Video Lesson</h2>
+                <p class="text-muted">Enter lesson metadata and a standard YouTube URL. The system converts it into an accessible, responsive video embed.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="CreateLearningVideo" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Title" class="form-label fw-semibold">Lesson Title <span class="text-danger">*</span></label>
+                                <input asp-for="Title" class="form-control" placeholder="e.g., Introduction to Braille Reading: Dot Numbers & Alphabet" />
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Category" class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+                                <select asp-for="Category" class="form-select">
+                                    @foreach (var cat in categories)
+                                    {
+                                        <option value="@cat">@cat</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Category" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label asp-for="YouTubeUrl" class="form-label fw-semibold">YouTube Video URL <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="fab fa-youtube text-danger"></i></span>
+                                    <input asp-for="YouTubeUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." />
+                                </div>
+                                <div class="form-text text-muted">
+                                    Supports standard watch links, youtu.be short links, or embed links. Safe no-cookie embeds are automatically generated.
+                                </div>
+                                <span asp-validation-for="YouTubeUrl" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Duration" class="form-label fw-semibold">Duration (Optional)</label>
+                                <input asp-for="Duration" class="form-control" placeholder="e.g., 18 mins" />
+                                <span asp-validation-for="Duration" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label fw-semibold">Lesson Summary & Curriculum Notes <span class="text-danger">*</span></label>
+                                <textarea asp-for="Description" rows="5" class="form-control" placeholder="Summarize key learning objectives, resources mentioned, keyboard shortcuts, or practice exercises..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-check form-switch">
+                                    <input asp-for="IsPublished" class="form-check-input" type="checkbox" id="publishSwitch" />
+                                    <label class="form-check-label fw-semibold" for="publishSwitch">
+                                        Publish immediately (Visible in the public Learning Hub)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                                <a href="/Admin/LearningHub" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fas fa-check-circle me-1"></i> Save & Publish Lesson
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
