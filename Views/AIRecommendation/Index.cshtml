@@ -1,0 +1,268 @@
+@model SDP1.Models.AIRecommendationResultViewModel
+@{
+    ViewData["Title"] = "AI Recommendation";
+    var userRole = Context.Session.GetString("UserRole");
+    var userName = Context.Session.GetString("UserName");
+    var disabilityProfile = ViewBag.DisabilityProfile as SDP1.Models.DisabilityUser;
+    var dashboardUrl = userRole switch
+    {
+        "Disability" => "/Disability/Dashboard",
+        "Volunteer" => "/Volunteer/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        "Admin" => "/Admin/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(135deg, #EAF4FF 0%, #FFFFFF 100%); border-left: 5px solid #2563EB !important;">
+        <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 52px; height: 52px; background-color: #2563EB; color: #fff; font-size: 24px;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h2 class="h3 fw-bold mb-1" style="color: #1E293B;">AI Recommendation Assistant</h2>
+                        <p class="text-muted mb-0">Describe what support or opportunity you need, and our assistant will match you with actual records on AbilityConnect BD.</p>
+                    </div>
+                </div>
+                <a href="@dashboardUrl" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+            </div>
+
+            @if (disabilityProfile != null)
+            {
+                <div class="p-3 rounded-3 mt-3 d-flex align-items-center flex-wrap gap-2" style="background-color: #FFFFFF; border: 1px solid #BFDBFE;">
+                    <span class="badge" style="background-color: #2563EB;"><i class="fas fa-user-check me-1"></i> Personalized Profile</span>
+                    <span class="small text-secondary">
+                        <strong>Disability:</strong> @(disabilityProfile.DisabilityType ?? "General") |
+                        <strong>Location:</strong> @(disabilityProfile.Location ?? "Bangladesh")
+                        @if (!string.IsNullOrWhiteSpace(disabilityProfile.Skills))
+                        {
+                            <span>| <strong>Skills:</strong> @disabilityProfile.Skills</span>
+                        }
+                    </span>
+                </div>
+            }
+
+            <form asp-controller="AIRecommendation" asp-action="GetRecommendations" method="post" class="mt-4" id="aiForm">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label for="userQuery" class="form-label fw-semibold text-dark fs-5">
+                        Tell us what you need:
+                    </label>
+                    <div class="input-group input-group-lg shadow-sm">
+                        <span class="input-group-text bg-white border-end-0 text-primary">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text"
+                               id="userQuery"
+                               name="query"
+                               value="@Model.Query"
+                               class="form-control border-start-0 py-3"
+                               placeholder="e.g. I am visually impaired and looking for a remote job..."
+                               required
+                               maxlength="500" />
+                        <button class="btn btn-primary px-4 fw-semibold d-flex align-items-center" type="submit" id="btnSubmit" style="background-color: #2563EB; border-color: #2563EB;">
+                            <span class="spinner-border spinner-border-sm me-2 d-none" id="submitSpinner" role="status" aria-hidden="true"></span>
+                            <i class="fas fa-magic me-2" id="submitIcon"></i>
+                            <span>Get Recommendations</span>
+                        </button>
+                    </div>
+                </div>
+
+                @if (ViewBag.CooldownMessage != null)
+                {
+                    <div class="alert alert-warning py-2 px-3 small rounded-3 mt-2">
+                        <i class="fas fa-hourglass-half me-1"></i> @ViewBag.CooldownMessage
+                    </div>
+                }
+
+                <div class="mt-3">
+                    <span class="small text-muted me-2">Try asking:</span>
+                    <div class="d-inline-flex flex-wrap gap-2 mt-1">
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill py-1 px-3 example-btn" data-query="I am visually impaired and looking for a remote job.">
+                            "Visually impaired looking for remote job"
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill py-1 px-3 example-btn" data-query="I want to learn freelancing for free.">
+                            "Learn freelancing for free"
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill py-1 px-3 example-btn" data-query="Computer training courses for disabled persons.">
+                            "Computer training courses"
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill py-1 px-3 example-btn" data-query="I need physical rehabilitation or doctor appointment.">
+                            "Physiotherapy & doctors"
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill py-1 px-3 example-btn" data-query="Scholarships for students with disabilities in Bangladesh.">
+                            "Scholarships for students"
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Summary) || Model.Recommendations.Any())
+    {
+        <div class="mb-5">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h4 fw-bold mb-0 text-dark">
+                    <i class="fas fa-sparkles text-warning me-2"></i> Recommendation Results
+                </h3>
+                @if (Model.IsAiGenerated)
+                {
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+                        <i class="fas fa-bolt me-1"></i> Gemini AI Verified
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
+                        <i class="fas fa-database me-1"></i> Database Matches
+                    </span>
+                }
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.NoticeMessage))
+            {
+                <div class="alert alert-info py-2 px-3 small rounded-3 mb-3 border-0" style="background-color: #EAF4FF; color: #1E40AF;">
+                    <i class="fas fa-info-circle me-1"></i> @Model.NoticeMessage
+                </div>
+            }
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4" style="background-color: #F8FAFC; border-left: 4px solid #2563EB !important;">
+                <div class="card-body p-4">
+                    <h5 class="fw-semibold text-secondary mb-2 fs-6 text-uppercase" style="letter-spacing: 0.5px;">Summary & Advice</h5>
+                    <p class="fs-5 text-dark mb-0" style="line-height: 1.6;">
+                        @Model.Summary
+                    </p>
+                </div>
+            </div>
+
+            @if (Model.Recommendations.Any())
+            {
+                <div class="row g-4">
+                    @for (int i = 0; i < Model.Recommendations.Count; i++)
+                    {
+                        var item = Model.Recommendations[i];
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative" style="background-color: #FFFFFF; transition: transform 0.2s, box-shadow 0.2s;">
+                                <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-start">
+                                    <span class="badge @item.BadgeClass px-3 py-2 rounded-pill">
+                                        <i class="@item.IconClass me-1"></i> @item.ItemType
+                                    </span>
+                                    <span class="text-muted small fw-bold">#@(i + 1)</span>
+                                </div>
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <h4 class="h5 fw-bold text-dark mb-1">@item.Title</h4>
+                                    <p class="text-primary fw-medium small mb-2">
+                                        <i class="fas fa-building me-1"></i> @item.OrganizationOrProvider
+                                    </p>
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Location))
+                                    {
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-map-marker-alt me-1 text-danger"></i> @item.Location
+                                        </p>
+                                    }
+
+                                    <div class="p-3 rounded-3 mb-3 mt-auto" style="background-color: #EAF4FF; border-left: 3px solid #2563EB;">
+                                        <div class="text-xs fw-bold text-uppercase mb-1" style="color: #2563EB; font-size: 0.75rem;">Why this matches:</div>
+                                        <div class="small text-secondary" style="line-height: 1.4;">
+                                            @item.Reason
+                                        </div>
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(item.ExtraDetails))
+                                    {
+                                        <div class="small text-muted mb-3">
+                                            <i class="fas fa-info-circle me-1"></i> @item.ExtraDetails
+                                        </div>
+                                    }
+
+                                    <a href="@item.Url" class="btn btn-outline-primary w-100 fw-semibold mt-2 rounded-pill" style="border-color: #2563EB; color: #2563EB;">
+                                        View Details <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <div class="text-muted mb-3" style="font-size: 48px;">
+                        <i class="fas fa-search-minus"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">No Matching Records Found</h5>
+                    <p class="text-muted mb-3">We couldn't find active opportunities matching this specific request in the current database. Try a broader search term like "remote job", "computer course", or "healthcare".</p>
+                    <div>
+                        <a href="/Jobs" class="btn btn-outline-primary btn-sm rounded-pill me-2">Browse All Jobs</a>
+                        <a href="/Services/Trainings" class="btn btn-outline-success btn-sm rounded-pill me-2">Browse Trainings</a>
+                        <a href="/Healthcare" class="btn btn-outline-danger btn-sm rounded-pill">Browse Healthcare</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 bg-white">
+                    <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background-color: #EAF4FF; color: #2563EB; font-size: 22px;">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Accessible Jobs</h5>
+                    <p class="text-muted small mb-0">Ask about remote jobs, inclusive employers, flexible working hours, and positions matching your skills.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 bg-white">
+                    <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background-color: #EAF4FF; color: #2563EB; font-size: 22px;">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Trainings & Scholarships</h5>
+                    <p class="text-muted small mb-0">Ask for computer training, freelancing bootcamps, and educational financial support programs.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 bg-white">
+                    <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background-color: #EAF4FF; color: #2563EB; font-size: 22px;">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark">Healthcare & Support</h5>
+                    <p class="text-muted small mb-0">Find certified doctors, physiotherapists, speech specialists, and accessible medical services near you.</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.example-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const query = this.getAttribute('data-query');
+                const input = document.getElementById('userQuery');
+                input.value = query;
+                input.focus();
+            });
+        });
+
+        document.getElementById('aiForm').addEventListener('submit', function () {
+            const btn = document.getElementById('btnSubmit');
+            const spinner = document.getElementById('submitSpinner');
+            const icon = document.getElementById('submitIcon');
+            if (btn && spinner && icon) {
+                spinner.classList.remove('d-none');
+                icon.classList.add('d-none');
+                btn.disabled = true;
+                this.submit();
+            }
+        });
+    </script>
+}
