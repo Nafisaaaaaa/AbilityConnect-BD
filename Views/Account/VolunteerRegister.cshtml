@@ -1,0 +1,261 @@
+@{
+    ViewData["Title"] = "Volunteer Registration";
+}
+
+@model SDP1.Models.VolunteerRegisterViewModel
+
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="auth-card register-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3>Volunteer Registration</h3>
+                        <p class="text-muted">Join our community of volunteers making a difference</p>
+                    </div>
+
+                    <form asp-action="VolunteerRegister" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row">
+                           
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-user"></i> Personal Information</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FullName" class="form-label">Full Name *</label>
+                                    <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label">Email Address *</label>
+                                    <input asp-for="Email" class="form-control" placeholder="Enter your email" type="email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Password" class="form-label">Password *</label>
+                                    <div class="password-wrapper">
+                                        <input asp-for="Password" class="form-control" placeholder="Min 6 characters" type="password" id="passwordInput" />
+                                        <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', 'passwordToggleIcon')">
+                                            <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password *</label>
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" type="password" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="form-label">Phone Number *</label>
+                                    <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Location" class="form-label">Location *</label>
+                                    <div class="input-group">
+                                        <input asp-for="Location" class="form-control" id="locationInput" placeholder="Enter your city/area" />
+                                        <button type="button" class="btn btn-outline-primary" id="btnDetectLocation" onclick="detectUserLocation()">
+                                            <i class="fas fa-crosshairs me-1"></i> Detect Location
+                                        </button>
+                                    </div>
+                                    <input type="hidden" asp-for="Latitude" id="latitudeInput" />
+                                    <input type="hidden" asp-for="Longitude" id="longitudeInput" />
+                                    <div id="locationStatus" class="mt-1 small"></div>
+                                    <span asp-validation-for="Location" class="text-danger"></span>
+                                    <span asp-validation-for="Latitude" class="text-danger"></span>
+                                    <span asp-validation-for="Longitude" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-heart"></i> Volunteer Information</h5>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Skills" class="form-label">Skills *</label>
+                                    <input asp-for="Skills" class="form-control" placeholder="E.g., Teaching, First Aid, Counseling" />
+                                    <span asp-validation-for="Skills" class="text-danger"></span>
+                                    <span class="text-muted small">Separate skills with commas</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Availability" class="form-label">Availability</label>
+                                    <select asp-for="Availability" class="form-select">
+                                        <option value="">Select Availability</option>
+                                        <option value="Full Time">Full Time</option>
+                                        <option value="Part Time">Part Time</option>
+                                        <option value="Weekends">Weekends</option>
+                                        <option value="Evenings">Evenings</option>
+                                        <option value="Flexible">Flexible</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Experience" class="form-label">Experience</label>
+                                    <input asp-for="Experience" class="form-control" placeholder="E.g., 2 years volunteering" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="LanguagesSpoken" class="form-label">Languages Spoken</label>
+                                    <input asp-for="LanguagesSpoken" class="form-control" placeholder="E.g., Bengali, English, Hindi" />
+                                    <span class="text-muted small">Separate languages with commas</span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-image"></i> Profile Picture</h5>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="ProfilePictureFile" class="form-label">Upload Profile Picture</label>
+                                    <input asp-for="ProfilePictureFile" class="form-control" type="file" accept="image/*" />
+                                    <span class="text-muted small">Upload your profile picture (JPG, PNG, Max 2MB)</span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="termsCheck" required />
+                                    <label class="form-check-label" for="termsCheck">
+                                        I agree to the <a href="#" target="_blank">Terms and Conditions</a> and
+                                        <a href="#" target="_blank">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-user-plus"></i> Register as Volunteer
+                        </button>
+
+                        <div class="auth-links">
+                            <p>
+                                Already have an account? <a href="/Account/Login">Login here</a>
+                            </p>
+                            <p>
+                                <a href="/Account/DisabilityRegister">Register as Disability</a> |
+                                <a href="/Account/OrganizationRegister">Register as Organization</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        var emailInput = document.getElementById('Email');
+        var emailStatus = document.createElement('small');
+        emailStatus.className = 'form-text';
+        emailInput.parentNode.appendChild(emailStatus);
+
+        var emailTimer;
+        emailInput.addEventListener('input', function () {
+            clearTimeout(emailTimer);
+            var val = this.value.trim();
+
+            if (val.length === 0) {
+                emailStatus.textContent = '';
+                return;
+            }
+
+            emailStatus.textContent = 'Checking...';
+            emailStatus.style.color = '#718096';
+
+            emailTimer = setTimeout(function () {
+                fetch('/Account/CheckEmailAvailability?email=' + encodeURIComponent(val) + '&role=Disability')
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.available) {
+                            emailStatus.textContent = '✓ ' + data.message;
+                            emailStatus.style.color = '#48BB78';
+                        } else {
+                            emailStatus.textContent = '✗ ' + data.message;
+                            emailStatus.style.color = '#FC8181';
+                        }
+                    })
+                    .catch(() => {
+                        emailStatus.textContent = '';
+                    });
+            }, 500);
+        });
+
+        function detectUserLocation() {
+            var btn = document.getElementById('btnDetectLocation');
+            var status = document.getElementById('locationStatus');
+            var latInput = document.getElementById('latitudeInput');
+            var lngInput = document.getElementById('longitudeInput');
+            var locInput = document.getElementById('locationInput');
+
+            if (!navigator.geolocation) {
+                status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i> Geolocation is not supported by your browser. Please enter your location manually.</span>';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Detecting...';
+            status.innerHTML = '<span class="text-muted"><i class="fas fa-circle-notch fa-spin me-1"></i> Requesting location permission...</span>';
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var lat = position.coords.latitude.toFixed(6);
+                    var lng = position.coords.longitude.toFixed(6);
+                    latInput.value = lat;
+                    lngInput.value = lng;
+                    if (!locInput.value || locInput.value.trim() === '') {
+                        locInput.value = lat + ', ' + lng;
+                    }
+                    status.innerHTML = '<span class="text-primary fw-semibold"><i class="fas fa-check-circle me-1"></i> Location detected! (' + lat + ', ' + lng + ')</span>';
+                },
+                function (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var msg = 'Unable to detect location. Please enter your location manually.';
+                    if (error.code === error.PERMISSION_DENIED) {
+                        msg = 'Location permission was denied. You can enter your location manually, or enable browser location permission and click Detect Location to retry.';
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                        msg = 'Location information is currently unavailable. Please enter your location manually or retry.';
+                    } else if (error.code === error.TIMEOUT) {
+                        msg = 'Location request timed out. Please retry or enter your location manually.';
+                    }
+                    status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i> ' + msg + '</span>';
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+    </script>
+}

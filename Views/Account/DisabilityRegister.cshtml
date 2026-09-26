@@ -1,0 +1,322 @@
+@{
+    ViewData["Title"] = "Disability Registration";
+}
+
+@model SDP1.Models.DisabilityRegisterViewModel
+
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="auth-card register-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <i class="fas fa-wheelchair"></i>
+                        </div>
+                        <h3>Disability Registration</h3>
+                        <p class="text-muted">Create your account to access personalized services</p>
+                    </div>
+
+                    <form asp-action="DisabilityRegister" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-user"></i> Personal Information</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FullName" class="form-label">Full Name *</label>
+                                    <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label">Email Address *</label>
+                                    <input asp-for="Email" class="form-control" placeholder="Enter your email" type="email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Password" class="form-label">Password *</label>
+                                    <div class="password-wrapper">
+                                        <input asp-for="Password" class="form-control" placeholder="Min 8 characters" type="password" id="passwordInput" />
+                                        <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', 'passwordToggleIcon')">
+                                            <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password *</label>
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" type="password" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="form-label">Phone Number *</label>
+                                    <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="DateOfBirth" class="form-label">Date of Birth *</label>
+                                    <input asp-for="DateOfBirth" class="form-control" type="date" />
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Gender" class="form-label">Gender *</label>
+                                    <select asp-for="Gender" class="form-select">
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Location" class="form-label">Location *</label>
+                                    <div class="input-group">
+                                        <input asp-for="Location" class="form-control" id="locationInput" placeholder="Enter your city/area" />
+                                        <button type="button" class="btn btn-outline-primary" id="btnDetectLocation" onclick="detectUserLocation()">
+                                            <i class="fas fa-crosshairs me-1"></i> Detect Location
+                                        </button>
+                                    </div>
+                                    <input type="hidden" asp-for="Latitude" id="latitudeInput" />
+                                    <input type="hidden" asp-for="Longitude" id="longitudeInput" />
+                                    <div id="locationStatus" class="mt-1 small"></div>
+                                    <span asp-validation-for="Location" class="text-danger"></span>
+                                    <span asp-validation-for="Latitude" class="text-danger"></span>
+                                    <span asp-validation-for="Longitude" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-stethoscope"></i> Disability Information</h5>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="DisabilityType" class="form-label">Disability Type *</label>
+                                    <select asp-for="DisabilityType" class="form-select" id="disabilityTypeSelect">
+                                        <option value="">Select Disability Type</option>
+                                        <option value="Visual Impairment">Visual Impairment</option>
+                                        <option value="Hearing Impairment">Hearing Impairment</option>
+                                        <option value="Physical Disability">Physical Disability</option>
+                                        <option value="Cognitive Disability">Cognitive Disability</option>
+                                        <option value="Speech Impairment">Speech Impairment</option>
+                                        <option value="Multiple Disabilities">Multiple Disabilities</option>
+                                        <option value="Other">Other (Please specify)</option>
+                                    </select>
+                                    <span asp-validation-for="DisabilityType" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" id="otherDisabilityBox" style="display:none;">
+                                <div class="form-group">
+                                    <label asp-for="OtherDisabilityType" class="form-label">
+                                        <i class="fas fa-edit"></i> Please specify your disability type *
+                                    </label>
+                                    <textarea asp-for="OtherDisabilityType" class="form-control" rows="3"
+                                              placeholder="E.g., Chronic illness, Learning disability, etc."
+                                              id="otherDisabilityTextarea"></textarea>
+                                    <span asp-validation-for="OtherDisabilityType" class="text-danger"></span>
+                                    <span class="text-muted small">Describe your disability in detail</span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-graduation-cap"></i> Skills & Education</h5>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Skills" class="form-label">Skills</label>
+                                    <input asp-for="Skills" class="form-control" placeholder="E.g., Programming, Graphic Design, Communication" />
+                                    <span class="text-muted small">Separate skills with commas</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Education" class="form-label">Education</label>
+                                    <input asp-for="Education" class="form-control" placeholder="E.g., Bachelor's in Computer Science" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Interests" class="form-label">Interests</label>
+                                    <input asp-for="Interests" class="form-control" placeholder="E.g., Technology, Art, Sports" />
+                                    <span class="text-muted small">Separate interests with commas</span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-file-upload"></i> Documents</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ProfilePictureFile" class="form-label">Profile Picture</label>
+                                    <input asp-for="ProfilePictureFile" class="form-control" type="file" accept="image/*" />
+                                    <span class="text-muted small">Upload your profile picture (JPG, PNG, Max 2MB)</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="DisabilityCertificateFile" class="form-label">Disability Certificate</label>
+                                    <input asp-for="DisabilityCertificateFile" class="form-control" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                                    <span class="text-muted small">Upload your disability certificate (PDF, JPG, PNG, Max 5MB)</span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="termsCheck" required />
+                                    <label class="form-check-label" for="termsCheck">
+                                        I agree to the <a href="#" target="_blank">Terms and Conditions</a> and
+                                        <a href="#" target="_blank">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+
+                        <div class="auth-links">
+                            <p>
+                                Already have an account? <a href="/Account/Login">Login here</a>
+                            </p>
+                            <p>
+                                <a href="/Account/VolunteerRegister">Register as Volunteer</a> |
+                                <a href="/Account/OrganizationRegister">Register as Organization</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        var disabilitySelect = document.getElementById('disabilityTypeSelect');
+        var otherDisabilityBox = document.getElementById('otherDisabilityBox');
+        var otherDisabilityTextarea = document.getElementById('otherDisabilityTextarea');
+
+        function toggleDisabilityOther() {
+            if (!disabilitySelect || !otherDisabilityBox || !otherDisabilityTextarea) return;
+
+            if (disabilitySelect.value === 'Other') {
+                otherDisabilityBox.style.display = 'block';
+                otherDisabilityTextarea.setAttribute('required', 'required');
+            } else {
+                otherDisabilityBox.style.display = 'none';
+                otherDisabilityTextarea.removeAttribute('required');
+                otherDisabilityTextarea.value = '';
+            }
+        }
+
+        if (disabilitySelect) {
+            disabilitySelect.addEventListener('change', toggleDisabilityOther);
+        }
+        document.addEventListener('DOMContentLoaded', toggleDisabilityOther);
+
+        function togglePassword(inputId, toggleId) {
+            var passwordInput = document.getElementById(inputId);
+            var toggleIcon = document.getElementById(toggleId);
+            if (!passwordInput || !toggleIcon) return;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        function detectUserLocation() {
+            var btn = document.getElementById('btnDetectLocation');
+            var status = document.getElementById('locationStatus');
+            var latInput = document.getElementById('latitudeInput');
+            var lngInput = document.getElementById('longitudeInput');
+            var locInput = document.getElementById('locationInput');
+
+            if (!navigator.geolocation) {
+                status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i> Geolocation is not supported by your browser. Please enter your location manually.</span>';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Detecting...';
+            status.innerHTML = '<span class="text-muted"><i class="fas fa-circle-notch fa-spin me-1"></i> Requesting location permission...</span>';
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var lat = position.coords.latitude.toFixed(6);
+                    var lng = position.coords.longitude.toFixed(6);
+                    latInput.value = lat;
+                    lngInput.value = lng;
+                    if (!locInput.value || locInput.value.trim() === '') {
+                        locInput.value = lat + ', ' + lng;
+                    }
+                    status.innerHTML = '<span class="text-primary fw-semibold"><i class="fas fa-check-circle me-1"></i> Coordinates detected! (' + lat + ', ' + lng + ')</span>';
+
+                    try {
+                        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng)
+                            .then(function (res) { return res.json(); })
+                            .then(function (data) {
+                                if (data && data.address) {
+                                    var place = data.address.city || data.address.town || data.address.suburb || data.address.district || data.address.state || '';
+                                    if (place) {
+                                        locInput.value = place;
+                                        status.innerHTML = '<span class="text-primary fw-semibold"><i class="fas fa-check-circle me-1"></i> Location: ' + place + ' (' + lat + ', ' + lng + ')</span>';
+                                    }
+                                }
+                            })
+                            .catch(function () {});
+                    } catch (e) {}
+                },
+                function (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var msg = 'Unable to detect location. Please enter your location manually.';
+                    if (error.code === error.PERMISSION_DENIED) {
+                        msg = 'Location permission was denied. You can enter your location manually, or enable browser location permission and click Detect Location to retry.';
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                        msg = 'Location information is currently unavailable. Please enter your location manually or retry.';
+                    } else if (error.code === error.TIMEOUT) {
+                        msg = 'Location request timed out. Please retry or enter your location manually.';
+                    }
+                    status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i> ' + msg + '</span>';
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+    </script>
+}

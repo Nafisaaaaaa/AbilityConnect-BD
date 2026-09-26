@@ -1,0 +1,315 @@
+@{
+    ViewData["Title"] = "Organization Registration";
+}
+
+@model SDP1.Models.OrganizationRegisterViewModel
+
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="auth-card register-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Organization Registration</h3>
+                        <p class="text-muted">Register your organization to provide services and opportunities</p>
+                    </div>
+
+                    <form asp-action="OrganizationRegister" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-building"></i> Organization Information</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="OrganizationName" class="form-label">Organization Name *</label>
+                                    <input asp-for="OrganizationName" class="form-control" placeholder="Enter organization name" />
+                                    <span asp-validation-for="OrganizationName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="OrganizationType" class="form-label">Organization Type *</label>
+                                    <select asp-for="OrganizationType" class="form-select" id="orgTypeSelect">
+                                        <option value="">Select Type</option>
+                                        <option value="NGO">NGO</option>
+                                        <option value="Employer">Employer / Company</option>
+                                        <option value="Training Center">Training Center</option>
+                                        <option value="Rehabilitation Center">Rehabilitation Center</option>
+                                        <option value="Healthcare">Healthcare Provider</option>
+                                        <option value="Educational Institution">Educational Institution</option>
+                                        <option value="Government Agency">Government Agency</option>
+                                        <option value="Disability Organization">Disability Organization</option>
+                                        <option value="Other">Other (Please specify)</option>
+                                    </select>
+                                    <span asp-validation-for="OrganizationType" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" id="otherOrgTypeBox" style="display:none;">
+                                <div class="form-group">
+                                    <label asp-for="OtherOrganizationType" class="form-label">
+                                        <i class="fas fa-edit"></i> Please specify your organization type *
+                                    </label>
+                                    <textarea asp-for="OtherOrganizationType" class="form-control" rows="3"
+                                              placeholder="E.g., Community center, Religious organization, etc."
+                                              id="otherOrgTypeTextarea"></textarea>
+                                    <span asp-validation-for="OtherOrganizationType" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="OrganizationDescription" class="form-label">Organization Description *</label>
+                                    <textarea asp-for="OrganizationDescription" class="form-control" rows="3" placeholder="Describe your organization's mission, vision, and services"></textarea>
+                                    <span asp-validation-for="OrganizationDescription" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label">Official Email *</label>
+                                    <input asp-for="Email" class="form-control" placeholder="organization@email.com" type="email" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PhoneNumber" class="form-label">Phone Number *</label>
+                                    <input asp-for="PhoneNumber" class="form-control" placeholder="+880 1234 567890" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Address" class="form-label">Location / Office Address *</label>
+                                    <div class="input-group">
+                                        <input asp-for="Address" class="form-control" id="locationInput" placeholder="Enter office address or location" />
+                                        <button type="button" class="btn btn-outline-primary" id="btnDetectLocation" onclick="detectUserLocation()">
+                                            <i class="fas fa-crosshairs me-1"></i> Detect Location
+                                        </button>
+                                    </div>
+                                    <input type="hidden" asp-for="Latitude" id="latitudeInput" />
+                                    <input type="hidden" asp-for="Longitude" id="longitudeInput" />
+                                    <div id="locationStatus" class="mt-1 small"></div>
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                    <span asp-validation-for="Latitude" class="text-danger"></span>
+                                    <span asp-validation-for="Longitude" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Website" class="form-label">Website</label>
+                                    <input asp-for="Website" class="form-control" placeholder="https://www.organization.com" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FacebookProfileLink" class="form-label">
+                                        Your Profile Facebook Link
+                                    </label>
+                                    <input asp-for="FacebookProfileLink" class="form-control"
+                                           placeholder="https://facebook.com/yourprofile" type="url" />
+                                    <span class="text-muted small">Your organization's Facebook profile link</span>
+                                    <span asp-validation-for="FacebookProfileLink" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-user-tie"></i> Contact Person Information</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ContactPersonName" class="form-label">Contact Person Name *</label>
+                                    <input asp-for="ContactPersonName" class="form-control" placeholder="Full name of contact person" />
+                                    <span asp-validation-for="ContactPersonName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ContactPersonDesignation" class="form-label">Designation *</label>
+                                    <input asp-for="ContactPersonDesignation" class="form-control" placeholder="Executive Director, HR Manager, etc." />
+                                    <span asp-validation-for="ContactPersonDesignation" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ContactPersonPhone" class="form-label">Contact Person Phone *</label>
+                                    <input asp-for="ContactPersonPhone" class="form-control" placeholder="+880 1234 567890" />
+                                    <span asp-validation-for="ContactPersonPhone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ContactPersonEmail" class="form-label">Contact Person Email *</label>
+                                    <input asp-for="ContactPersonEmail" class="form-control" placeholder="contact@email.com" type="email" />
+                                    <span asp-validation-for="ContactPersonEmail" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-lock"></i> Account Credentials</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Password" class="form-label">Password *</label>
+                                    <div class="password-wrapper">
+                                        <input asp-for="Password" class="form-control" placeholder="Min 8 characters" type="password" id="passwordInput" />
+                                        <button type="button" class="password-toggle" onclick="togglePassword('passwordInput', 'passwordToggleIcon')">
+                                            <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                                        </button>
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password *</label>
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" type="password" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h5 class="form-section-title"><i class="fas fa-image"></i> Organization Logo</h5>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label">Upload Logo</label>
+                                    <input type="file" class="form-control" accept="image/*" name="LogoFile" />
+                                    <span class="text-muted small">Recommended: Square image, 200x200 pixels, Max 2MB</span>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="termsCheck" required />
+                                    <label class="form-check-label" for="termsCheck">
+                                        I agree to the <a href="#" target="_blank">Terms and Conditions</a> and
+                                        <a href="#" target="_blank">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-user-plus"></i> Register Organization
+                        </button>
+
+                        <div class="auth-links">
+                            <p>
+                                Already have an account? <a href="/Account/Login">Login here</a>
+                            </p>
+                            <p>
+                                <a href="/Account/DisabilityRegister">Register as Disability</a> |
+                                <a href="/Account/VolunteerRegister">Register as Volunteer</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        var orgSelect = document.getElementById('orgTypeSelect');
+        var otherOrgBox = document.getElementById('otherOrgTypeBox');
+        var otherOrgTextarea = document.getElementById('otherOrgTypeTextarea');
+
+        function toggleOrgOther() {
+            if (!orgSelect || !otherOrgBox || !otherOrgTextarea) return;
+
+            if (orgSelect.value === 'Other') {
+                otherOrgBox.style.display = 'block';
+                otherOrgTextarea.setAttribute('required', 'required');
+            } else {
+                otherOrgBox.style.display = 'none';
+                otherOrgTextarea.removeAttribute('required');
+                otherOrgTextarea.value = '';
+            }
+        }
+
+        if (orgSelect) {
+            orgSelect.addEventListener('change', toggleOrgOther);
+        }
+        document.addEventListener('DOMContentLoaded', toggleOrgOther);
+
+        function togglePassword(inputId, toggleId) {
+            var passwordInput = document.getElementById(inputId);
+            var toggleIcon = document.getElementById(toggleId);
+            if (!passwordInput || !toggleIcon) return;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        function detectUserLocation() {
+            var btn = document.getElementById('btnDetectLocation');
+            var status = document.getElementById('locationStatus');
+            var latInput = document.getElementById('latitudeInput');
+            var lngInput = document.getElementById('longitudeInput');
+            var locInput = document.getElementById('locationInput');
+
+            if (!navigator.geolocation) {
+                status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i> Geolocation is not supported by your browser. Please enter your location manually.</span>';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Detecting...';
+            status.innerHTML = '<span class="text-muted"><i class="fas fa-circle-notch fa-spin me-1"></i> Requesting location permission...</span>';
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var lat = position.coords.latitude.toFixed(6);
+                    var lng = position.coords.longitude.toFixed(6);
+                    latInput.value = lat;
+                    lngInput.value = lng;
+                    if (!locInput.value || locInput.value.trim() === '') {
+                        locInput.value = lat + ', ' + lng;
+                    }
+                    status.innerHTML = '<span class="text-primary fw-semibold"><i class="fas fa-check-circle me-1"></i> Location detected! (' + lat + ', ' + lng + ')</span>';
+                },
+                function (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var msg = 'Unable to detect location. Please enter your location manually.';
+                    if (error.code === error.PERMISSION_DENIED) {
+                        msg = 'Location permission was denied. You can enter your location manually, or enable browser location permission and click Detect Location to retry.';
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                        msg = 'Location information is currently unavailable. Please enter your location manually or retry.';
+                    } else if (error.code === error.TIMEOUT) {
+                        msg = 'Location request timed out. Please retry or enter your location manually.';
+                    }
+                    status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i> ' + msg + '</span>';
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+    </script>
+}
