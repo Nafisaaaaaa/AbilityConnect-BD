@@ -1,0 +1,148 @@
+@model List<SDP1.Models.Job>
+@{
+    ViewData["Title"] = "Recommended Jobs";
+    var userName = ViewBag.UserName ?? "User";
+    var disabilityType = ViewBag.DisabilityType ?? "Not Specified";
+    var profilePicture = ViewBag.ProfilePicture ?? "/images/default-avatar.png";
+    var appliedJobIds = ViewBag.AppliedJobIds as HashSet<int> ?? new HashSet<int>();
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar disability-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile disability-profile">
+                    <img src="@profilePicture" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-primary">Disability</span>
+                    <span class="badge bg-info mt-1">@disabilityType</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Disability/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="active"><a href="/Disability/RecommendedJobs"><i class="fas fa-briefcase"></i> Recommended Jobs</a></li>
+                    <li><a href="/Jobs/MyApplications"><i class="fas fa-file-alt"></i> My Applications</a></li>
+                    <li><a href="/Jobs/SavedJobs"><i class="fas fa-bookmark"></i> Saved Jobs</a></li>
+                    <li><a href="/Disability/NearbyNGOs"><i class="fas fa-hand-holding-heart"></i> Nearby NGOs & Volunteers</a></li>
+                    <li><a href="/Disability/VolunteerSupport"><i class="fas fa-hands-helping"></i> Volunteer Support</a></li>
+                    <li><a href="/Disability/DoctorAppointments"><i class="fas fa-user-md"></i> Doctor Appointments</a></li>
+                    <li><a href="/Disability/Scholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Disability/AISuggestions"><i class="fas fa-robot"></i> AI Suggestions</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="welcome-card disability-welcome mb-4">
+                <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
+                    <div>
+                        <h3 class="mb-1">Recommended Jobs for You 💼</h3>
+                        <p class="mb-0">Matched based on your accessibility preferences and profile.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="/Disability/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                        <a href="/Jobs" class="btn btn-primary fw-semibold rounded-pill px-3" style="background-color: #2563EB; border-color: #2563EB;">
+                            <i class="fas fa-search me-1"></i> Browse All Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="card shadow-sm border-0 text-center py-5 bg-white">
+                    <div class="card-body">
+                        <div class="mb-3 text-muted" style="font-size: 3.5rem;">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark">No Jobs Available Currently</h4>
+                        <p class="text-muted max-w-md mx-auto">
+                            There are currently no active job postings available. Please check back later as employers post new positions daily.
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row g-3">
+                    @foreach (var job in Model)
+                    {
+                        var hasApplied = appliedJobIds.Contains(job.Id);
+
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card h-100 shadow-sm border-0 bg-white">
+                                <div class="card-body d-flex flex-column p-3">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge bg-light text-dark border">@job.WorkplaceType</span>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary">@job.JobType</span>
+                                    </div>
+
+                                    <h5 class="card-title fw-bold mb-1">
+                                        <a href="/Jobs/Details/@job.Id" class="text-dark text-decoration-none hover-primary">@job.Title</a>
+                                    </h5>
+                                    <div class="text-primary small fw-semibold mb-2">
+                                        <i class="fas fa-building me-1"></i>@(job.Organization?.OrganizationName ?? "Verified Employer")
+                                    </div>
+
+                                    <div class="text-muted small mb-2">
+                                        <i class="fas fa-map-marker-alt text-danger me-1"></i>@job.Location
+                                    </div>
+
+                                    @if (!string.IsNullOrEmpty(job.Salary))
+                                    {
+                                        <div class="text-success small fw-bold mb-2">
+                                            <i class="fas fa-money-bill-wave me-1"></i>@job.Salary
+                                        </div>
+                                    }
+
+                                    <div class="d-flex flex-wrap gap-1 mb-3">
+                                        @if (job.FlexibleWorkingHours)
+                                        {
+                                            <span class="badge bg-light text-warning border" style="font-size: 0.72rem;">
+                                                <i class="fas fa-clock me-1"></i>Flexible
+                                            </span>
+                                        }
+                                        @if (job.AssistiveTechnologySupport)
+                                        {
+                                            <span class="badge bg-light text-info border" style="font-size: 0.72rem;">
+                                                <i class="fas fa-universal-access me-1"></i>Tech Support
+                                            </span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(job.AccessibilityFeatures))
+                                        {
+                                            <span class="badge bg-light text-primary border" style="font-size: 0.72rem;">
+                                                <i class="fas fa-wheelchair me-1"></i>Accessible
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                                        <div class="text-muted small">
+                                            <i class="far fa-calendar-alt me-1 text-danger"></i>@job.ApplicationDeadline.ToString("MMM dd")
+                                        </div>
+
+                                        @if (hasApplied)
+                                        {
+                                            <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                                                <i class="fas fa-check-circle me-1"></i>Applied
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <a href="/Jobs/Details/@job.Id" class="btn btn-sm btn-primary">
+                                                View & Apply
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

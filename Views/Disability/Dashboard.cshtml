@@ -1,0 +1,94 @@
+@{
+    ViewData["Title"] = "Disability Dashboard";
+    var userName = ViewBag.UserName ?? "User";
+    var disabilityType = ViewBag.DisabilityType ?? "Not Specified";
+    var profilePicture = ViewBag.ProfilePicture ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar disability-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile disability-profile">
+                    <img src="@profilePicture" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-primary">Disability</span>
+                    <span class="badge bg-info mt-1">@disabilityType</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li class="active"><a href="/Disability/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Disability/RecommendedJobs"><i class="fas fa-briefcase"></i> Recommended Jobs</a></li>
+                    <li><a href="/Services/Trainings"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li><a href="/Services/Scholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Services/Events"><i class="fas fa-calendar-alt"></i> Awareness Events</a></li>
+                    <li><a href="/LearningHub"><i class="fas fa-book-reader"></i> Learning Hub</a></li>
+                    <li><a href="/Services/SavedOpportunities"><i class="fas fa-bookmark"></i> Saved Items</a></li>
+                    <li><a href="/Services/MyRegistrations"><i class="fas fa-clipboard-check"></i> My Registrations</a></li>
+                    <li><a href="/Disability/NearbyNGOs"><i class="fas fa-hand-holding-heart"></i> Nearby NGOs & Volunteers</a></li>
+                    <li><a href="/Disability/VolunteerSupport"><i class="fas fa-hands-helping"></i> Volunteer Support</a></li>
+                    <li><a href="/Disability/DoctorAppointments"><i class="fas fa-user-md"></i> Doctor Appointments</a></li>
+                    <li><a href="/Community"><i class="fas fa-users"></i> Community Forum</a></li>
+                    <li><a href="/AIRecommendation"><i class="fas fa-robot"></i> AI Recommendation</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Profile/ChangePassword"><i class="fas fa-key"></i> Change Password</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="welcome-card disability-welcome">
+                <div>
+                    <h3>Welcome back, @userName! 👋</h3>
+                    <p class="mb-0">We've personalized your experience based on your disability type and interests.</p>
+                </div>
+                <div class="welcome-date">
+                    <i class="fas fa-calendar-alt"></i> @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .disability-sidebar .sidebar-nav li.active a {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .disability-welcome {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            color: #ffffff;
+        }
+
+        .disability-welcome h3 {
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .disability-welcome p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .disability-welcome .welcome-date {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: #ffffff;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+}

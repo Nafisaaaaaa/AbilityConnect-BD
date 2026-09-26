@@ -1,0 +1,402 @@
+@model SDP1.Models.NearbyNGOsAndVolunteersViewModel
+@{
+    ViewData["Title"] = "Nearby NGOs & Volunteers";
+    var userName = ViewBag.UserName ?? "User";
+    var profilePicture = ViewBag.ProfilePicture ?? "/images/default-avatar.png";
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar disability-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile disability-profile">
+                    <img src="@profilePicture" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-primary">Disability</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Disability/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Disability/RecommendedJobs"><i class="fas fa-briefcase"></i> Recommended Jobs</a></li>
+                    <li><a href="/Services/Trainings"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li><a href="/Services/Scholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Services/Events"><i class="fas fa-calendar-alt"></i> Awareness Events</a></li>
+                    <li><a href="/LearningHub"><i class="fas fa-book-reader"></i> Learning Hub</a></li>
+                    <li><a href="/Services/SavedOpportunities"><i class="fas fa-bookmark"></i> Saved Items</a></li>
+                    <li><a href="/Services/MyRegistrations"><i class="fas fa-clipboard-check"></i> My Registrations</a></li>
+                    <li class="active"><a href="/Disability/NearbyNGOs"><i class="fas fa-hand-holding-heart"></i> Nearby NGOs & Volunteers</a></li>
+                    <li><a href="/Disability/VolunteerSupport"><i class="fas fa-hands-helping"></i> Volunteer Support</a></li>
+                    <li><a href="/Disability/DoctorAppointments"><i class="fas fa-user-md"></i> Doctor Appointments</a></li>
+                    <li><a href="/Community"><i class="fas fa-users"></i> Community Forum</a></li>
+                    <li><a href="/AIRecommendation"><i class="fas fa-robot"></i> AI Recommendation</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="card border-0 shadow-sm rounded-4 mb-4" style="background: linear-gradient(135deg, #EAF4FF 0%, #FFFFFF 100%); border-left: 5px solid #2563EB !important;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2" style="background-color: #EAF4FF; color: #2563EB; font-weight: 600; font-size: 0.85rem;">
+                            <i class="fas fa-map-marked-alt"></i> Location Discovery
+                        </div>
+                        <h2 class="h3 fw-bold mb-1 text-dark">Nearby NGOs & Volunteers</h2>
+                        <p class="text-muted mb-0">Discover registered non-governmental organizations and active community volunteers in your area.</p>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                        <a href="/Disability/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                        <span class="badge bg-primary px-3 py-2 fs-6 rounded-pill"><i class="fas fa-building me-1"></i> @Model.Organizations.Count NGOs</span>
+                        <span class="badge px-3 py-2 fs-6 rounded-pill" style="background-color: #2563EB;"><i class="fas fa-hands-helping me-1"></i> @Model.Volunteers.Count Volunteers</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 p-3">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                            <input type="text" id="mapSearchInput" class="form-control bg-light border-start-0" placeholder="Search area or city (e.g. Dhaka, Chittagong, Sylhet)..." />
+                            <button class="btn btn-primary px-4 fw-semibold" type="button" id="btnSearchLocation" style="background-color: #2563EB;">Search</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-md-end align-items-center gap-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="showNgosCheck" checked>
+                            <label class="form-check-label fw-semibold text-dark small" for="showNgosCheck">
+                                <span class="badge me-1" style="background-color: #2563EB;">●</span> NGOs (@Model.Organizations.Count)
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="showVolunteersCheck" checked>
+                            <label class="form-check-label fw-semibold text-dark small" for="showVolunteersCheck">
+                                <span class="badge me-1" style="background-color: #60A5FA;">●</span> Volunteers (@Model.Volunteers.Count)
+                            </label>
+                        </div>
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" type="button" id="btnResetMap">
+                            <i class="fas fa-redo-alt me-1"></i> Reset View
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+                <div class="card-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-map text-primary"></i>
+                        <span class="fw-bold text-dark">Interactive OpenStreetMap</span>
+                    </div>
+                    <span class="small text-muted">Click any marker to view contact and open profile details.</span>
+                </div>
+                <div id="osmMap" style="height: 520px; width: 100%; z-index: 1;"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 bg-white h-100 p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <h5 class="fw-bold text-dark mb-0"><i class="fas fa-building text-primary me-2"></i>Registered NGOs</h5>
+                            <span class="badge bg-primary-subtle text-primary border border-primary">@Model.Organizations.Count Available</span>
+                        </div>
+                        <div class="overflow-auto" style="max-height: 380px;">
+                            @if (!Model.Organizations.Any())
+                            {
+                                <p class="text-muted small">No organizations found.</p>
+                            }
+                            else
+                            {
+                                @foreach (var org in Model.Organizations)
+                                {
+                                    <div class="p-3 mb-2 rounded-3 border bg-light bg-opacity-50 hover-card d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-dark">@org.Name</h6>
+                                            <div class="small text-muted mb-1">
+                                                <i class="fas fa-map-marker-alt text-danger me-1"></i>@(string.IsNullOrEmpty(org.Address) ? org.City : org.Address + ", " + org.City)
+                                            </div>
+                                            <div class="small text-muted">
+                                                <i class="fas fa-phone text-success me-1"></i>@(string.IsNullOrEmpty(org.Phone) ? "Not specified" : org.Phone)
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="openOrgModal(@org.Id)">
+                                            View Profile
+                                        </button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 bg-white h-100 p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <h5 class="fw-bold text-dark mb-0"><i class="fas fa-hands-helping text-primary me-2"></i>Active Volunteers</h5>
+                            <span class="badge bg-primary-subtle text-primary border border-primary">@Model.Volunteers.Count Active</span>
+                        </div>
+                        <div class="overflow-auto" style="max-height: 380px;">
+                            @if (!Model.Volunteers.Any())
+                            {
+                                <p class="text-muted small">No volunteers found in this area.</p>
+                            }
+                            else
+                            {
+                                @foreach (var vol in Model.Volunteers)
+                                {
+                                    <div class="p-3 mb-2 rounded-3 border bg-light bg-opacity-50 hover-card d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-dark">@vol.Name</h6>
+                                            <div class="small text-muted mb-1">
+                                                <i class="fas fa-map-marker-alt text-danger me-1"></i>@vol.Area
+                                            </div>
+                                            <div class="small text-muted">
+                                                <i class="fas fa-hands me-1 text-primary"></i>@(string.IsNullOrEmpty(vol.SupportTypes) ? "General Support" : vol.SupportTypes)
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="openVolunteerModal(@vol.Id)">
+                                            View Profile
+                                        </button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ngoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 pb-0" style="background-color: #EAF4FF;">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background-color: #2563EB; color: #fff;">
+                        <i class="fas fa-building fa-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark mb-0" id="ngoModalName">Organization Name</h5>
+                        <span class="badge bg-primary" id="ngoModalType">NGO</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="text-secondary small mb-3" id="ngoModalDesc">Description</p>
+                <div class="bg-light p-3 rounded-3 small mb-3">
+                    <div class="mb-2"><strong><i class="fas fa-map-marker-alt text-danger me-2"></i>Address:</strong> <span id="ngoModalAddress"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-user text-primary me-2"></i>Contact Person:</strong> <span id="ngoModalContactPerson"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-phone text-success me-2"></i>Phone:</strong> <span id="ngoModalPhone"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-envelope text-info me-2"></i>Email:</strong> <span id="ngoModalEmail"></span></div>
+                    <div id="ngoModalWebContainer"><strong><i class="fas fa-globe text-secondary me-2"></i>Website:</strong> <a href="#" id="ngoModalWebsite" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="volunteerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0 pb-0" style="background-color: #DCFCE7;">
+                <div class="d-flex align-items-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background-color: #16A34A; color: #fff;">
+                        <i class="fas fa-hands-helping fa-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark mb-0" id="volModalName">Volunteer Name</h5>
+                        <span class="badge bg-success">Active Volunteer</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3" id="volModalBioContainer">
+                    <h6 class="fw-bold small text-dark mb-1">About</h6>
+                    <p class="text-secondary small mb-0" id="volModalBio"></p>
+                </div>
+                <div class="bg-light p-3 rounded-3 small mb-3">
+                    <div class="mb-2"><strong><i class="fas fa-map-marker-alt text-danger me-2"></i>Area:</strong> <span id="volModalArea"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-hand-holding-heart text-primary me-2"></i>Support Types:</strong> <span id="volModalSupport"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-tools text-secondary me-2"></i>Skills:</strong> <span id="volModalSkills"></span></div>
+                    <div class="mb-2"><strong><i class="fas fa-envelope text-info me-2"></i>Email:</strong> <span id="volModalEmail"></span></div>
+                    <div><strong><i class="fas fa-phone text-success me-2"></i>Phone:</strong> <span id="volModalPhone"></span></div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+    const orgsData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Organizations));
+    const volData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Volunteers));
+
+    const defaultLat = @Model.DefaultLat;
+    const defaultLng = @Model.DefaultLng;
+
+    const map = L.map('osmMap').setView([defaultLat, defaultLng], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    function createCustomMarkerIcon(bgColor, iconClass) {
+        return L.divIcon({
+            className: 'custom-map-pin',
+            html: `<div style="background-color: ${bgColor}; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid #fff;"><i class="${iconClass}"></i></div>`,
+            iconSize: [34, 34],
+            iconAnchor: [17, 34],
+            popupAnchor: [0, -32]
+        });
+    }
+
+    const ngoIcon = createCustomMarkerIcon('#2563EB', 'fas fa-building');
+    const volIcon = createCustomMarkerIcon('#3B82F6', 'fas fa-hands-helping');
+
+    const ngoMarkersGroup = L.layerGroup().addTo(map);
+    const volMarkersGroup = L.layerGroup().addTo(map);
+
+    orgsData.forEach(org => {
+        if (org.Latitude && org.Longitude) {
+            const popupHtml = `
+                <div style="min-width: 200px;">
+                    <div style="font-weight: 700; color: #1E293B; font-size: 0.95rem; margin-bottom: 4px;">${org.Name}</div>
+                    <div style="font-size: 0.8rem; color: #64748B; margin-bottom: 3px;"><i class="fas fa-map-marker-alt" style="color: #EF4444; margin-right: 4px;"></i>${org.Address || org.City}</div>
+                    <div style="font-size: 0.8rem; color: #64748B; margin-bottom: 8px;"><i class="fas fa-phone" style="color: #10B981; margin-right: 4px;"></i>${org.Phone || 'Contact NGO'}</div>
+                    <button class="btn btn-sm btn-primary w-100 rounded-pill" onclick="openOrgModal(${org.Id})" style="font-size: 0.75rem; background-color: #2563EB; border-color: #2563EB;">View Profile</button>
+                </div>
+            `;
+            const marker = L.marker([org.Latitude, org.Longitude], { icon: ngoIcon }).bindPopup(popupHtml);
+            ngoMarkersGroup.addLayer(marker);
+        }
+    });
+
+    volData.forEach(vol => {
+        if (vol.Latitude && vol.Longitude) {
+            const popupHtml = `
+                <div style="min-width: 200px;">
+                    <div style="font-weight: 700; color: #1E293B; font-size: 0.95rem; margin-bottom: 4px;">${vol.Name}</div>
+                    <div style="font-size: 0.8rem; color: #64748B; margin-bottom: 3px;"><i class="fas fa-map-marker-alt" style="color: #EF4444; margin-right: 4px;"></i>${vol.Area}</div>
+                    <div style="font-size: 0.8rem; color: #64748B; margin-bottom: 8px;"><i class="fas fa-hands" style="color: #2563EB; margin-right: 4px;"></i>${vol.SupportTypes || 'General Support'}</div>
+                    <button class="btn btn-sm btn-primary w-100 rounded-pill" onclick="openVolunteerModal(${vol.Id})" style="font-size: 0.75rem; background-color: #2563EB; border-color: #2563EB;">View Profile</button>
+                </div>
+            `;
+            const marker = L.marker([vol.Latitude, vol.Longitude], { icon: volIcon }).bindPopup(popupHtml);
+            volMarkersGroup.addLayer(marker);
+        }
+    });
+
+    document.getElementById('showNgosCheck').addEventListener('change', function () {
+        if (this.checked) map.addLayer(ngoMarkersGroup);
+        else map.removeLayer(ngoMarkersGroup);
+    });
+
+    document.getElementById('showVolunteersCheck').addEventListener('change', function () {
+        if (this.checked) map.addLayer(volMarkersGroup);
+        else map.removeLayer(volMarkersGroup);
+    });
+
+    document.getElementById('btnSearchLocation').addEventListener('click', searchLocation);
+    document.getElementById('mapSearchInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            searchLocation();
+        }
+    });
+
+    function searchLocation() {
+        const query = document.getElementById('mapSearchInput').value.trim();
+        if (!query) return;
+
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', Bangladesh')}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lon = parseFloat(data[0].lon);
+                    map.setView([lat, lon], 14);
+                } else {
+                    alert('Location not found on map. Please try a different name.');
+                }
+            })
+            .catch(() => {
+                alert('Could not connect to map search service.');
+            });
+    }
+
+    document.getElementById('btnResetMap').addEventListener('click', function () {
+        map.setView([defaultLat, defaultLng], 12);
+        document.getElementById('mapSearchInput').value = '';
+    });
+
+    function openOrgModal(orgId) {
+        const org = orgsData.find(o => o.Id === orgId);
+        if (!org) return;
+
+        document.getElementById('ngoModalName').textContent = org.Name;
+        document.getElementById('ngoModalType').textContent = org.OrganizationType || 'NGO';
+        document.getElementById('ngoModalDesc').textContent = org.Description || 'No description provided.';
+        document.getElementById('ngoModalAddress').textContent = org.Address ? `${org.Address}, ${org.City}, ${org.Division}` : `${org.City}, ${org.Division}`;
+        document.getElementById('ngoModalContactPerson').textContent = org.ContactPerson || 'Administration';
+        document.getElementById('ngoModalPhone').textContent = org.Phone || 'Not available';
+        document.getElementById('ngoModalEmail').textContent = org.Email || 'Not available';
+
+        const webContainer = document.getElementById('ngoModalWebContainer');
+        const webLink = document.getElementById('ngoModalWebsite');
+        if (org.Website) {
+            webLink.href = org.Website.startsWith('http') ? org.Website : `https://${org.Website}`;
+            webLink.textContent = org.Website;
+            webContainer.style.display = 'block';
+        } else {
+            webContainer.style.display = 'none';
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('ngoModal'));
+        modal.show();
+    }
+
+    function openVolunteerModal(volId) {
+        const vol = volData.find(v => v.Id === volId);
+        if (!vol) return;
+
+        document.getElementById('volModalName').textContent = vol.Name;
+        document.getElementById('volModalBio').textContent = vol.Bio || 'Dedicated community volunteer ready to support persons with disabilities.';
+        document.getElementById('volModalArea').textContent = vol.Area;
+        document.getElementById('volModalSupport').textContent = vol.SupportTypes || 'Hospital Visits, Daily Support, Travel Assistance';
+        document.getElementById('volModalSkills').textContent = vol.Skills || 'Not specified';
+        document.getElementById('volModalEmail').textContent = vol.Email || 'Registered Volunteer';
+        document.getElementById('volModalPhone').textContent = vol.Phone || 'Contact available through Volunteer Support workflow';
+
+        const modal = new bootstrap.Modal(document.getElementById('volunteerModal'));
+        modal.show();
+    }
+</script>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+    }
+    .disability-sidebar .sidebar-nav li.active a {
+        background: #EAF4FF;
+        color: #2563EB;
+        border-left-color: #2563EB;
+    }
+</style>

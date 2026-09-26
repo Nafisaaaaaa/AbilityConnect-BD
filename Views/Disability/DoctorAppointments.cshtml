@@ -1,0 +1,173 @@
+@model List<SDP1.Models.HealthcareAppointment>
+@{
+    ViewData["Title"] = "Doctor Appointments";
+    var userName = ViewBag.UserName ?? "User";
+    var disabilityType = ViewBag.DisabilityType ?? "Not Specified";
+    var profilePicture = ViewBag.ProfilePicture ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar disability-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile disability-profile">
+                    <img src="@profilePicture" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-primary">Disability</span>
+                    <span class="badge bg-info mt-1">@disabilityType</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Disability/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Disability/RecommendedJobs"><i class="fas fa-briefcase"></i> Recommended Jobs</a></li>
+                    <li><a href="/Jobs/MyApplications"><i class="fas fa-file-alt"></i> My Applications</a></li>
+                    <li><a href="/Jobs/SavedJobs"><i class="fas fa-bookmark"></i> Saved Jobs</a></li>
+                    <li><a href="/Disability/NearbyNGOs"><i class="fas fa-hand-holding-heart"></i> Nearby NGOs & Volunteers</a></li>
+                    <li><a href="/Disability/VolunteerSupport"><i class="fas fa-hands-helping"></i> Volunteer Support</a></li>
+                    <li class="active"><a href="/Disability/DoctorAppointments"><i class="fas fa-user-md"></i> Doctor Appointments</a></li>
+                    <li><a href="/Disability/Scholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Disability/AISuggestions"><i class="fas fa-robot"></i> AI Suggestions</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="welcome-card disability-welcome mb-4">
+                <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
+                    <div>
+                        <h3 class="mb-1">Doctor & Therapy Consultations 🩺</h3>
+                        <p class="mb-0">Keep track of your medical visits, rehabilitation therapy, and doctor instructions.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="/Disability/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                        </a>
+                        <a href="/Healthcare" class="btn btn-primary fw-semibold rounded-pill px-3" style="background-color: #2563EB; border-color: #2563EB;">
+                            <i class="fas fa-search me-1"></i> Find Healthcare Providers
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="card shadow-sm border-0 text-center py-5 bg-white" style="border-radius: 12px;">
+                    <div class="card-body">
+                        <div class="mb-3 text-muted" style="font-size: 3.5rem;">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h5 class="fw-bold text-secondary">No Appointments Scheduled</h5>
+                        <p class="text-muted">You haven't booked any doctor or rehabilitation therapy appointments yet.</p>
+                        <a href="/Healthcare" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Discover Healthcare & Therapy Providers
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                    <div class="card-body p-4">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Doctor / Provider</th>
+                                        <th>Service Type</th>
+                                        <th>Date & Time</th>
+                                        <th>Reason & Accommodations</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appt in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="fw-bold text-dark">@(appt.HealthcareProvider?.Name ?? "Unknown")</div>
+                                                <small class="text-muted"><i class="fas fa-hospital me-1"></i> @(appt.HealthcareProvider?.OrganizationOrClinic ?? "")</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light text-primary border">@(appt.HealthcareProvider?.ProviderType ?? "")</span>
+                                                <small class="text-muted d-block">@(appt.HealthcareProvider?.Specialization ?? "")</small>
+                                            </td>
+                                            <td>
+                                                <span class="fw-semibold text-dark d-block">@appt.AppointmentDate.ToString("MMM dd, yyyy")</span>
+                                                <small class="text-muted"><i class="fas fa-clock me-1"></i> @appt.TimeSlot</small>
+                                            </td>
+                                            <td>
+                                                <div class="small text-truncate" style="max-width: 220px;" title="@appt.ReasonForVisit">
+                                                    <strong>Reason:</strong> @appt.ReasonForVisit
+                                                </div>
+                                                @if (!string.IsNullOrEmpty(appt.PatientNotes))
+                                                {
+                                                    <div class="small text-primary text-truncate" style="max-width: 220px;" title="@appt.PatientNotes">
+                                                        <i class="fas fa-universal-access me-1"></i> @appt.PatientNotes
+                                                    </div>
+                                                }
+                                                @if (!string.IsNullOrEmpty(appt.DoctorNotes))
+                                                {
+                                                    <div class="small text-info text-truncate" style="max-width: 220px;" title="@appt.DoctorNotes">
+                                                        <i class="fas fa-comment-medical me-1"></i> Doctor: @appt.DoctorNotes
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td>
+                                                @switch (appt.Status)
+                                                {
+                                                    case "Pending":
+                                                        <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i> Pending</span>
+                                                        break;
+                                                    case "Confirmed":
+                                                        <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Confirmed</span>
+                                                        break;
+                                                    case "Completed":
+                                                        <span class="badge bg-primary"><i class="fas fa-award me-1"></i> Completed</span>
+                                                        break;
+                                                    case "Cancelled":
+                                                        <span class="badge bg-secondary"><i class="fas fa-times me-1"></i> Cancelled</span>
+                                                        break;
+                                                    case "Rejected":
+                                                        <span class="badge bg-danger"><i class="fas fa-ban me-1"></i> Rejected</span>
+                                                        break;
+                                                    default:
+                                                        <span class="badge bg-light text-dark border">@appt.Status</span>
+                                                        break;
+                                                }
+                                            </td>
+                                            <td class="text-end">
+                                                <div class="d-flex justify-content-end gap-1">
+                                                    <a href="/Healthcare/Details/@appt.HealthcareProviderId" class="btn btn-outline-primary btn-sm" title="View Details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    @if (appt.Status == "Pending" || appt.Status == "Confirmed")
+                                                    {
+                                                        <form asp-controller="Healthcare" asp-action="CancelAppointment" method="post" class="d-inline" onsubmit="return confirm('Cancel this appointment?');">
+                                                            @Html.AntiForgeryToken()
+                                                            <input type="hidden" name="id" value="@appt.Id" />
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Cancel Appointment">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    @if (appt.Status == "Completed")
+                                                    {
+                                                        <a href="/Healthcare/Details/@appt.HealthcareProviderId" class="btn btn-outline-warning btn-sm text-dark" title="Review Consultation">
+                                                            <i class="fas fa-star text-warning"></i> Review
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
