@@ -1,0 +1,147 @@
+@model SDP1.Models.AccessibilityPlaceDetailsViewModel
+@{
+    ViewData["Title"] = Model.Place.PlaceName + " - Accessibility Details";
+}
+
+<div class="container py-4">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/Accessibility">Accessibility Map</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Place.PlaceName</li>
+            </ol>
+        </nav>
+        <a href="/Accessibility" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to Directory
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    
+    <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden">
+        <div class="card-body p-4 p-md-5">
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1">
+                            <i class="fas fa-building me-1"></i>@Model.Place.PlaceType
+                        </span>
+                        <span class="badge @(Model.Place.AccessibilityScore >= 80 ? "bg-success" : Model.Place.AccessibilityScore >= 60 ? "bg-info text-dark" : "bg-warning text-dark") px-3 py-1">
+                            Accessibility Score: @Model.Place.AccessibilityScore/100
+                        </span>
+                    </div>
+
+                    <h1 class="h2 fw-bold text-dark mb-2">@Model.Place.PlaceName</h1>
+                    
+                    <p class="text-muted mb-3 fs-6">
+                        <i class="fas fa-map-marker-alt text-danger me-2"></i>@Model.Place.Address, @Model.Place.City, @Model.Place.District
+                    </p>
+
+                    <p class="text-secondary mb-4 leading-relaxed">
+                        @Model.Place.Description
+                    </p>
+
+                    
+                    <div class="row g-3 pt-2">
+                        <div class="col-sm-6 col-md-3">
+                            <div class="p-3 rounded-3 border @(Model.Place.WheelchairRamp ? "bg-success-subtle border-success" : "bg-light") text-center">
+                                <div class="fs-4 @(Model.Place.WheelchairRamp ? "text-success" : "text-muted") mb-1">
+                                    <i class="fas fa-wheelchair"></i>
+                                </div>
+                                <div class="fw-bold small text-dark">Wheelchair Ramp</div>
+                                <span class="badge @(Model.Place.WheelchairRamp ? "bg-success" : "bg-secondary") mt-1">
+                                    @(Model.Place.WheelchairRamp ? "Available" : "Not Available")
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-3">
+                            <div class="p-3 rounded-3 border @(Model.Place.Elevator ? "bg-success-subtle border-success" : "bg-light") text-center">
+                                <div class="fs-4 @(Model.Place.Elevator ? "text-success" : "text-muted") mb-1">
+                                    <i class="fas fa-sort-numeric-up"></i>
+                                </div>
+                                <div class="fw-bold small text-dark">Elevator</div>
+                                <span class="badge @(Model.Place.Elevator ? "bg-success" : "bg-secondary") mt-1">
+                                    @(Model.Place.Elevator ? "Available" : "Not Available")
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-3">
+                            <div class="p-3 rounded-3 border @(Model.Place.AccessibleToilet ? "bg-success-subtle border-success" : "bg-light") text-center">
+                                <div class="fs-4 @(Model.Place.AccessibleToilet ? "text-success" : "text-muted") mb-1">
+                                    <i class="fas fa-restroom"></i>
+                                </div>
+                                <div class="fw-bold small text-dark">Accessible Toilet</div>
+                                <span class="badge @(Model.Place.AccessibleToilet ? "bg-success" : "bg-secondary") mt-1">
+                                    @(Model.Place.AccessibleToilet ? "Available" : "Not Available")
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-3">
+                            <div class="p-3 rounded-3 border @(Model.Place.AccessibleParking ? "bg-success-subtle border-success" : "bg-light") text-center">
+                                <div class="fs-4 @(Model.Place.AccessibleParking ? "text-success" : "text-muted") mb-1">
+                                    <i class="fas fa-parking"></i>
+                                </div>
+                                <div class="fw-bold small text-dark">Accessible Parking</div>
+                                <span class="badge @(Model.Place.AccessibleParking ? "bg-success" : "bg-secondary") mt-1">
+                                    @(Model.Place.AccessibleParking ? "Available" : "Not Available")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               
+                <div class="col-lg-4">
+                    <div class="card border border-2 rounded-4 shadow-sm overflow-hidden mb-3">
+                        <div class="card-header bg-light py-2 px-3 border-bottom d-flex justify-content-between align-items-center">
+                            <span class="small fw-bold text-dark">
+                                <i class="fas fa-map-marked text-primary me-1"></i> Location Map
+                            </span>
+                            <span class="badge bg-secondary-subtle text-secondary border">Map Ready</span>
+                        </div>
+                        <div class="p-4 text-center bg-light bg-opacity-75" style="min-height: 200px; background-image: radial-gradient(#cbd5e0 1px, transparent 1px); background-size: 16px 16px;">
+                            <div class="my-2">
+                                <div class="d-inline-flex p-3 rounded-circle bg-primary text-white shadow-sm mb-2 animate-bounce">
+                                    <i class="fas fa-map-pin fa-2x"></i>
+                                </div>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-1">@Model.Place.PlaceName</h6>
+                            <p class="small text-muted mb-2">@Model.Place.City, Bangladesh</p>
+                            
+                            <div class="badge bg-dark font-monospace px-3 py-2 text-white">
+                                Lat: @Model.Place.Latitude.ToString("F6") | Lng: @Model.Place.Longitude.ToString("F6")
+                            </div>
+                            <div class="mt-2 text-muted small" style="font-size: 0.75rem;">
+                                <i class="fas fa-info-circle me-1"></i>Ready for Google Maps API overlay in production
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a href="/Community/Report?type=Location&placeName=@Uri.EscapeDataString(Model.Place.PlaceName)&address=@Uri.EscapeDataString(Model.Place.Address + ", " + Model.Place.City)&lat=@Model.Place.Latitude&lng=@Model.Place.Longitude" class="btn btn-outline-warning w-100 py-2 rounded-3 fw-semibold shadow-sm text-dark">
+                            <i class="fas fa-flag me-2"></i> Report Location Issue
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
