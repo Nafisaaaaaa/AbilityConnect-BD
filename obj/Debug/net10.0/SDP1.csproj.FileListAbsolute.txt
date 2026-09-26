@@ -1,0 +1,380 @@
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\appsettings.Development.json
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\appsettings.json
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\SDP1.staticwebassets.runtime.json
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\SDP1.staticwebassets.endpoints.json
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\SDP1.exe
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\SDP1.deps.json
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\SDP1.runtimeconfig.json
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\SDP1.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\SDP1.pdb
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\BCrypt-Net-Next.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Humanizer.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.Build.Framework.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.CSharp.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.Workspaces.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.ExternalAccess.RazorCompiler.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Design.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.Extensions.DependencyModel.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Microsoft.VisualStudio.SolutionPersistence.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Mono.TextTemplating.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Newtonsoft.Json.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Npgsql.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\System.CodeDom.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\System.Composition.AttributedModel.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\System.Composition.Convention.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\System.Composition.Hosting.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\System.Composition.Runtime.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\System.Composition.TypedParts.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.csproj.AssemblyReference.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\rpswa.dswa.cache.json
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.GeneratedMSBuildEditorConfig.editorconfig
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.AssemblyInfoInputs.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.AssemblyInfo.cs
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.csproj.CoreCompileInputs.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.MvcApplicationPartsAssemblyInfo.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.RazorAssemblyInfo.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.RazorAssemblyInfo.cs
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\rjimswa.dswa.cache.json
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\scopedcss\bundle\SDP1.styles.css
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\scopedcss\projectbundle\SDP1.bundle.scp.css
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\zyoxv4fbbb-{0}-n505rjbybl-n505rjbybl.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ihhyi3hk7h-{0}-61n19gt1b8-61n19gt1b8.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\87gpvyib74-{0}-u7q8te5p8w-u7q8te5p8w.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\e6f4913a3a-{0}-bqjiyaj88i-bqjiyaj88i.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\70iiep1f7v-{0}-c2jlpeoesf-c2jlpeoesf.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ms9lm3q0ju-{0}-erw9l3u2r3-erw9l3u2r3.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\llsvyoculk-{0}-aexeepp0ev-aexeepp0ev.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ntgjdwfu4y-{0}-d7shbmvgxk-d7shbmvgxk.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\01ly7052v3-{0}-ausgxo2sd3-ausgxo2sd3.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\owz7mv990n-{0}-k8d9w2qqmf-k8d9w2qqmf.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\sisvhjtb6z-{0}-cosvhxvwiu-cosvhxvwiu.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\fw44warm12-{0}-ub07r2b239-ub07r2b239.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ff0rze6a20-{0}-fvhpjtyr6v-fvhpjtyr6v.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\iw7kebeb5g-{0}-b7pk76d08c-b7pk76d08c.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\mqa71tpvxb-{0}-fsbi9cje9m-fsbi9cje9m.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\nbuw6kc2u2-{0}-rzd6atqjts-rzd6atqjts.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\0yzw6c515w-{0}-ee0r1s7dh0-ee0r1s7dh0.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\w25itbqb7u-{0}-dxx9fxp4il-dxx9fxp4il.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ynkb324wr4-{0}-jd9uben2k1-jd9uben2k1.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\fdaxoyftip-{0}-khv3u5hwcm-khv3u5hwcm.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\9p95hhi8jc-{0}-r4e9w2rdcm-r4e9w2rdcm.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\bu2m5ti7q9-{0}-lcd1t2u6c8-lcd1t2u6c8.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\1l030vkcyd-{0}-c2oey78nd0-c2oey78nd0.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\mjrzczguwk-{0}-tdbxkamptv-tdbxkamptv.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\p2v78cphcx-{0}-j5mq2jizvt-j5mq2jizvt.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\4bo813fveu-{0}-06098lyss8-06098lyss8.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\fsmi0644x3-{0}-nvvlpmu67g-nvvlpmu67g.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\a2746z3ywp-{0}-s35ty4nyc5-s35ty4nyc5.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\5f0qdq0mbk-{0}-pj5nd1wqec-pj5nd1wqec.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\9k7g9sq1i7-{0}-46ein0sx1k-46ein0sx1k.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\p7jedgo5uv-{0}-v0zj4ognzu-v0zj4ognzu.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\02mlronckw-{0}-37tfw0ft22-37tfw0ft22.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\wx6rpbxmzm-{0}-hrwsygsryq-hrwsygsryq.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\0llhf5lkaz-{0}-pk9g2wxc8p-pk9g2wxc8p.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\h7pnpkhdza-{0}-ft3s53vfgj-ft3s53vfgj.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\8tui59wew5-{0}-6cfz1n2cew-6cfz1n2cew.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\h9sis5uo4k-{0}-6pdc2jztkx-6pdc2jztkx.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\h84b55nvza-{0}-493y06b0oq-493y06b0oq.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ebsxjipnsp-{0}-iovd86k7lj-iovd86k7lj.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\uqb0wthn0d-{0}-vr1egmr9el-vr1egmr9el.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\32dbmf9d32-{0}-kbrnm935zg-kbrnm935zg.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\t87bym699u-{0}-jj8uyg4cgr-jj8uyg4cgr.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ubbdrb6hdz-{0}-y7v9cxd14o-y7v9cxd14o.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\xxqcx93yew-{0}-notf2xhcfb-notf2xhcfb.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\qnyimzgk00-{0}-h1s4sie4z3-h1s4sie4z3.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\vwu4bu6i0r-{0}-63fj8s7r0e-63fj8s7r0e.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\g3y7zj2pdp-{0}-0j3bgjxly4-0j3bgjxly4.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\n6oxsms104-{0}-47otxtyo56-47otxtyo56.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\3jnj2iaby4-{0}-4v8eqarkd7-4v8eqarkd7.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\x1tldpv1gu-{0}-356vix0kms-356vix0kms.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\5o5mee0vzx-{0}-83jwlth58m-83jwlth58m.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\6oosixxj6q-{0}-mrlpezrjn3-mrlpezrjn3.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\peou1qoz4p-{0}-lzl9nlhx6b-lzl9nlhx6b.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\n9ojw2csu8-{0}-ag7o75518u-ag7o75518u.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\vpxr4y26kl-{0}-x0q3zqp4vz-x0q3zqp4vz.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\4l1dfuwma6-{0}-0i3buxo5is-0i3buxo5is.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\pytdqb9ar5-{0}-o1o13a6vjx-o1o13a6vjx.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\ygd8pmobov-{0}-ttgo8qnofa-ttgo8qnofa.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\11xunybaxb-{0}-2z0ns9nrw6-2z0ns9nrw6.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\2evd3n0fwu-{0}-muycvpuwrr-muycvpuwrr.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\2zve7e87dq-{0}-87fc7y1x7t-87fc7y1x7t.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\nk10nbtlla-{0}-mlv21k5csn-mlv21k5csn.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\px64deh2it-{0}-xjx637i4am-xjx637i4am.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\compressed\jtl8tvzz0v-{0}-xjx637i4am-xjx637i4am.gz
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.build.json
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.build.json.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.development.json
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\swae.build.ex.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.csproj.Up2Date
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.dll
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\refint\SDP1.dll
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.pdb
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\SDP1.genruntimeconfig.cache
+E:\Univarsity Dusbin\SDP1\SDP1\obj\Debug\net10.0\ref\SDP1.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\appsettings.Development.json
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\appsettings.json
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\SDP1.staticwebassets.runtime.json
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\SDP1.staticwebassets.endpoints.json
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\SDP1.exe
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\SDP1.deps.json
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\SDP1.runtimeconfig.json
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\SDP1.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\SDP1.pdb
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\BCrypt-Net-Next.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Humanizer.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.Build.Framework.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.Workspaces.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.ExternalAccess.RazorCompiler.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Microsoft.VisualStudio.SolutionPersistence.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Mono.TextTemplating.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Newtonsoft.Json.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Npgsql.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\System.CodeDom.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\System.Composition.AttributedModel.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\System.Composition.Convention.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\System.Composition.Hosting.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\System.Composition.Runtime.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\System.Composition.TypedParts.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\cs\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\de\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\es\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\fr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\it\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ja\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ko\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pl\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\ru\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.AssemblyInfo.cs
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.RazorAssemblyInfo.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.RazorAssemblyInfo.cs
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\scopedcss\bundle\SDP1.styles.css
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\scopedcss\projectbundle\SDP1.bundle.scp.css
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\zyoxv4fbbb-{0}-m06wg49rww-m06wg49rww.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ihhyi3hk7h-{0}-61n19gt1b8-61n19gt1b8.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\87gpvyib74-{0}-wct4vd9lb2-wct4vd9lb2.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\e6f4913a3a-{0}-bqjiyaj88i-bqjiyaj88i.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\70iiep1f7v-{0}-c2jlpeoesf-c2jlpeoesf.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ms9lm3q0ju-{0}-erw9l3u2r3-erw9l3u2r3.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\llsvyoculk-{0}-aexeepp0ev-aexeepp0ev.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ntgjdwfu4y-{0}-d7shbmvgxk-d7shbmvgxk.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\01ly7052v3-{0}-ausgxo2sd3-ausgxo2sd3.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\owz7mv990n-{0}-k8d9w2qqmf-k8d9w2qqmf.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\sisvhjtb6z-{0}-cosvhxvwiu-cosvhxvwiu.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\fw44warm12-{0}-ub07r2b239-ub07r2b239.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ff0rze6a20-{0}-fvhpjtyr6v-fvhpjtyr6v.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\iw7kebeb5g-{0}-b7pk76d08c-b7pk76d08c.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\mqa71tpvxb-{0}-fsbi9cje9m-fsbi9cje9m.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\nbuw6kc2u2-{0}-rzd6atqjts-rzd6atqjts.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\0yzw6c515w-{0}-ee0r1s7dh0-ee0r1s7dh0.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\w25itbqb7u-{0}-dxx9fxp4il-dxx9fxp4il.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ynkb324wr4-{0}-jd9uben2k1-jd9uben2k1.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\fdaxoyftip-{0}-khv3u5hwcm-khv3u5hwcm.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\9p95hhi8jc-{0}-r4e9w2rdcm-r4e9w2rdcm.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\bu2m5ti7q9-{0}-lcd1t2u6c8-lcd1t2u6c8.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\1l030vkcyd-{0}-c2oey78nd0-c2oey78nd0.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\mjrzczguwk-{0}-tdbxkamptv-tdbxkamptv.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\p2v78cphcx-{0}-j5mq2jizvt-j5mq2jizvt.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\4bo813fveu-{0}-06098lyss8-06098lyss8.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\fsmi0644x3-{0}-nvvlpmu67g-nvvlpmu67g.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\a2746z3ywp-{0}-s35ty4nyc5-s35ty4nyc5.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\5f0qdq0mbk-{0}-pj5nd1wqec-pj5nd1wqec.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\9k7g9sq1i7-{0}-46ein0sx1k-46ein0sx1k.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\p7jedgo5uv-{0}-v0zj4ognzu-v0zj4ognzu.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\02mlronckw-{0}-37tfw0ft22-37tfw0ft22.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\wx6rpbxmzm-{0}-hrwsygsryq-hrwsygsryq.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\0llhf5lkaz-{0}-pk9g2wxc8p-pk9g2wxc8p.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\h7pnpkhdza-{0}-ft3s53vfgj-ft3s53vfgj.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\8tui59wew5-{0}-6cfz1n2cew-6cfz1n2cew.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\h9sis5uo4k-{0}-6pdc2jztkx-6pdc2jztkx.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\h84b55nvza-{0}-493y06b0oq-493y06b0oq.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ebsxjipnsp-{0}-iovd86k7lj-iovd86k7lj.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\uqb0wthn0d-{0}-vr1egmr9el-vr1egmr9el.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\32dbmf9d32-{0}-kbrnm935zg-kbrnm935zg.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\t87bym699u-{0}-jj8uyg4cgr-jj8uyg4cgr.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ubbdrb6hdz-{0}-y7v9cxd14o-y7v9cxd14o.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\xxqcx93yew-{0}-notf2xhcfb-notf2xhcfb.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\qnyimzgk00-{0}-h1s4sie4z3-h1s4sie4z3.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\vwu4bu6i0r-{0}-63fj8s7r0e-63fj8s7r0e.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\g3y7zj2pdp-{0}-0j3bgjxly4-0j3bgjxly4.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\n6oxsms104-{0}-47otxtyo56-47otxtyo56.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\3jnj2iaby4-{0}-4v8eqarkd7-4v8eqarkd7.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\x1tldpv1gu-{0}-356vix0kms-356vix0kms.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\5o5mee0vzx-{0}-83jwlth58m-83jwlth58m.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\6oosixxj6q-{0}-mrlpezrjn3-mrlpezrjn3.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\peou1qoz4p-{0}-lzl9nlhx6b-lzl9nlhx6b.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\n9ojw2csu8-{0}-ag7o75518u-ag7o75518u.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\vpxr4y26kl-{0}-x0q3zqp4vz-x0q3zqp4vz.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\4l1dfuwma6-{0}-0i3buxo5is-0i3buxo5is.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\pytdqb9ar5-{0}-o1o13a6vjx-o1o13a6vjx.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\ygd8pmobov-{0}-ttgo8qnofa-ttgo8qnofa.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\11xunybaxb-{0}-2z0ns9nrw6-2z0ns9nrw6.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\2evd3n0fwu-{0}-muycvpuwrr-muycvpuwrr.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\2zve7e87dq-{0}-87fc7y1x7t-87fc7y1x7t.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\nk10nbtlla-{0}-mlv21k5csn-mlv21k5csn.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\px64deh2it-{0}-xnyvlgn4qi-xnyvlgn4qi.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\compressed\jtl8tvzz0v-{0}-xnyvlgn4qi-xnyvlgn4qi.gz
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.build.json
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.development.json
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.csproj.Up2Date
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.dll
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\refint\SDP1.dll
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.pdb
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\SDP1.genruntimeconfig.cache
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\ref\SDP1.dll
+C:\Users\User\source\repos\SDP1\SDP1\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

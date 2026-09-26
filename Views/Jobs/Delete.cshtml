@@ -1,0 +1,64 @@
+@model SDP1.Models.Job
+@{
+    ViewData["Title"] = "Delete Job Post";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Jobs/Manage" class="text-decoration-none">Manage Jobs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete Job</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 bg-white">
+                <div class="card-header bg-danger text-white p-4">
+                    <h4 class="fw-bold mb-1"><i class="fas fa-exclamation-triangle me-2"></i>Delete Job Posting Confirmation</h4>
+                    <p class="mb-0 opacity-90">Are you sure you want to permanently delete this job listing?</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="alert alert-warning border-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        <strong>Warning:</strong> Deleting this job will also remove all candidate applications submitted for this job. This action cannot be undone.
+                    </div>
+
+                    <div class="bg-light p-3 rounded-3 mb-4">
+                        <h5 class="fw-bold text-dark mb-1">@Model.Title</h5>
+                        <div class="text-primary small mb-2">
+                            <i class="fas fa-building me-1"></i>@(Model.Organization?.OrganizationName ?? "Organization")
+                        </div>
+                        <div class="text-muted small">
+                            <span><i class="fas fa-map-marker-alt me-1 text-danger"></i>@Model.Location</span>
+                            <span class="mx-2">•</span>
+                            <span>@Model.WorkplaceType</span>
+                            <span class="mx-2">•</span>
+                            <span>@Model.JobType</span>
+                        </div>
+                        <div class="text-muted small mt-1">
+                            <span>Posted on: @Model.CreatedAt.ToString("MMM dd, yyyy")</span>
+                            <span class="mx-2">•</span>
+                            <span>Applications received: @(Model.JobApplications?.Count ?? 0)</span>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-between align-items-center pt-2">
+                            <a href="/Jobs/Manage" class="btn btn-light border">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel & Return
+                            </a>
+                            <button type="submit" class="btn btn-danger px-4 py-2">
+                                <i class="fas fa-trash-alt me-2"></i> Permanently Delete Job
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

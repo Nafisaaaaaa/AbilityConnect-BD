@@ -1,0 +1,278 @@
+@model SDP1.Models.DisabilityUser
+@{
+    ViewData["Title"] = "Edit Profile";
+    var userName = Model.FullName ?? "User";
+    var profilePicture = !string.IsNullOrEmpty(Model.ProfilePicture) ? Model.ProfilePicture : "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar disability-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile disability-profile">
+                    <img src="@profilePicture" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-primary">Disability</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Disability/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Disability/RecommendedJobs"><i class="fas fa-briefcase"></i> Recommended Jobs</a></li>
+                    <li><a href="/Services/Trainings"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li><a href="/Services/Scholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Services/Events"><i class="fas fa-calendar-alt"></i> Awareness Events</a></li>
+                    <li><a href="/LearningHub"><i class="fas fa-book-reader"></i> Learning Hub</a></li>
+                    <li><a href="/Services/SavedOpportunities"><i class="fas fa-bookmark"></i> Saved Items</a></li>
+                    <li><a href="/Services/MyRegistrations"><i class="fas fa-clipboard-check"></i> My Registrations</a></li>
+                    <li><a href="/Disability/NearbyNGOs"><i class="fas fa-hand-holding-heart"></i> Nearby NGOs & Volunteers</a></li>
+                    <li><a href="/Disability/VolunteerSupport"><i class="fas fa-hands-helping"></i> Volunteer Support</a></li>
+                    <li><a href="/Disability/DoctorAppointments"><i class="fas fa-user-md"></i> Doctor Appointments</a></li>
+                    <li><a href="/Community"><i class="fas fa-users"></i> Community Forum</a></li>
+                    <li><a href="/AIRecommendation"><i class="fas fa-robot"></i> AI Recommendation</a></li>
+                    <li class="active"><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Profile/ChangePassword"><i class="fas fa-key"></i> Change Password</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="page-header d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold mb-1"><i class="fas fa-user-edit text-primary me-2"></i> Edit Profile</h3>
+                    <p class="text-muted mb-0">Update your personal details, location coordinates, and skills.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/Profile/ChangePassword" class="btn btn-outline-secondary fw-semibold rounded-pill px-3">
+                        <i class="fas fa-key me-1"></i> Change Password
+                    </a>
+                    <a href="/Disability/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4">
+                    <i class="fas fa-check-circle me-1"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
+                <form asp-action="EditDisability" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Email" />
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-id-card me-2"></i>Personal Details</h5>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="FullName" class="form-label fw-semibold">Full Name *</label>
+                                <input asp-for="FullName" class="form-control" required />
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="text" class="form-control bg-light" value="@Model.Email" disabled />
+                                <small class="text-muted">Email cannot be changed.</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number *</label>
+                                <input asp-for="PhoneNumber" class="form-control" required />
+                                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Gender" class="form-label fw-semibold">Gender</label>
+                                <select asp-for="Gender" class="form-select">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-map-marker-alt me-2"></i>Location & Coordinates</h5>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label asp-for="Location" class="form-label fw-semibold">Location / Address *</label>
+                                <div class="input-group">
+                                    <input asp-for="Location" class="form-control" id="locationInput" placeholder="Enter your city/area" required />
+                                    <button type="button" class="btn btn-outline-primary" id="btnDetectLocation" onclick="detectUserLocation()">
+                                        <i class="fas fa-crosshairs me-1"></i> Detect Location
+                                    </button>
+                                </div>
+                                <input type="hidden" asp-for="Latitude" id="latitudeInput" />
+                                <input type="hidden" asp-for="Longitude" id="longitudeInput" />
+                                <div id="locationStatus" class="mt-1 small">
+                                    @if (Model.Latitude.HasValue && Model.Longitude.HasValue)
+                                    {
+                                        <span class="text-primary fw-semibold">
+                                            <i class="fas fa-check-circle me-1"></i> Saved coordinates: (@Model.Latitude.Value.ToString("F4"), @Model.Longitude.Value.ToString("F4"))
+                                        </span>
+                                    }
+                                </div>
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-wheelchair me-2"></i>Disability & Skills</h5>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DisabilityType" class="form-label fw-semibold">Disability Type *</label>
+                                <select asp-for="DisabilityType" class="form-select" id="disabilityTypeSelect">
+                                    <option value="Visual Impairment">Visual Impairment</option>
+                                    <option value="Hearing Impairment">Hearing Impairment</option>
+                                    <option value="Physical Disability">Physical Disability</option>
+                                    <option value="Cognitive Disability">Cognitive Disability</option>
+                                    <option value="Speech Impairment">Speech Impairment</option>
+                                    <option value="Multiple Disabilities">Multiple Disabilities</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Skills" class="form-label fw-semibold">Skills</label>
+                                <input asp-for="Skills" class="form-control" placeholder="E.g., Programming, Writing, Accounting" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Education" class="form-label fw-semibold">Education</label>
+                                <input asp-for="Education" class="form-control" placeholder="E.g., High School, Bachelor's degree" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Interests" class="form-label fw-semibold">Interests</label>
+                                <input asp-for="Interests" class="form-control" placeholder="E.g., Technology, Art, Community service" />
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-file-upload me-2"></i>Profile Documents</h5>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-semibold">Profile Picture</label>
+                                <input type="file" name="ProfilePictureFile" class="form-control" accept="image/*" />
+                                @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                                {
+                                    <small class="text-muted d-block mt-1">Current picture: <a href="@Model.ProfilePicture" target="_blank">View</a></small>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label fw-semibold">Disability Certificate</label>
+                                <input type="file" name="DisabilityCertificateFile" class="form-control" accept=".pdf,image/*" />
+                                @if (!string.IsNullOrEmpty(Model.DisabilityCertificate))
+                                {
+                                    <small class="text-muted d-block mt-1">Current certificate: <a href="@Model.DisabilityCertificate" target="_blank">View Certificate</a></small>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4 pt-3 border-top d-flex gap-2">
+                            <button type="submit" class="btn btn-primary fw-semibold px-4">
+                                <i class="fas fa-save me-1"></i> Save Changes
+                            </button>
+                            <a href="/Disability/Dashboard" class="btn btn-outline-secondary px-4">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function detectUserLocation() {
+            var btn = document.getElementById('btnDetectLocation');
+            var status = document.getElementById('locationStatus');
+            var latInput = document.getElementById('latitudeInput');
+            var lngInput = document.getElementById('longitudeInput');
+            var locInput = document.getElementById('locationInput');
+
+            if (!navigator.geolocation) {
+                status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i> Geolocation is not supported by your browser.</span>';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Detecting...';
+            status.innerHTML = '<span class="text-muted"><i class="fas fa-circle-notch fa-spin me-1"></i> Requesting location...</span>';
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var lat = position.coords.latitude.toFixed(6);
+                    var lng = position.coords.longitude.toFixed(6);
+                    latInput.value = lat;
+                    lngInput.value = lng;
+                    if (!locInput.value || locInput.value.trim() === '') {
+                        locInput.value = lat + ', ' + lng;
+                    }
+                    status.innerHTML = '<span class="text-primary fw-semibold"><i class="fas fa-check-circle me-1"></i> Coordinates detected! (' + lat + ', ' + lng + ')</span>';
+
+                    try {
+                        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng)
+                            .then(function (res) { return res.json(); })
+                            .then(function (data) {
+                                if (data && data.address) {
+                                    var place = data.address.city || data.address.town || data.address.suburb || data.address.district || data.address.state || '';
+                                    if (place) {
+                                        locInput.value = place;
+                                        status.innerHTML = '<span class="text-primary fw-semibold"><i class="fas fa-check-circle me-1"></i> Location: ' + place + ' (' + lat + ', ' + lng + ')</span>';
+                                    }
+                                }
+                            })
+                            .catch(function () {});
+                    } catch (e) {}
+                },
+                function (error) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-crosshairs me-1"></i> Detect Location';
+                    var msg = 'Unable to detect location. Please enter manually.';
+                    if (error.code === error.PERMISSION_DENIED) {
+                        msg = 'Location permission was denied. You can enter your location manually, or enable browser location permission and click Detect Location to retry.';
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                        msg = 'Location information unavailable. Please enter manually.';
+                    } else if (error.code === error.TIMEOUT) {
+                        msg = 'Location request timed out. Please retry or enter manually.';
+                    }
+                    status.innerHTML = '<span class="text-danger"><i class="fas fa-exclamation-circle me-1"></i> ' + msg + '</span>';
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+    </script>
+}

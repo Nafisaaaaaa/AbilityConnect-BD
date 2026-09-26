@@ -1,0 +1,118 @@
+@model List<SDP1.Models.SavedJob>
+@{
+    ViewData["Title"] = "Saved Jobs";
+    var appliedJobIds = ViewBag.AppliedJobIds as HashSet<int> ?? new HashSet<int>();
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1"><i class="fas fa-bookmark text-primary me-2"></i>Saved Opportunities</h2>
+            <p class="text-muted mb-0">Quickly access and apply to jobs you have bookmarked for later.</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="/Disability/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+            <a href="/Jobs" class="btn btn-outline-secondary rounded-pill px-3">
+                <i class="fas fa-search me-1"></i> Browse More Jobs
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card shadow-sm border-0 text-center py-5 bg-white">
+            <div class="card-body">
+                <div class="mb-3 text-muted" style="font-size: 3.5rem;">
+                    <i class="far fa-bookmark"></i>
+                </div>
+                <h4 class="fw-bold text-dark">No Saved Jobs</h4>
+                <p class="text-muted max-w-md mx-auto">
+                    You haven't bookmarked any jobs yet. When browsing jobs, click the bookmark icon to save positions for later review.
+                </p>
+                <a href="/Jobs" class="btn btn-primary mt-2">
+                    <i class="fas fa-briefcase me-1"></i> Discover Jobs
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var item in Model)
+            {
+                var job = item.Job;
+                if (job == null) continue;
+                var hasApplied = appliedJobIds.Contains(job.Id);
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 bg-white">
+                        <div class="card-body d-flex flex-column p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-light text-dark border">@job.WorkplaceType</span>
+                                <form method="post" asp-action="ToggleSave" asp-route-id="@job.Id">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn btn-sm btn-link p-0 text-danger" title="Remove from bookmarks">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <h5 class="fw-bold mb-1">
+                                <a href="/Jobs/Details/@job.Id" class="text-dark text-decoration-none hover-primary">@job.Title</a>
+                            </h5>
+                            <div class="text-primary small fw-semibold mb-2">
+                                <i class="fas fa-building me-1"></i>@(job.Organization?.OrganizationName ?? "Organization")
+                            </div>
+
+                            <div class="text-muted small mb-2">
+                                <i class="fas fa-map-pin me-1 text-danger"></i>@job.Location
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(job.Salary))
+                            {
+                                <div class="text-success small fw-bold mb-2">
+                                    <i class="fas fa-money-bill-wave me-1"></i>@job.Salary
+                                </div>
+                            }
+
+                            <div class="text-muted small mb-3">
+                                <i class="far fa-calendar-alt text-warning me-1"></i>Deadline: @job.ApplicationDeadline.ToString("MMM dd, yyyy")
+                            </div>
+
+                            <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                                <a href="/Jobs/Details/@job.Id" class="btn btn-sm btn-light border">
+                                    View Details
+                                </a>
+
+                                @if (hasApplied)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                                        <i class="fas fa-check-circle me-1"></i>Applied
+                                    </span>
+                                }
+                                else
+                                {
+                                    <a href="/Jobs/Apply/@job.Id" class="btn btn-sm btn-primary">
+                                        Apply Now
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>showToast('@Html.Raw(TempData["SuccessMessage"])', 'success');</text>
+        }
+    </script>
+}

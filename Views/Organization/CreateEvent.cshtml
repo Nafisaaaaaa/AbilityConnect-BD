@@ -1,0 +1,125 @@
+@model SDP1.Models.AwarenessEvent
+@{
+    ViewData["Title"] = "Host New Awareness Event";
+    var orgName = ViewBag.UserName ?? "Organization";
+    var logo = ViewBag.Logo ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar org-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile org-profile">
+                    <img src="@logo" alt="Organization" class="profile-img" />
+                    <h5>@orgName</h5>
+                    <span class="badge bg-primary">Organization</span>
+                    <span class="badge bg-success mt-1">Verified</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Organization/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Organization/ManageJobPosts"><i class="fas fa-briefcase"></i> Manage Job Posts</a></li>
+                    <li><a href="/Organization/TrainingPrograms"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li><a href="/Organization/ManageScholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li class="active"><a href="/Organization/ManageEvents"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="/Organization/ReviewApplications"><i class="fas fa-users"></i> Review Applications</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="mb-4">
+                <a href="/Organization/ManageEvents" class="btn btn-outline-secondary btn-sm mb-2">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Events
+                </a>
+                <h2 class="fw-bold"><i class="fas fa-plus-circle text-primary me-2"></i> Host New Awareness Event</h2>
+                <p class="text-muted">Create a community awareness campaign, webinar, or seminar for disability empowerment.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="CreateEvent" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Title" class="form-label fw-semibold">Event Title <span class="text-danger">*</span></label>
+                                <input asp-for="Title" class="form-control" placeholder="e.g., National Seminar on Workplace Inclusion & Assistive Tech" />
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="EventType" class="form-label fw-semibold">Event Format <span class="text-danger">*</span></label>
+                                <select asp-for="EventType" class="form-select">
+                                    <option value="Disability Awareness">Disability Awareness</option>
+                                    <option value="Career Awareness">Career Awareness</option>
+                                    <option value="Digital Awareness">Digital Awareness</option>
+                                    <option value="Educational Seminar">Educational Seminar</option>
+                                    <option value="Community Gathering">Community Gathering</option>
+                                </select>
+                                <span asp-validation-for="EventType" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="EventDate" class="form-label fw-semibold">Event Date <span class="text-danger">*</span></label>
+                                <input asp-for="EventDate" type="date" class="form-control" />
+                                <span asp-validation-for="EventDate" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="StartTime" class="form-label fw-semibold">Start Time <span class="text-danger">*</span></label>
+                                <input asp-for="StartTime" class="form-control" placeholder="e.g., 10:00 AM" />
+                                <span asp-validation-for="StartTime" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="EndTime" class="form-label fw-semibold">End Time <span class="text-danger">*</span></label>
+                                <input asp-for="EndTime" class="form-control" placeholder="e.g., 01:00 PM" />
+                                <span asp-validation-for="EndTime" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="RegistrationDeadline" class="form-label fw-semibold">Registration Deadline <span class="text-danger">*</span></label>
+                                <input asp-for="RegistrationDeadline" type="date" class="form-control" />
+                                <span asp-validation-for="RegistrationDeadline" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Location" class="form-label fw-semibold">Location / Platform Link <span class="text-danger">*</span></label>
+                                <input asp-for="Location" class="form-control" placeholder="e.g., Zoom Meeting or National Press Club Auditorium, Dhaka" />
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Eligibility" class="form-label fw-semibold">Target Audience / Eligibility <span class="text-danger">*</span></label>
+                                <input asp-for="Eligibility" class="form-control" placeholder="e.g., Open to persons with disabilities, families, advocates, and educators" />
+                                <span asp-validation-for="Eligibility" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ContactInfo" class="form-label fw-semibold">Contact Email / Phone <span class="text-danger">*</span></label>
+                                <input asp-for="ContactInfo" class="form-control" placeholder="e.g., events@organization.org" />
+                                <span asp-validation-for="ContactInfo" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label fw-semibold">Event Agenda & Details <span class="text-danger">*</span></label>
+                                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Describe the topics discussed, keynote speakers, accessibility arrangements (e.g. sign language interpreter, wheelchair access), etc..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                                <a href="/Organization/ManageEvents" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fas fa-check-circle me-1"></i> Launch Event
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

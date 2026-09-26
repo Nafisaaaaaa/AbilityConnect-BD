@@ -1,0 +1,160 @@
+@model SDP1.Models.Scholarship
+@{
+    ViewData["Title"] = "Scholarship Applications - " + Model.Title;
+    var orgName = ViewBag.UserName ?? "Organization";
+    var logo = ViewBag.Logo ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar org-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile org-profile">
+                    <img src="@logo" alt="Organization" class="profile-img" />
+                    <h5>@orgName</h5>
+                    <span class="badge bg-primary">Organization</span>
+                    <span class="badge bg-success mt-1">Verified</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Organization/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Organization/ManageJobPosts"><i class="fas fa-briefcase"></i> Manage Job Posts</a></li>
+                    <li><a href="/Organization/TrainingPrograms"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li class="active"><a href="/Organization/ManageScholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Organization/ManageEvents"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="/Organization/ReviewApplications"><i class="fas fa-users"></i> Review Applications</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="mb-4">
+                <a href="/Organization/ManageScholarships" class="btn btn-outline-secondary btn-sm mb-2">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Scholarships
+                </a>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h2 class="fw-bold mb-1"><i class="fas fa-file-alt text-primary me-2"></i> Scholarship Applications</h2>
+                        <h5 class="text-secondary">@Model.Title</h5>
+                    </div>
+                    <div>
+                        <span class="badge bg-warning text-dark p-2 fs-6">
+                            Total Applications: @(Model.Applications?.Count ?? 0)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Applications != null && Model.Applications.Any())
+            {
+                <div class="row g-4">
+                    @foreach (var app in Model.Applications.OrderByDescending(a => a.AppliedAt))
+                    {
+                        var statusBadge = app.Status switch
+                        {
+                            "Accepted" => "bg-success",
+                            "Shortlisted" => "bg-info text-dark",
+                            "Under Review" => "bg-warning text-dark",
+                            "Rejected" => "bg-danger",
+                            _ => "bg-secondary"
+                        };
+
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                    <div>
+                                        <h5 class="mb-0 fw-bold">@app.FullName</h5>
+                                        <small class="text-muted">
+                                            <i class="fas fa-envelope me-1"></i> @app.Email | 
+                                            <i class="fas fa-phone me-1"></i> @app.Phone | 
+                                            <i class="fas fa-map-marker-alt me-1"></i> @app.Address
+                                        </small>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge @statusBadge fs-6">@app.Status</span>
+                                        <a href="/Organization/DownloadCV/@app.Id" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-file-download me-1"></i> Download CV
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <h6 class="fw-semibold text-primary"><i class="fas fa-graduation-cap me-1"></i> Educational Background</h6>
+                                            <p class="mb-1"><strong>Highest Qualification:</strong> @app.HighestQualification</p>
+                                            <p class="mb-1"><strong>Institution:</strong> @app.Institution</p>
+                                            <p class="mb-1"><strong>Field of Study:</strong> @app.FieldOfStudy</p>
+                                            <p class="mb-0"><strong>Passing Year / Result:</strong> @app.PassingYear @(!string.IsNullOrEmpty(app.AcademicResult) ? $"({app.AcademicResult})" : "")</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="fw-semibold text-primary"><i class="fas fa-tools me-1"></i> Skills & Capabilities</h6>
+                                            <p class="mb-1"><strong>Technical Skills:</strong> @app.TechnicalSkills</p>
+                                            @if (!string.IsNullOrEmpty(app.ProfessionalSkills))
+                                            {
+                                                <p class="mb-1"><strong>Professional Skills:</strong> @app.ProfessionalSkills</p>
+                                            }
+                                            @if (!string.IsNullOrEmpty(app.OtherSkills))
+                                            {
+                                                <p class="mb-0"><strong>Other Skills:</strong> @app.OtherSkills</p>
+                                            }
+                                        </div>
+                                        <div class="col-12">
+                                            <h6 class="fw-semibold text-primary"><i class="fas fa-comment-dots me-1"></i> Statement of Motivation</h6>
+                                            <div class="p-3 bg-light rounded text-dark" style="white-space: pre-wrap;">@app.Motivation</div>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(app.RelevantExperience))
+                                        {
+                                            <div class="col-12">
+                                                <h6 class="fw-semibold text-primary"><i class="fas fa-briefcase me-1"></i> Relevant Experience</h6>
+                                                <div class="p-3 bg-light rounded text-dark" style="white-space: pre-wrap;">@app.RelevantExperience</div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i> Applied on: @app.AppliedAt.ToString("MMM dd, yyyy hh:mm tt")
+                                    </small>
+                                    <form method="post" action="/Organization/UpdateScholarshipApplicationStatus" class="d-inline-flex gap-2 align-items-center">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@app.Id" />
+                                        <label class="form-label mb-0 small fw-semibold text-muted">Update Decision:</label>
+                                        <select name="status" class="form-select form-select-sm" style="width: auto;">
+                                            <option value="Pending" selected="@(app.Status == "Pending")">Pending</option>
+                                            <option value="Under Review" selected="@(app.Status == "Under Review")">Under Review</option>
+                                            <option value="Shortlisted" selected="@(app.Status == "Shortlisted")">Shortlisted</option>
+                                            <option value="Accepted" selected="@(app.Status == "Accepted")">Accepted</option>
+                                            <option value="Rejected" selected="@(app.Status == "Rejected")">Rejected</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-save me-1"></i> Update
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm text-center py-5">
+                    <div class="card-body">
+                        <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                        <h4 class="fw-bold">No Applications Submitted Yet</h4>
+                        <p class="text-muted">When candidates submit their scholarship applications and CVs, they will be listed here for your review.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

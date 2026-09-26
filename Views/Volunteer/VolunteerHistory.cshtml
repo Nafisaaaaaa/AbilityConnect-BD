@@ -1,0 +1,111 @@
+@model SDP1.Models.VolunteerHistoryViewModel
+@{
+    ViewData["Title"] = "Volunteer History";
+    var userName = ViewBag.UserName ?? "Volunteer";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar volunteer-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile volunteer-profile">
+                    <img src="@(ViewBag.ProfilePicture ?? "/images/default-avatar.png")" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-success">Volunteer</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Volunteer/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Volunteer/NearbyHelpRequests"><i class="fas fa-hands-helping"></i> Nearby Help Requests</a></li>
+                    <li><a href="/Volunteer/AssignedTasks"><i class="fas fa-tasks"></i> Assigned Tasks</a></li>
+                    <li class="active"><a href="/Volunteer/VolunteerHistory"><i class="fas fa-history"></i> Volunteer History</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h3 class="fw-bold mb-1"><i class="fas fa-history text-primary me-2"></i>Volunteer Service History</h3>
+                    <p class="text-muted mb-0">Record of all completed and past community support commitments.</p>
+                </div>
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <a href="/Volunteer/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                    <span class="badge bg-primary fs-6 px-3 py-2">
+                        <i class="fas fa-medal me-1"></i>@Model.CompletedCount Completed Tasks
+                    </span>
+                </div>
+            </div>
+
+            @if (!Model.PastRequests.Any())
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <i class="fas fa-award text-muted opacity-50 fa-3x mb-3"></i>
+                    <h5 class="fw-bold text-dark">No Service History Yet</h5>
+                    <p class="text-muted small max-w-md mx-auto">
+                        Once you accept and complete tasks supporting community members with disabilities, your accomplishments and service hours will be documented here.
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Task Title & Type</th>
+                                    <th>Recipient</th>
+                                    <th>Date Scheduled</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Completed At</th>
+                                    <th class="text-end pe-4">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var task in Model.PastRequests)
+                                {
+                                    <tr>
+                                        <td class="ps-4 py-3">
+                                            <div class="fw-bold text-dark">@task.Title</div>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-0">
+                                                @task.AssistanceType
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold">@(task.RequestedByUser?.FullName ?? "Disability User")</div>
+                                            <div class="text-muted small">@(task.RequestedByUser?.PhoneNumber ?? "")</div>
+                                        </td>
+                                        <td class="text-muted small">
+                                            @task.RequestDate.ToString("MMM dd, yyyy")
+                                        </td>
+                                        <td class="small">
+                                            @task.City, @task.District
+                                        </td>
+                                        <td>
+                                            <span class="badge @(task.Status == "Completed" ? "bg-success" : "bg-secondary") px-2 py-1">
+                                                @task.Status
+                                            </span>
+                                        </td>
+                                        <td class="text-muted small">
+                                            @(task.CompletedAt.HasValue ? task.CompletedAt.Value.ToString("MMM dd, yyyy hh:mm tt") : "N/A")
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a href="/VolunteerSupport/Details/@task.Id" class="btn btn-sm btn-outline-primary">
+                                                View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

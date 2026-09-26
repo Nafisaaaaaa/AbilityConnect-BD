@@ -1,0 +1,148 @@
+@model SDP1.Models.TrainingProgram
+@{
+    ViewData["Title"] = "Post New Training Program";
+    var orgName = ViewBag.UserName ?? "Organization";
+    var logo = ViewBag.Logo ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar org-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile org-profile">
+                    <img src="@logo" alt="Organization" class="profile-img" />
+                    <h5>@orgName</h5>
+                    <span class="badge bg-primary">Organization</span>
+                    <span class="badge bg-success mt-1">Verified</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Organization/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Organization/ManageJobPosts"><i class="fas fa-briefcase"></i> Manage Job Posts</a></li>
+                    <li class="active"><a href="/Organization/TrainingPrograms"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li><a href="/Organization/ManageScholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Organization/ManageEvents"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="/Organization/ReviewApplications"><i class="fas fa-users"></i> Review Applications</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="mb-4">
+                <a href="/Organization/TrainingPrograms" class="btn btn-outline-secondary btn-sm mb-2">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Training Programs
+                </a>
+                <h2 class="fw-bold"><i class="fas fa-plus-circle text-primary me-2"></i> Post New Training Program</h2>
+                <p class="text-muted">Fill out the details below to launch a training program for persons with disabilities.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="CreateTraining" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label asp-for="Title" class="form-label fw-semibold">Training Title <span class="text-danger">*</span></label>
+                                <input asp-for="Title" class="form-control" placeholder="e.g., Accessible Web Development & Digital Freelancing" />
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="TrainingCategory" class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+                                <select asp-for="TrainingCategory" class="form-select">
+                                    <option value="Computer Training">Computer Training</option>
+                                    <option value="Freelancing">Freelancing</option>
+                                    <option value="Digital Skills">Digital Skills</option>
+                                    <option value="Vocational Skills">Vocational Skills</option>
+                                    <option value="Communication Skills">Communication Skills</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="TrainingCategory" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="DeliveryMode" class="form-label fw-semibold">Delivery Mode <span class="text-danger">*</span></label>
+                                <select asp-for="DeliveryMode" class="form-select">
+                                    <option value="Online">Online (Zoom / Google Meet)</option>
+                                    <option value="Offline">In-Person (On-site)</option>
+                                    <option value="Hybrid">Hybrid (Online + Physical)</option>
+                                </select>
+                                <span asp-validation-for="DeliveryMode" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Duration" class="form-label fw-semibold">Duration <span class="text-danger">*</span></label>
+                                <input asp-for="Duration" class="form-control" placeholder="e.g., 3 Months (2 days/week, 2 hours/session)" />
+                                <span asp-validation-for="Duration" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="MaxParticipants" class="form-label fw-semibold">Maximum Capacity (Leave blank for unlimited)</label>
+                                <input asp-for="MaxParticipants" type="number" min="1" class="form-control" placeholder="e.g., 30" />
+                                <span asp-validation-for="MaxParticipants" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="StartDate" class="form-label fw-semibold">Start Date <span class="text-danger">*</span></label>
+                                <input asp-for="StartDate" type="date" class="form-control" />
+                                <span asp-validation-for="StartDate" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="EndDate" class="form-label fw-semibold">End Date <span class="text-danger">*</span></label>
+                                <input asp-for="EndDate" type="date" class="form-control" />
+                                <span asp-validation-for="EndDate" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="RegistrationDeadline" class="form-label fw-semibold">Registration Deadline <span class="text-danger">*</span></label>
+                                <input asp-for="RegistrationDeadline" type="date" class="form-control" />
+                                <span asp-validation-for="RegistrationDeadline" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Location" class="form-label fw-semibold">Location / Platform Link <span class="text-danger">*</span></label>
+                                <input asp-for="Location" class="form-control" placeholder="e.g., Online via Google Meet or Center Address in Dhaka" />
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ContactInfo" class="form-label fw-semibold">Contact Email / Phone <span class="text-danger">*</span></label>
+                                <input asp-for="ContactInfo" class="form-control" placeholder="e.g., training@organization.org or +8801700000000" />
+                                <span asp-validation-for="ContactInfo" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="SkillsCovered" class="form-label fw-semibold">Skills Covered <span class="text-danger">*</span></label>
+                                <input asp-for="SkillsCovered" class="form-control" placeholder="e.g., HTML, CSS, Screen Reader Navigation, Data Entry, Resume Writing" />
+                                <span asp-validation-for="SkillsCovered" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Eligibility" class="form-label fw-semibold">Eligibility Requirements <span class="text-danger">*</span></label>
+                                <input asp-for="Eligibility" class="form-control" placeholder="e.g., Open to persons with visual or physical disabilities with basic computer interest" />
+                                <span asp-validation-for="Eligibility" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label fw-semibold">Detailed Course Description <span class="text-danger">*</span></label>
+                                <textarea asp-for="Description" rows="5" class="form-control" placeholder="Provide syllabus overview, prerequisites, assistive tools supported, and certification details..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                                <a href="/Organization/TrainingPrograms" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fas fa-check-circle me-1"></i> Publish Training Program
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+@model SDP1.Models.HealthcareProviderFormViewModel
+@{
+    ViewData["Title"] = "Add Healthcare Provider";
+    var userRole = Context.Session.GetString("UserRole");
+    var isAdmin = userRole == "Admin";
+    var dashboardUrl = userRole switch
+    {
+        "Admin" => "/Admin/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <a href="/Healthcare" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to Healthcare Finder
+        </a>
+        <a href="@dashboardUrl" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+            <i class="fas fa-home me-1"></i> Back to Dashboard
+        </a>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                <div class="p-4" style="background: linear-gradient(135deg, #E8F0FE 0%, #FFFFFF 100%); border-bottom: 1px solid #E2E8F0;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center justify-content-center text-primary rounded-circle"
+                             style="width: 50px; height: 50px; background: #FFFFFF; font-size: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0 text-dark">Register Healthcare & Therapy Provider</h4>
+                            <small class="text-muted">Fill out professional credentials, clinical services, and clinic accessibility information.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Name" class="form-label fw-semibold small text-secondary">Provider / Center Name *</label>
+                                <input asp-for="Name" class="form-control" placeholder="e.g. Dr. Mahbubur Rahman / CRP Rehab Center" required />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="ProviderType" class="form-label fw-semibold small text-secondary">Service Type *</label>
+                                <select asp-for="ProviderType" class="form-select" required>
+                                    <option value="Doctor">Doctor</option>
+                                    <option value="Physiotherapist">Physiotherapist</option>
+                                    <option value="Speech Therapist">Speech Therapist</option>
+                                    <option value="Rehabilitation Center">Rehabilitation Center</option>
+                                    <option value="Eye Specialist">Eye Specialist</option>
+                                    <option value="Mental Health Specialist">Mental Health Specialist</option>
+                                </select>
+                                <span asp-validation-for="ProviderType" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="OrganizationOrClinic" class="form-label fw-semibold small text-secondary">Affiliated Clinic / Hospital *</label>
+                                <input asp-for="OrganizationOrClinic" class="form-control" placeholder="e.g. National Institute of Mental Health / CRP" required />
+                                <span asp-validation-for="OrganizationOrClinic" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Specialization" class="form-label fw-semibold small text-secondary">Clinical Specialization *</label>
+                                <input asp-for="Specialization" class="form-control" placeholder="e.g. Stroke Rehabilitation & Physical Therapy" required />
+                                <span asp-validation-for="Specialization" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label fw-semibold small text-secondary">Professional Background & Disability Care Details *</label>
+                                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Overview of expertise, rehabilitation approach, assistive equipment, and disability accessibility..." required></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="AvailableServices" class="form-label fw-semibold small text-secondary">Available Services (Comma separated) *</label>
+                                <input asp-for="AvailableServices" class="form-control" placeholder="e.g. Gait Training, Wheelchair Fitting, Speech Therapy, Home Visits" required />
+                                <span asp-validation-for="AvailableServices" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ConsultationFee" class="form-label fw-semibold small text-secondary">Consultation Fee (BDT) (0 or blank for free)</label>
+                                <input asp-for="ConsultationFee" type="number" step="0.01" class="form-control" placeholder="e.g. 500.00" />
+                                <span asp-validation-for="ConsultationFee" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="AvailabilitySchedule" class="form-label fw-semibold small text-secondary">Availability Schedule *</label>
+                                <input asp-for="AvailabilitySchedule" class="form-control" placeholder="e.g. Sat - Wed: 4:00 PM - 8:00 PM" required />
+                                <span asp-validation-for="AvailabilitySchedule" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="form-label fw-semibold small text-secondary">Contact Phone *</label>
+                                <input asp-for="Phone" class="form-control" placeholder="+880 1XXXXXXXXX" required />
+                                <span asp-validation-for="Phone" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label fw-semibold small text-secondary">Email Address *</label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="provider@clinic.com" required />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Address" class="form-label fw-semibold small text-secondary">Full Street Address *</label>
+                                <input asp-for="Address" class="form-control" placeholder="House/Road, Sector/Area..." required />
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="City" class="form-label fw-semibold small text-secondary">City / Area *</label>
+                                <input asp-for="City" class="form-control" placeholder="e.g. Mirpur, Agrabad" required />
+                                <span asp-validation-for="City" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="District" class="form-label fw-semibold small text-secondary">District *</label>
+                                <input asp-for="District" class="form-control" placeholder="e.g. Dhaka, Chittagong, Sylhet" required />
+                                <span asp-validation-for="District" class="text-danger small"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <a href="/Healthcare" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-1"></i> Save Healthcare Provider
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

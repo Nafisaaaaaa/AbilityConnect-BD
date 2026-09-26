@@ -1,0 +1,217 @@
+@model SDP1.Models.VolunteerSupportRequest
+@{
+    ViewData["Title"] = Model.Title + " - Support Request Details";
+    var nearbyMatches = ViewBag.NearbyMatches as List<SDP1.Models.Volunteer> ?? new List<SDP1.Models.Volunteer>();
+    var userRole = Context.Session.GetString("UserRole");
+    var userId = Context.Session.GetInt32("UserId");
+    bool isRequester = userRole == "Disability" && Model.RequestedByUserId == userId;
+    bool isAssigned = userRole == "Volunteer" && Model.AssignedVolunteerId == userId;
+}
+
+<div class="container py-4">
+    <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="@(userRole == "Volunteer" ? "/Volunteer/AssignedTasks" : "/VolunteerSupport")">
+                        @(userRole == "Volunteer" ? "Assigned Tasks" : "Volunteer Support")
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Request #@Model.Id</li>
+            </ol>
+        </nav>
+        <div class="d-flex gap-2">
+            <a href="@(userRole == "Volunteer" ? "/Volunteer/Dashboard" : "/Disability/Dashboard")" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+                <i class="fas fa-home me-1"></i> Back to Dashboard
+            </a>
+            <a href="@(userRole == "Volunteer" ? "/Volunteer/AssignedTasks" : "/VolunteerSupport")" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                <i class="fas fa-arrow-left me-1"></i> Back
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 mb-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1">
+                            <i class="fas fa-tag me-1"></i>@Model.AssistanceType
+                        </span>
+                        @if (Model.Urgency == "Emergency")
+                        {
+                            <span class="badge bg-danger ms-1 px-3 py-1">Emergency</span>
+                        }
+                        else if (Model.Urgency == "High")
+                        {
+                            <span class="badge bg-warning text-dark ms-1 px-3 py-1">High Urgency</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-light text-dark border ms-1 px-3 py-1">Standard Urgency</span>
+                        }
+                    </div>
+
+                    <span class="badge @(Model.Status == "Completed" ? "bg-success" : Model.Status == "Accepted" ? "bg-primary" : Model.Status == "InProgress" ? "bg-info text-dark" : Model.Status == "Cancelled" ? "bg-secondary" : "bg-warning text-dark") fs-6 px-3 py-1">
+                        @Model.Status
+                    </span>
+                </div>
+
+                <h2 class="fw-bold text-dark mb-3">@Model.Title</h2>
+
+                <p class="text-secondary mb-4 leading-relaxed fs-6">
+                    @Model.Description
+                </p>
+
+                <div class="p-4 bg-light rounded-3 mb-4">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Date of Assistance:</span>
+                            <span class="fw-semibold text-dark fs-6">
+                                <i class="fas fa-calendar-alt text-primary me-2"></i>@Model.RequestDate.ToString("MMMM dd, yyyy")
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Time / Timing:</span>
+                            <span class="fw-semibold text-dark fs-6">
+                                <i class="fas fa-clock text-info me-2"></i>@Model.RequestTime
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Meeting Location:</span>
+                            <span class="fw-semibold text-dark fs-6">
+                                <i class="fas fa-map-marker-alt text-danger me-2"></i>@Model.Location
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">City & District:</span>
+                            <span class="fw-semibold text-dark fs-6">
+                                <i class="fas fa-city text-secondary me-2"></i>@Model.City, @Model.District
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 pt-3 border-top align-items-center justify-content-between">
+                    <span class="small text-muted">
+                        Requested by <strong>@(Model.RequestedByUser?.FullName ?? "Disability User")</strong> on @Model.CreatedAt.ToString("MMM dd, yyyy")
+                    </span>
+
+                    <div class="d-flex gap-2">
+                        @if (Model.AssignedVolunteerId != null)
+                        {
+                            <a href="/VolunteerSupport/Chat/@Model.Id" class="btn btn-primary px-4 fw-bold">
+                                <i class="fas fa-comments me-2"></i> Open Real-Time Chat
+                            </a>
+                        }
+
+                        @if (isRequester && (Model.Status == "Pending" || Model.Status == "Accepted"))
+                        {
+                            <form method="post" asp-action="Cancel" asp-route-id="@Model.Id" onsubmit="return confirm('Are you sure you want to cancel this support request?');" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger">Cancel Request</button>
+                            </form>
+                        }
+
+                        @if (userRole == "Volunteer" && Model.Status == "Pending" && Model.AssignedVolunteerId == null)
+                        {
+                            <form method="post" asp-controller="Volunteer" asp-action="AcceptRequest" asp-route-requestId="@Model.Id" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-success fw-bold px-4">
+                                    <i class="fas fa-check-circle me-1"></i> Accept This Request
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            @if (Model.AssignedVolunteer != null)
+            {
+                <div class="card border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="@(Model.AssignedVolunteer.ProfilePicture ?? "/images/default-avatar.png")" alt="@Model.AssignedVolunteer.FullName" class="rounded-circle" style="width: 55px; height: 55px; object-fit: cover;" />
+                        <div>
+                            <h5 class="fw-bold mb-0 text-dark">@Model.AssignedVolunteer.FullName</h5>
+                            <span class="badge bg-success-subtle text-success border border-success">
+                                <i class="fas fa-check-circle me-1"></i>Assigned Volunteer
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column gap-2 small text-muted mb-4">
+                        <div>
+                            <i class="fas fa-phone text-primary me-2"></i>
+                            <strong>Phone:</strong> @Model.AssignedVolunteer.PhoneNumber
+                        </div>
+                        <div>
+                            <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                            <strong>Location:</strong> @(Model.AssignedVolunteer.City ?? Model.AssignedVolunteer.Location)
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.AssignedVolunteer.Skills))
+                        {
+                            <div>
+                                <i class="fas fa-star text-warning me-2"></i>
+                                <strong>Skills:</strong> @Model.AssignedVolunteer.Skills
+                            </div>
+                        }
+                    </div>
+
+                    <a href="/VolunteerSupport/Chat/@Model.Id" class="btn btn-primary w-100 py-2 fw-semibold">
+                        <i class="fas fa-comments me-2"></i> Chat with Volunteer
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
+                    <h6 class="fw-bold text-dark mb-2">
+                        <i class="fas fa-radar text-primary me-2"></i>Nearby Matching Volunteers
+                    </h6>
+                    <p class="small text-muted mb-3">
+                        Volunteers in @Model.City capable of providing @Model.AssistanceType:
+                    </p>
+
+                    @if (!nearbyMatches.Any())
+                    {
+                        <div class="p-3 bg-light rounded-3 text-center small text-muted">
+                            Broadcast sent to active volunteers. As soon as a volunteer accepts, their details and instant chat will activate here.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column gap-2">
+                            @foreach (var vol in nearbyMatches)
+                            {
+                                <div class="p-2 rounded-3 bg-light d-flex align-items-center gap-2">
+                                    <img src="@(vol.ProfilePicture ?? "/images/default-avatar.png")" alt="@vol.FullName" class="rounded-circle" style="width: 36px; height: 36px; object-fit: cover;" />
+                                    <div class="small overflow-hidden">
+                                        <div class="fw-bold text-dark text-truncate">@vol.FullName</div>
+                                        <div class="text-muted text-truncate" style="font-size: 0.75rem;">@vol.Location</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

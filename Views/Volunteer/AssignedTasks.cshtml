@@ -1,0 +1,180 @@
+@model SDP1.Models.VolunteerAssignedTasksViewModel
+@{
+    ViewData["Title"] = "Assigned Tasks";
+    var userName = ViewBag.UserName ?? "Volunteer";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar volunteer-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile volunteer-profile">
+                    <img src="@(ViewBag.ProfilePicture ?? "/images/default-avatar.png")" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-success">Volunteer</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Volunteer/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Volunteer/NearbyHelpRequests"><i class="fas fa-hands-helping"></i> Nearby Help Requests</a></li>
+                    <li class="active"><a href="/Volunteer/AssignedTasks"><i class="fas fa-tasks"></i> Assigned Tasks</a></li>
+                    <li><a href="/Volunteer/VolunteerHistory"><i class="fas fa-history"></i> Volunteer History</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4">
+                    <i class="fas fa-check-circle me-1"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert alert-info alert-dismissible fade show rounded-3 shadow-sm mb-4">
+                    <i class="fas fa-info-circle me-1"></i> @TempData["InfoMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4">
+                    <i class="fas fa-exclamation-circle me-1"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold mb-1"><i class="fas fa-tasks text-primary me-2"></i>My Assigned Tasks</h3>
+                    <p class="text-muted mb-0">Active volunteer commitments currently assigned to you.</p>
+                </div>
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <a href="/Volunteer/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                    <span class="badge bg-primary fs-6 px-3 py-2">@Model.AcceptedCount Accepted</span>
+                    <span class="badge bg-info text-dark fs-6 px-3 py-2">@Model.InProgressCount In Progress</span>
+                </div>
+            </div>
+
+            @if (!Model.ActiveTasks.Any())
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <i class="fas fa-clipboard-check text-muted opacity-50 fa-3x mb-3"></i>
+                    <h5 class="fw-bold text-dark">No Active Tasks Currently Assigned</h5>
+                    <p class="text-muted small max-w-md mx-auto">
+                        You don't have any ongoing tasks right now. Explore open requests in your area to lend a helping hand!
+                    </p>
+                    <div class="mt-2">
+                        <a href="/Volunteer/NearbyHelpRequests" class="btn btn-primary px-4">
+                            <i class="fas fa-search me-1"></i> Browse Nearby Help Requests
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var task in Model.ActiveTasks)
+                    {
+                        <div class="col-lg-6">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-column hover-card">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                        <i class="fas fa-tag me-1"></i>@task.AssistanceType
+                                    </span>
+                                    <span class="badge @(task.Status == "InProgress" ? "bg-info text-dark" : "bg-primary") px-3 py-1">
+                                        @task.Status
+                                    </span>
+                                </div>
+
+                                <h5 class="fw-bold text-dark mb-1">@task.Title</h5>
+
+                                <p class="text-secondary small mb-3 flex-grow-1">
+                                    @task.Description
+                                </p>
+
+                                <div class="p-3 bg-light rounded-3 mb-3 small">
+                                    <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                                        <div>
+                                            <span class="text-muted d-block" style="font-size: 0.75rem;">Requester:</span>
+                                            <span class="fw-bold text-dark">
+                                                <i class="fas fa-user-circle text-primary me-1"></i>@(task.RequestedByUser?.FullName ?? "Disability User")
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted d-block text-end" style="font-size: 0.75rem;">Contact:</span>
+                                            <a href="tel:@task.RequestedByUser?.PhoneNumber" class="text-primary fw-semibold">
+                                                <i class="fas fa-phone me-1"></i>@(task.RequestedByUser?.PhoneNumber ?? "N/A")
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.75rem;">When:</span>
+                                            <span class="fw-semibold text-dark">@task.RequestDate.ToString("MMM dd") (@task.RequestTime)</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block" style="font-size: 0.75rem;">Where:</span>
+                                            <span class="fw-semibold text-dark text-truncate d-block">@task.Location, @task.City</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-auto pt-3 border-top d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                                    <a href="/VolunteerSupport/Chat/@task.Id" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                        <i class="fas fa-comments me-1"></i> Real-Time Chat
+                                    </a>
+
+                                    <div class="d-flex gap-2">
+                                        @if (task.Status == "Accepted")
+                                        {
+                                            <form method="post" asp-action="UpdateTaskStatus" asp-route-requestId="@task.Id" asp-route-status="InProgress" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-info text-dark fw-semibold">
+                                                    <i class="fas fa-play me-1"></i> Start Task
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (task.Status == "InProgress" || task.Status == "Accepted")
+                                        {
+                                            <form method="post" asp-action="UpdateTaskStatus" asp-route-requestId="@task.Id" asp-route-status="Completed" class="d-inline" onsubmit="return confirm('Confirm that this assistance task has been completed?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-success fw-bold">
+                                                    <i class="fas fa-check me-1"></i> Complete Task
+                                                </button>
+                                            </form>
+                                        }
+
+                                        <form method="post" asp-action="RejectRequest" asp-route-requestId="@task.Id" class="d-inline" onsubmit="return confirm('Release this task so another volunteer can take it?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-light border text-danger" title="Release Task">
+                                                Release
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+    }
+</style>

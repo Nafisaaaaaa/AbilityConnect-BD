@@ -1,0 +1,133 @@
+@model SDP1.Models.JobApplyViewModel
+@{
+    ViewData["Title"] = "Apply for " + Model.JobTitle;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Jobs" class="text-decoration-none">Jobs</a></li>
+            <li class="breadcrumb-item"><a href="/Jobs/Details/@Model.JobId" class="text-decoration-none">@Model.JobTitle</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Apply</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 bg-white">
+                <div class="card-header bg-primary text-white p-4">
+                    <h4 class="fw-bold mb-1"><i class="fas fa-paper-plane me-2"></i>Job Application</h4>
+                    <p class="mb-0 opacity-90">
+                        You are applying for <strong>@Model.JobTitle</strong> at <strong>@Model.OrganizationName</strong> (@Model.WorkplaceType • @Model.Location)
+                    </p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Apply" method="post" enctype="multipart/form-data" id="jobApplyForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="JobId" />
+                        <input type="hidden" asp-for="JobTitle" />
+                        <input type="hidden" asp-for="OrganizationName" />
+                        <input type="hidden" asp-for="WorkplaceType" />
+                        <input type="hidden" asp-for="Location" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Applicant Details</h5>
+
+                        <div class="mb-3">
+                            <label asp-for="ApplicantFullName" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                            <input asp-for="ApplicantFullName" class="form-control" placeholder="Enter your full name" />
+                            <span asp-validation-for="ApplicantFullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="ApplicantEmail" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                                <input asp-for="ApplicantEmail" type="email" class="form-control" placeholder="name@example.com" />
+                                <span asp-validation-for="ApplicantEmail" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="ApplicantPhone" class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
+                                <input asp-for="ApplicantPhone" class="form-control" placeholder="+880 1XXXXXXXXX" />
+                                <span asp-validation-for="ApplicantPhone" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">2. Resume / Curriculum Vitae</h5>
+
+                        <div class="mb-4">
+                            <label asp-for="ResumeFile" class="form-label fw-semibold">Upload Resume Document <span class="text-danger">*</span></label>
+                            <input asp-for="ResumeFile" type="file" class="form-control" id="resumeFileInput" accept=".pdf,.doc,.docx" />
+                            <div class="form-text text-muted mt-1">
+                                <i class="fas fa-info-circle me-1"></i>Supported formats: <strong>PDF (.pdf)</strong>, <strong>Word (.doc, .docx)</strong>. Maximum file size: <strong>5 MB</strong>.
+                            </div>
+                            <span asp-validation-for="ResumeFile" class="text-danger small d-block mt-1"></span>
+                            <div id="fileValidationMessage" class="text-danger small mt-1" style="display:none;"></div>
+                        </div>
+
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">3. Additional Information</h5>
+
+                        <div class="mb-3">
+                            <label asp-for="CoverLetter" class="form-label fw-semibold">Cover Letter / Note to Employer</label>
+                            <textarea asp-for="CoverLetter" class="form-control" rows="4" placeholder="Introduce yourself, relevant experiences, and explain why you're a great fit for this position..."></textarea>
+                            <span asp-validation-for="CoverLetter" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="AccommodationRequested" class="form-label fw-semibold">Workplace Accommodation Needs (Optional)</label>
+                            <textarea asp-for="AccommodationRequested" class="form-control" rows="2" placeholder="Let the employer know of any specific accessibility requirements or assistive technologies you may need (e.g., wheelchair ramp access, screen reading software, flexible desk)..."></textarea>
+                            <span asp-validation-for="AccommodationRequested" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <a href="/Jobs/Details/@Model.JobId" class="btn btn-light border">
+                                <i class="fas fa-arrow-left me-1"></i> Back to Job Details
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 py-2" id="submitBtn">
+                                <i class="fas fa-paper-plane me-2"></i> Submit Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('resumeFileInput').addEventListener('change', function () {
+            var file = this.files[0];
+            var errorDiv = document.getElementById('fileValidationMessage');
+            var submitBtn = document.getElementById('submitBtn');
+
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+            submitBtn.disabled = false;
+
+            if (!file) return;
+
+            var maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                errorDiv.textContent = 'File size exceeds 5 MB. Please select a smaller file.';
+                errorDiv.style.display = 'block';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            var fileName = file.name.toLowerCase();
+            var validExtensions = ['.pdf', '.doc', '.docx'];
+            var isValidExt = validExtensions.some(function (ext) { return fileName.endsWith(ext); });
+
+            if (!isValidExt) {
+                errorDiv.textContent = 'Invalid file extension. Only .pdf, .doc, and .docx files are permitted.';
+                errorDiv.style.display = 'block';
+                submitBtn.disabled = true;
+                return;
+            }
+        });
+    </script>
+}

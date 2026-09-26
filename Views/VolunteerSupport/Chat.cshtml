@@ -1,0 +1,169 @@
+@model SDP1.Models.VolunteerChatViewModel
+@{
+    ViewData["Title"] = "Chat - " + Model.Request.Title;
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden max-w-4xl mx-auto" style="height: 75vh; display: flex; flex-direction: column;">
+        <div class="p-3 px-4 border-bottom bg-light bg-opacity-75 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <a href="@Url.Action("Details", "VolunteerSupport", new { id = Model.Request.Id })" class="btn btn-sm btn-outline-secondary rounded-circle" style="width: 34px; height: 34px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="fas fa-comments text-primary me-2"></i>@Model.OtherPartyName
+                        <span class="badge bg-primary-subtle text-primary border border-primary ms-1" style="font-size: 0.7rem;">@Model.OtherPartyRole</span>
+                    </h6>
+                    <div class="small text-muted" style="font-size: 0.75rem;">
+                        Task: <span class="fw-semibold">@Model.Request.Title</span> (@Model.Request.AssistanceType)
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                @if (!string.IsNullOrEmpty(Model.OtherPartyPhone))
+                {
+                    <a href="tel:@Model.OtherPartyPhone" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                        <i class="fas fa-phone-alt me-1"></i> @Model.OtherPartyPhone
+                    </a>
+                }
+                <span id="connectionBadge" class="badge bg-success-subtle text-success border border-success">
+                    <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Real-Time Connected
+                </span>
+            </div>
+        </div>
+
+        <div id="messagesContainer" class="p-4 flex-grow-1 overflow-auto bg-light bg-opacity-25" style="display: flex; flex-direction: column; gap: 12px;">
+            @if (!Model.Messages.Any())
+            {
+                <div id="noMessagesPlaceholder" class="text-center my-auto py-5 text-muted">
+                    <i class="fas fa-comments fa-3x mb-2 opacity-25"></i>
+                    <p class="small mb-0">No messages yet. Send a message to coordinate timing, meeting point, or requirements.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var msg in Model.Messages)
+                {
+                    bool isMe = msg.SenderUserId == Model.CurrentUserId;
+                    <div class="d-flex flex-column @(isMe ? "align-items-end" : "align-items-start")">
+                        <div class="small text-muted mb-1 px-1" style="font-size: 0.75rem;">
+                            @(isMe ? "You" : msg.SenderName) • @msg.SentAt.ToString("hh:mm tt, MMM dd")
+                        </div>
+                        <div class="p-3 rounded-4 shadow-sm @(isMe ? "bg-primary text-white" : "bg-white text-dark border")" style="max-width: 75%; word-break: break-word;">
+                            @msg.MessageText
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="p-3 border-top bg-white">
+            <form id="chatForm" class="d-flex gap-2" onsubmit="event.preventDefault(); sendMessage();">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="requestId" value="@Model.Request.Id" />
+                <input type="text" id="messageInput" class="form-control rounded-pill px-4" placeholder="Type your message here..." autocomplete="off" required />
+                <button type="submit" id="sendBtn" class="btn btn-primary rounded-circle" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script>
+    const requestId = "@Model.Request.Id";
+    const currentUserId = @Model.CurrentUserId;
+    const currentUserName = "@Model.CurrentUserName";
+    const container = document.getElementById('messagesContainer');
+    const input = document.getElementById('messageInput');
+    const badge = document.getElementById('connectionBadge');
+
+    function scrollToBottom() {
+        container.scrollTop = container.scrollHeight;
+    }
+    scrollToBottom();
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/hubs/volunteerChat")
+        .withAutomaticReconnect()
+        .build();
+
+    connection.on("ReceiveMessage", function (data) {
+        appendMessage(data.senderUserId, data.senderName, data.messageText, data.sentAt);
+    });
+
+    connection.start().then(function () {
+        connection.invoke("JoinRequestGroup", requestId.toString());
+        badge.className = "badge bg-success-subtle text-success border border-success";
+        badge.innerHTML = '<i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Real-Time Connected';
+    }).catch(function (err) {
+        console.warn("SignalR connection error, falling back to HTTP: ", err.toString());
+        badge.className = "badge bg-warning-subtle text-dark border border-warning";
+        badge.innerHTML = '<i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Direct Chat Mode';
+    });
+
+    function appendMessage(senderId, senderName, text, time) {
+        const placeholder = document.getElementById('noMessagesPlaceholder');
+        if (placeholder) placeholder.remove();
+
+        const isMe = (senderId === currentUserId);
+        const wrapper = document.createElement('div');
+        wrapper.className = `d-flex flex-column ${isMe ? 'align-items-end' : 'align-items-start'}`;
+
+        wrapper.innerHTML = `
+            <div class="small text-muted mb-1 px-1" style="font-size: 0.75rem;">
+                ${isMe ? 'You' : escapeHtml(senderName)} • ${time}
+            </div>
+            <div class="p-3 rounded-4 shadow-sm ${isMe ? 'bg-primary text-white' : 'bg-white text-dark border'}" style="max-width: 75%; word-break: break-word;">
+                ${escapeHtml(text)}
+            </div>
+        `;
+        container.appendChild(wrapper);
+        scrollToBottom();
+    }
+
+    function escapeHtml(string) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(string));
+        return div.innerHTML;
+    }
+
+    async function sendMessage() {
+        const text = input.value.trim();
+        if (!text) return;
+
+        input.value = '';
+
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            try {
+                await connection.invoke("SendMessage", parseInt(requestId), text);
+                return;
+            } catch (err) {
+                console.error("SignalR SendMessage error: ", err);
+            }
+        }
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+        const formData = new FormData();
+        formData.append('requestId', requestId);
+        formData.append('messageText', text);
+        formData.append('__RequestVerificationToken', token);
+
+        try {
+            const resp = await fetch('/VolunteerSupport/SendMessage', {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await resp.json();
+            if (data.success) {
+                appendMessage(data.senderUserId, data.senderName, data.messageText, data.sentAt);
+            }
+        } catch (e) {
+            console.error("HTTP chat error: ", e);
+        }
+    }
+</script>

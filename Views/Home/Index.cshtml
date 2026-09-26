@@ -1,0 +1,139 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title">
+                    <span class="highlight">Empowering</span> Every Ability
+                </h1>
+                <p class="hero-subtitle">
+                    AbilityConnect BD is an AI-powered platform connecting persons with disabilities
+                    to employment, healthcare, accessibility, and community support in Bangladesh.
+                </p>
+                <div class="hero-buttons">
+                    <a href="/Account/Login" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Get Started
+                    </a>
+                    
+                </div>
+            </div>
+            <div class="col-lg-6 hero-image">
+                <img src="~/images/hero-illustration.png" alt="AbilityConnect BD" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title text-center">Our Features</h2>
+        <p class="section-subtitle text-center">Comprehensive solutions for an inclusive Bangladesh</p>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h4>Accessible Job Portal</h4>
+                    <p>Find disability-friendly jobs with accessibility features and flexible working options.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h4>Healthcare & Therapy</h4>
+                    <p>Connect with doctors, therapists, and rehabilitation centers near your location.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h4>Accessibility Map</h4>
+                    <p>Discover accessible public places and report accessibility issues in your community.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h4>Volunteer Matching</h4>
+                    <p>Connect with nearby volunteers for daily assistance and emergency support.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+             
+                    <div class="feature-card h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>AI Recommendations</h4>
+                        <p>Get personalized recommendations based on your disability, skills, and interests.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                
+                    <div class="feature-card h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h4>Community Forum</h4>
+                        <p>Share experiences, ask questions, and support others in our inclusive community.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="how-it-works">
+    <div class="container">
+        <h2 class="section-title text-center">How It Works</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h5>Register</h5>
+                    <p>Create your account based on your role - Disability, Volunteer, or Organization.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h5>Personalize</h5>
+                    <p>Set up your profile with your disability type, skills, location, and interests.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h5>Connect</h5>
+                    <p>Access services, find opportunities, and connect with our community.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts {
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+                <text>
+                        window.addEventListener('DOMContentLoaded', function() {
+                            showToast('@Html.Raw(TempData["SuccessMessage"])', 'success');
+                        });
+                </text>
+        }
+    </script>
+}

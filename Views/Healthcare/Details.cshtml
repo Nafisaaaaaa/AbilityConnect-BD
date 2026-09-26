@@ -1,0 +1,232 @@
+@model SDP1.Models.HealthcareProviderDetailsViewModel
+@{
+    ViewData["Title"] = Model.Provider.Name + " - Healthcare Details";
+    var userRole = Context.Session.GetString("UserRole");
+    var dashboardUrl = userRole switch
+    {
+        "Disability" => "/Disability/Dashboard",
+        "Volunteer" => "/Volunteer/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        "Admin" => "/Admin/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                <li class="breadcrumb-item"><a href="/Healthcare">Healthcare & Therapy Finder</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Provider.Name</li>
+            </ol>
+        </nav>
+        <a href="@dashboardUrl" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-auto text-center text-md-start mb-3 mb-md-0">
+                    <div class="provider-avatar-circle d-inline-flex align-items-center justify-content-center text-primary shadow-sm"
+                         style="width: 90px; height: 90px; border-radius: 50%; background: #E8F0FE; font-size: 2.5rem;">
+                        @switch (Model.Provider.ProviderType)
+                        {
+                            case "Doctor":
+                                <i class="fas fa-user-md"></i>
+                                break;
+                            case "Physiotherapist":
+                                <i class="fas fa-walking"></i>
+                                break;
+                            case "Speech Therapist":
+                                <i class="fas fa-comments"></i>
+                                break;
+                            case "Rehabilitation Center":
+                                <i class="fas fa-hospital"></i>
+                                break;
+                            case "Eye Specialist":
+                                <i class="fas fa-eye"></i>
+                                break;
+                            case "Mental Health Specialist":
+                                <i class="fas fa-brain"></i>
+                                break;
+                            default:
+                                <i class="fas fa-stethoscope"></i>
+                                break;
+                        }
+                    </div>
+                </div>
+
+                <div class="col-md">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                        <span class="badge bg-primary px-3 py-1" style="font-size: 0.85rem;">@Model.Provider.ProviderType</span>
+                    </div>
+                    <h3 class="fw-bold mb-1" style="color: #2D3748;">@Model.Provider.Name</h3>
+                    <p class="text-secondary mb-2 fs-6">
+                        <i class="fas fa-hospital text-muted me-1"></i> <strong>@Model.Provider.OrganizationOrClinic</strong>
+                        <span class="mx-2 text-muted">•</span>
+                        <i class="fas fa-certificate text-primary me-1"></i> @Model.Provider.Specialization
+                    </p>
+                </div>
+
+                <div class="col-md-auto text-md-end mt-3 mt-md-0">
+                    <div class="d-flex flex-column gap-2">
+                        <a href="/Healthcare/BookAppointment/@Model.Provider.Id" class="btn btn-primary btn-lg shadow-sm">
+                            <i class="fas fa-calendar-plus me-1"></i> Book Appointment
+                        </a>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#chatNoticeModal">
+                            <i class="fas fa-comment-medical me-1"></i> Chat with Doctor
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
+                <h5 class="fw-bold mb-3" style="color: #2D3748;"><i class="fas fa-user-circle text-primary me-2"></i> About the Provider</h5>
+                <p class="text-secondary" style="line-height: 1.8; white-space: pre-line;">@Model.Provider.Description</p>
+
+                <h6 class="fw-bold mt-4 mb-3 text-dark"><i class="fas fa-cogs text-primary me-2"></i> Available Services & Facilities</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var service in Model.ServicesList)
+                    {
+                        <span class="badge px-3 py-2" style="background: #E8F0FE; color: #3A7BC8; font-size: 0.85rem; font-weight: 500;">
+                            <i class="fas fa-check-circle me-1 text-primary"></i> @service
+                        </span>
+                    }
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0" style="color: #2D3748;"><i class="fas fa-map-marker-alt text-danger me-2"></i> Clinic Location & Facility</h5>
+                </div>
+
+                <p class="text-secondary mb-3">
+                    <i class="fas fa-map-pin text-danger me-1"></i> @Model.Provider.Address, @Model.Provider.City, @Model.Provider.District
+                </p>
+
+                <div class="p-3 rounded-3" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <span class="small text-muted text-uppercase fw-semibold d-block">Street Address</span>
+                            <span class="fw-semibold text-dark"><i class="fas fa-map-marker-alt text-danger me-1"></i> @Model.Provider.Address</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="small text-muted text-uppercase fw-semibold d-block">City / Area</span>
+                            <span class="fw-semibold text-dark">@Model.Provider.City</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="small text-muted text-uppercase fw-semibold d-block">District</span>
+                            <span class="fw-semibold text-dark">@Model.Provider.District</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-3 border-top text-muted small d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-building text-primary me-1"></i> @Model.Provider.OrganizationOrClinic</span>
+                        <span><i class="fas fa-wheelchair me-1 text-success"></i> Accessible entrance confirmed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px; background: linear-gradient(to bottom, #FFFFFF, #F8FAFC);">
+                <h5 class="fw-bold mb-3" style="color: #2D3748;"><i class="fas fa-calendar-check text-primary me-2"></i> Consultation Details</h5>
+
+                <div class="mb-3 pb-3 border-bottom">
+                    <span class="text-muted small d-block mb-1">Consultation Fee</span>
+                    @if (Model.Provider.ConsultationFee.HasValue && Model.Provider.ConsultationFee.Value > 0)
+                    {
+                        <h4 class="fw-bold text-primary mb-0">BDT @Model.Provider.ConsultationFee.Value.ToString("N0")</h4>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success-subtle text-success fs-6 border border-success-subtle">Free / Subsidized Service</span>
+                    }
+                </div>
+
+                <div class="mb-3 pb-3 border-bottom">
+                    <span class="text-muted small d-block mb-1"><i class="fas fa-clock text-info me-1"></i> Availability Schedule</span>
+                    <span class="fw-semibold text-dark">@Model.Provider.AvailabilitySchedule</span>
+                </div>
+
+                <div class="mb-3 pb-3 border-bottom">
+                    <span class="text-muted small d-block mb-1"><i class="fas fa-phone text-success me-1"></i> Phone</span>
+                    <a href="tel:@Model.Provider.Phone" class="fw-semibold text-dark text-decoration-none">@Model.Provider.Phone</a>
+                </div>
+
+                <div class="mb-4">
+                    <span class="text-muted small d-block mb-1"><i class="fas fa-envelope text-primary me-1"></i> Email</span>
+                    <a href="mailto:@Model.Provider.Email" class="fw-semibold text-dark text-decoration-none">@Model.Provider.Email</a>
+                </div>
+
+                @if (Model.UserLatestAppointment != null)
+                {
+                    <div class="alert alert-info py-2 px-3 mb-3 small" role="alert">
+                        <strong><i class="fas fa-info-circle me-1"></i> Your Latest Request:</strong><br />
+                        Date: @Model.UserLatestAppointment.AppointmentDate.ToString("MMM dd, yyyy") (@Model.UserLatestAppointment.TimeSlot)<br />
+                        Status: <span class="badge @(Model.UserLatestAppointment.Status == "Confirmed" ? "bg-success" : Model.UserLatestAppointment.Status == "Pending" ? "bg-warning text-dark" : Model.UserLatestAppointment.Status == "Completed" ? "bg-primary" : "bg-secondary")">@Model.UserLatestAppointment.Status</span>
+                    </div>
+                }
+
+                <div class="d-grid gap-2">
+                    <a href="/Healthcare/BookAppointment/@Model.Provider.Id" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calendar-plus me-1"></i> Book Appointment
+                    </a>
+                    @if (userRole == "Admin" || (userRole == "Organization" && Model.Provider.OrganizationId == Context.Session.GetInt32("UserId")))
+                    {
+                        <a href="/Healthcare/Edit/@Model.Provider.Id" class="btn btn-outline-secondary">
+                            <i class="fas fa-edit me-1"></i> Edit Provider Profile
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4" style="border-radius: 12px;">
+                <h6 class="fw-bold mb-3" style="color: #2D3748;"><i class="fas fa-universal-access text-primary me-2"></i> Disability Provisions</h6>
+                <ul class="list-unstyled mb-0 small">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Wheelchair accessible consultation rooms</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Accompanied companion allowed</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Assistive communication support available</li>
+                    <li><i class="fas fa-check text-success me-2"></i> Priority waiting queue for severe disabilities</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="chatNoticeModal" tabindex="-1" aria-labelledby="chatNoticeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow" style="border-radius: 12px;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-primary" id="chatNoticeModalLabel">
+                    <i class="fas fa-comment-medical me-2"></i> Doctor Messaging
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4 text-center">
+                <div class="mb-3 text-primary" style="font-size: 3rem;">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h6 class="fw-bold mb-2">Direct Communication Channel</h6>
+                <p class="text-secondary small mb-3">
+                    Direct real-time chat with <strong>@Model.Provider.Name</strong> will be unlocked when the Real-Time Chat System is activated.
+                </p>
+                <div class="p-3 bg-light rounded text-start small">
+                    <p class="mb-1 text-muted">For immediate consultations or urgent inquiries, please contact:</p>
+                    <div class="fw-semibold text-dark"><i class="fas fa-phone text-success me-2"></i> @Model.Provider.Phone</div>
+                    <div class="fw-semibold text-dark"><i class="fas fa-envelope text-primary me-2"></i> @Model.Provider.Email</div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <a href="/Healthcare/BookAppointment/@Model.Provider.Id" class="btn btn-primary btn-sm">Book Appointment Instead</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,181 @@
+@model SDP1.Models.JobEditViewModel
+@{
+    ViewData["Title"] = "Edit Job - " + Model.Title;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Jobs/Manage" class="text-decoration-none">Manage Jobs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Job</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm border-0 bg-white">
+                <div class="card-header bg-primary text-white p-4">
+                    <h4 class="fw-bold mb-1"><i class="fas fa-edit me-2"></i>Edit Job Posting</h4>
+                    <p class="mb-0 opacity-90">Update job details, accessibility accommodations, or application settings.</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post" id="editJobForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Basic Job Details</h5>
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-semibold">Job Title <span class="text-danger">*</span></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label asp-for="JobType" class="form-label fw-semibold">Job Type <span class="text-danger">*</span></label>
+                                <select asp-for="JobType" class="form-select">
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Internship">Internship</option>
+                                    <option value="Volunteer">Volunteer</option>
+                                </select>
+                                <span asp-validation-for="JobType" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="WorkplaceType" class="form-label fw-semibold">Workplace Option <span class="text-danger">*</span></label>
+                                <select asp-for="WorkplaceType" class="form-select">
+                                    <option value="Onsite">Onsite</option>
+                                    <option value="Remote">Remote</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                </select>
+                                <span asp-validation-for="WorkplaceType" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="JobStatus" class="form-label fw-semibold">Job Status <span class="text-danger">*</span></label>
+                                <select asp-for="JobStatus" class="form-select">
+                                    <option value="Active">Active</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="Draft">Draft</option>
+                                </select>
+                                <span asp-validation-for="JobStatus" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Location" class="form-label fw-semibold">Location / Address <span class="text-danger">*</span></label>
+                                <input asp-for="Location" class="form-control" />
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Salary" class="form-label fw-semibold">Salary / Compensation</label>
+                                <input asp-for="Salary" class="form-control" />
+                                <span asp-validation-for="Salary" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label fw-semibold">Job Description <span class="text-danger">*</span></label>
+                            <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">2. Accessibility & Workplace Accommodations</h5>
+
+                        <div class="mb-3">
+                            <label asp-for="AccessibilityFeatures" class="form-label fw-semibold">Accessibility Features (comma-separated)</label>
+                            <input asp-for="AccessibilityFeatures" class="form-control" placeholder="e.g. Wheelchair Ramp, Screen Reader Workstation, Accessible Restrooms" />
+                            <span asp-validation-for="AccessibilityFeatures" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch pt-2">
+                                    <input asp-for="FlexibleWorkingHours" class="form-check-input" type="checkbox" id="flexSwitchEdit" />
+                                    <label asp-for="FlexibleWorkingHours" class="form-check-label fw-semibold">Flexible Working Hours</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch pt-2">
+                                    <input asp-for="AssistiveTechnologySupport" class="form-check-input" type="checkbox" id="techSwitchEdit" />
+                                    <label asp-for="AssistiveTechnologySupport" class="form-check-label fw-semibold">Assistive Technology Support</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="AssistiveTechDetails" class="form-label fw-semibold">Assistive Technology Details</label>
+                            <input asp-for="AssistiveTechDetails" class="form-control" />
+                            <span asp-validation-for="AssistiveTechDetails" class="text-danger small"></span>
+                        </div>
+
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">3. Skills, Requirements & Deadlines</h5>
+
+                        <div class="mb-3">
+                            <label asp-for="RequiredSkills" class="form-label fw-semibold">Required Skills <span class="text-danger">*</span></label>
+                            <input asp-for="RequiredSkills" class="form-control" />
+                            <span asp-validation-for="RequiredSkills" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="EducationRequirement" class="form-label fw-semibold">Education Requirement</label>
+                                <input asp-for="EducationRequirement" class="form-control" />
+                                <span asp-validation-for="EducationRequirement" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="ExperienceLevel" class="form-label fw-semibold">Experience Level</label>
+                                <select asp-for="ExperienceLevel" class="form-select">
+                                    <option value="Freshers Welcome">Freshers Welcome</option>
+                                    <option value="Entry-level (1-2 years)">Entry-level (1-2 years)</option>
+                                    <option value="Mid-level (3-5 years)">Mid-level (3-5 years)</option>
+                                    <option value="Senior (5+ years)">Senior (5+ years)</option>
+                                </select>
+                                <span asp-validation-for="ExperienceLevel" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="ApplicationDeadline" class="form-label fw-semibold">Application Deadline <span class="text-danger">*</span></label>
+                                <input asp-for="ApplicationDeadline" type="date" class="form-control" value="@Model.ApplicationDeadline.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="ApplicationDeadline" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="VacancyCount" class="form-label fw-semibold">Number of Vacancies</label>
+                                <input asp-for="VacancyCount" type="number" class="form-control" min="1" max="100" />
+                                <span asp-validation-for="VacancyCount" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-light rounded-3 mb-4 border">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsPublished" class="form-check-input" type="checkbox" id="isPublishedEdit" />
+                                <label asp-for="IsPublished" class="form-check-label fw-semibold">Published on portal</label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <a href="/Jobs/Manage" class="btn btn-light border">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 py-2">
+                                <i class="fas fa-save me-2"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

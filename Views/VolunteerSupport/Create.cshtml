@@ -1,0 +1,214 @@
+@model SDP1.Models.VolunteerSupportRequestCreateViewModel
+@{
+    ViewData["Title"] = "Request Volunteer Support";
+}
+
+<div class="container py-4">
+    <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/VolunteerSupport">Volunteer Support</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Request Support</li>
+            </ol>
+        </nav>
+        <div class="d-flex gap-2">
+            <a href="/Disability/Dashboard" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+                <i class="fas fa-home me-1"></i> Back to Dashboard
+            </a>
+            <a href="/VolunteerSupport" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                <i class="fas fa-arrow-left me-1"></i> My Requests
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5">
+                <div class="mb-4">
+                    <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1 mb-2">
+                        <i class="fas fa-hand-holding-heart me-1"></i> Community Assistance
+                    </span>
+                    <h2 class="fw-bold text-dark">Request Volunteer Support</h2>
+                    <p class="text-muted">
+                        Submit details regarding the assistance you need. We'll automatically match and alert verified volunteers located in your city.
+                    </p>
+                </div>
+
+                <form method="post" asp-action="Create" id="supportRequestForm">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="AssistanceType" class="form-label fw-bold small text-dark d-block">
+                            Assistance Type *
+                        </label>
+                        <div class="row g-2">
+                            @{
+                                var types = new[]
+                                {
+                                    new { Name = "Hospital Visits", Icon = "fa-hospital-user", Desc = "Doctor visits, medical tests & clinic accompaniment" },
+                                    new { Name = "Shopping Assistance", Icon = "fa-shopping-cart", Desc = "Grocery, pharmacy, mobility aid shopping" },
+                                    new { Name = "Travel Assistance", Icon = "fa-route", Desc = "Bus, train station, or airport navigation" },
+                                    new { Name = "Document Submission", Icon = "fa-file-invoice", Desc = "Government offices, banks, form submissions" },
+                                    new { Name = "Daily Support", Icon = "fa-hands-helping", Desc = "Reading, basic errands, event companionship" }
+                                };
+                            }
+                            @foreach (var t in types)
+                            {
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="card h-100 p-3 border rounded-3 text-start cursor-pointer hover-card type-card @(Model.AssistanceType == t.Name ? "border-primary bg-primary-subtle" : "")">
+                                        <input type="radio" name="AssistanceType" value="@t.Name" class="d-none type-radio" @(Model.AssistanceType == t.Name ? "checked" : "") />
+                                        <div class="fs-4 text-primary mb-1">
+                                            <i class="fas @t.Icon"></i>
+                                        </div>
+                                        <div class="fw-bold small text-dark">@t.Name</div>
+                                        <div class="small text-muted mt-1" style="font-size: 0.75rem;">@t.Desc</div>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <span asp-validation-for="AssistanceType" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-semibold small text-dark">Request Title *</label>
+                        <input asp-for="Title" class="form-control" placeholder="e.g. Need assistance attending OPD appointment at Dhaka Medical College" required />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold small text-dark">Detailed Description *</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the specific help you need, special requirements, meeting point, or wheelchair guidance..." required></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="RequestDate" class="form-label fw-semibold small text-dark">Date Needed *</label>
+                            <input asp-for="RequestDate" type="date" class="form-control" required />
+                            <span asp-validation-for="RequestDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="RequestTime" class="form-label fw-semibold small text-dark">Time / Duration *</label>
+                            <input asp-for="RequestTime" class="form-control" placeholder="e.g. 10:00 AM (approx 2 hours)" required />
+                            <span asp-validation-for="RequestTime" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <label asp-for="Location" class="form-label fw-semibold small text-dark">Specific Meeting Address / Venue *</label>
+                            <input asp-for="Location" class="form-control" placeholder="e.g. Gate 2, Dhaka Medical College Hospital, Ramna" required />
+                            <span asp-validation-for="Location" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="City" class="form-label fw-semibold small text-dark">City *</label>
+                            <input asp-for="City" class="form-control" placeholder="e.g. Dhaka" required />
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="District" class="form-label fw-semibold small text-dark">District *</label>
+                            <input asp-for="District" class="form-control" placeholder="e.g. Dhaka" required />
+                            <span asp-validation-for="District" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Urgency" class="form-label fw-semibold small text-dark">Urgency Level *</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Urgency" id="urgencyStandard" value="Standard" checked="@(Model.Urgency == "Standard")" />
+                                <label class="form-check-label small" for="urgencyStandard">
+                                    <span class="badge bg-light text-dark border">Standard (Routine Activity)</span>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Urgency" id="urgencyHigh" value="High" checked="@(Model.Urgency == "High")" />
+                                <label class="form-check-label small" for="urgencyHigh">
+                                    <span class="badge bg-warning text-dark">High (Time Sensitive)</span>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Urgency" id="urgencyEmergency" value="Emergency" checked="@(Model.Urgency == "Emergency")" />
+                                <label class="form-check-label small" for="urgencyEmergency">
+                                    <span class="badge bg-danger">Emergency (Immediate Need)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-top d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg px-5 fw-bold">
+                            <i class="fas fa-paper-plane me-2"></i> Submit & Broadcast Request
+                        </button>
+                        <a href="/VolunteerSupport" class="btn btn-outline-secondary btn-lg px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="fas fa-users-cog text-primary fs-5"></i>
+                    <h6 class="fw-bold mb-0">Nearby Available Volunteers</h6>
+                </div>
+                <p class="text-muted small mb-3">
+                    Verified volunteers ready to provide support in your locality:
+                </p>
+
+                @if (!Model.MatchingVolunteers.Any())
+                {
+                    <div class="p-3 bg-light rounded-3 text-center small text-muted">
+                        <i class="fas fa-search-location mb-1 d-block fs-5"></i>
+                        No specific volunteers registered for this exact city yet, but all registered platform volunteers will receive your broadcast request!
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-column gap-3">
+                        @foreach (var volunteer in Model.MatchingVolunteers)
+                        {
+                            <div class="p-3 rounded-3 bg-light border d-flex gap-3 align-items-center">
+                                <img src="@(volunteer.ProfilePicture ?? "/images/default-avatar.png")" alt="@volunteer.FullName" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" />
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <div class="fw-bold text-dark small text-truncate">@volunteer.FullName</div>
+                                    <div class="small text-muted text-truncate">
+                                        <i class="fas fa-map-marker-alt text-danger me-1"></i>@(volunteer.City ?? volunteer.Location)
+                                    </div>
+                                    <span class="badge bg-success-subtle text-success border border-success mt-1" style="font-size: 0.65rem;">
+                                        <i class="fas fa-check-circle me-1"></i>Verified & Available
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
+                <h6 class="fw-bold mb-2"><i class="fas fa-shield-alt text-success me-2"></i>Safety & Privacy</h6>
+                <ul class="small text-muted ps-3 mb-0">
+                    <li class="mb-1">All volunteers are community-verified.</li>
+                    <li class="mb-1">Phone numbers are shared only once a volunteer accepts.</li>
+                    <li class="mb-1">Coordinate meeting spots via our built-in real-time chat.</li>
+                    <li>You can cancel a pending or accepted request anytime.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const typeCards = document.querySelectorAll('.type-card');
+        typeCards.forEach(card => {
+            card.addEventListener('click', function () {
+                typeCards.forEach(c => c.classList.remove('border-primary', 'bg-primary-subtle'));
+                this.classList.add('border-primary', 'bg-primary-subtle');
+                const radio = this.querySelector('.type-radio');
+                if (radio) radio.checked = true;
+            });
+        });
+    });
+</script>

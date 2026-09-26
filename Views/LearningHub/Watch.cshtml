@@ -1,0 +1,137 @@
+@model SDP1.Models.LearningVideoDetailsViewModel
+@{
+    ViewData["Title"] = Model.Video.Title;
+    var v = Model.Video;
+    var catIcon = v.Category switch
+    {
+        "Braille" => "fas fa-braille",
+        "Sign Language" => "fas fa-hands",
+        "Computer Skills" => "fas fa-laptop",
+        "Freelancing" => "fas fa-briefcase",
+        _ => "fas fa-mobile-alt"
+    };
+}
+
+<div class="container py-4">
+    <div class="mb-3">
+        <a href="/LearningHub?category=@v.Category" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to @v.Category Lessons
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm overflow-hidden mb-4">
+                <div class="ratio ratio-16x9 bg-black">
+                    @if (!string.IsNullOrEmpty(Model.EmbedUrl))
+                    {
+                        <iframe src="@Model.EmbedUrl" 
+                                title="@v.Title" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowfullscreen
+                                loading="lazy">
+                        </iframe>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column align-items-center justify-content-center text-white p-4">
+                            <i class="fas fa-exclamation-triangle fa-3x text-warning mb-2"></i>
+                            <h5>Unable to load video player</h5>
+                            <p class="small text-muted mb-0">The video URL could not be safely resolved.</p>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                        <span class="badge bg-primary-subtle text-primary border border-primary fs-6">
+                            <i class="@catIcon me-1"></i> @v.Category
+                        </span>
+                        @if (!string.IsNullOrEmpty(v.Duration))
+                        {
+                            <span class="badge bg-light text-dark border fs-6">
+                                <i class="fas fa-clock me-1 text-primary"></i> @v.Duration
+                            </span>
+                        }
+                    </div>
+
+                    <h2 class="fw-bold mb-3">@v.Title</h2>
+
+                    <hr />
+
+                    <h5 class="fw-bold text-primary mb-2"><i class="fas fa-align-left me-2"></i> Lesson Description & Notes</h5>
+                    <div class="text-secondary" style="line-height: 1.8; white-space: pre-wrap;">@v.Description</div>
+
+                    <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center text-muted small">
+                        <span><i class="fas fa-calendar-alt me-1"></i> Added: @v.CreatedAt.ToString("MMMM dd, yyyy")</span>
+                        <a href="@v.YouTubeUrl" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-danger">
+                            <i class="fab fa-youtube me-1"></i> Open on YouTube
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-3"><i class="fas fa-list-ul text-primary me-2"></i> Related in @v.Category</h5>
+
+                @if (Model.RelatedVideos.Any())
+                {
+                    <div class="d-flex flex-column gap-3">
+                        @foreach (var rel in Model.RelatedVideos)
+                        {
+                            <div class="d-flex gap-3 align-items-start p-2 rounded hover-bg-light transition-all border-bottom pb-3">
+                                <div class="position-relative flex-shrink-0" style="width: 100px; aspect-ratio: 16/9; overflow: hidden; border-radius: 6px;">
+                                    @if (!string.IsNullOrEmpty(rel.ThumbnailUrl))
+                                    {
+                                        <img src="@rel.ThumbnailUrl" alt="@rel.Title" class="w-100 h-100 object-fit-cover" />
+                                    }
+                                    else
+                                    {
+                                        <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center text-white">
+                                            <i class="fas fa-play"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <h6 class="mb-1 text-truncate">
+                                        <a href="/LearningHub/Watch/@rel.Id" class="text-decoration-none text-dark fw-bold hover-primary">@rel.Title</a>
+                                    </h6>
+                                    @if (!string.IsNullOrEmpty(rel.Duration))
+                                    {
+                                        <small class="text-muted d-block"><i class="fas fa-clock me-1"></i> @rel.Duration</small>
+                                    }
+                                    <a href="/LearningHub/Watch/@rel.Id" class="btn btn-link btn-sm p-0 text-primary fw-semibold mt-1">
+                                        Watch <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted small mb-0">No other lessons found in this category right now.</p>
+                }
+
+                <div class="mt-4 pt-3 border-top">
+                    <a href="/LearningHub" class="btn btn-outline-primary w-100 btn-sm">
+                        <i class="fas fa-th-large me-1"></i> Browse All Hub Categories
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .hover-bg-light:hover {
+            background-color: #f8fafc;
+        }
+        .hover-primary:hover {
+            color: #2563EB !important;
+        }
+    </style>
+}

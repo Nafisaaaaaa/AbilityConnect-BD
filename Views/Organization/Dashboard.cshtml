@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "Organization Dashboard";
+    var orgName = ViewBag.UserName ?? "Organization";
+    var logo = ViewBag.Logo ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar org-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile org-profile">
+                    <img src="@logo" alt="Organization" class="profile-img" />
+                    <h5>@orgName</h5>
+                    <span class="badge bg-primary">Organization</span>
+                    <span class="badge bg-success mt-1">Verified</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li class="active"><a href="/Organization/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Organization/ManageJobPosts"><i class="fas fa-briefcase"></i> Manage Job Posts</a></li>
+                    <li><a href="/Organization/TrainingPrograms"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li><a href="/Organization/ManageScholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Organization/ManageEvents"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="/Organization/ReviewApplications"><i class="fas fa-users"></i> Review Applications</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Profile/ChangePassword"><i class="fas fa-key"></i> Change Password</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="welcome-card org-welcome">
+                <div>
+                    <h3>Welcome, @orgName! 🏢</h3>
+                    <p class="mb-0">Manage your organization's services and opportunities.</p>
+                </div>
+                <div class="welcome-date">
+                    <i class="fas fa-calendar-alt"></i> @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .org-sidebar .sidebar-nav li.active a {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .org-welcome {
+            background: linear-gradient(135deg, #2D3748, #4A5568);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            color: #ffffff;
+        }
+
+        .org-welcome h3 {
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .org-welcome p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .org-welcome .welcome-date {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: #ffffff;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+}

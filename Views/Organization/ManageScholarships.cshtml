@@ -1,0 +1,161 @@
+@model IEnumerable<SDP1.Models.Scholarship>
+@{
+    ViewData["Title"] = "Manage Scholarships";
+    var orgName = ViewBag.UserName ?? "Organization";
+    var logo = ViewBag.Logo ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar org-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile org-profile">
+                    <img src="@logo" alt="Organization" class="profile-img" />
+                    <h5>@orgName</h5>
+                    <span class="badge bg-primary">Organization</span>
+                    <span class="badge bg-success mt-1">Verified</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Organization/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Organization/ManageJobPosts"><i class="fas fa-briefcase"></i> Manage Job Posts</a></li>
+                    <li><a href="/Organization/TrainingPrograms"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li class="active"><a href="/Organization/ManageScholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Organization/ManageEvents"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="/Organization/ReviewApplications"><i class="fas fa-users"></i> Review Applications</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="fas fa-award text-warning me-2"></i> Scholarships & Educational Grants</h2>
+                    <p class="text-muted mb-0">Provide academic and vocational scholarship support to students and professionals with disabilities.</p>
+                </div>
+                <a href="/Organization/CreateScholarship" class="btn btn-primary shadow-sm">
+                    <i class="fas fa-plus-circle me-1"></i> Post New Scholarship
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-3">
+                    <form method="get" class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" name="search" value="@ViewBag.Search" class="form-control border-start-0" placeholder="Search by title or field of study..." />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="type" class="form-select">
+                                <option value="">All Funding Types</option>
+                                <option value="Full Funding" selected="@(ViewBag.Type == "Full Funding")">Full Funding</option>
+                                <option value="Tuition Waiver" selected="@(ViewBag.Type == "Tuition Waiver")">Tuition Waiver</option>
+                                <option value="Skill Course" selected="@(ViewBag.Type == "Skill Course")">Skill Course</option>
+                                <option value="Degree Support" selected="@(ViewBag.Type == "Degree Support")">Degree Support</option>
+                                <option value="Monthly Stipend" selected="@(ViewBag.Type == "Monthly Stipend")">Monthly Stipend</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i> Filter</button>
+                            <a href="/Organization/ManageScholarships" class="btn btn-outline-secondary"><i class="fas fa-redo"></i></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="card border-0 shadow-sm">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Scholarship Title</th>
+                                    <th>Type & Subject</th>
+                                    <th>Deadline</th>
+                                    <th>Applications</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var appCount = item.Applications?.Count ?? 0;
+                                    var statusBadge = item.Status == "Active" ? "bg-success" : "bg-secondary";
+                                    var isExpired = DateTime.UtcNow.Date > item.ApplicationDeadline.Date;
+
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold">@item.Title</div>
+                                            <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> @item.Location</small>
+                                        </td>
+                                        <td>
+                                            <div><span class="badge bg-warning text-dark">@item.ScholarshipType</span></div>
+                                            <small class="text-muted">@item.FieldOfStudy</small>
+                                        </td>
+                                        <td>
+                                            <div class="small @(isExpired ? "text-danger fw-bold" : "text-dark")">
+                                                <i class="fas fa-calendar-alt me-1"></i> @item.ApplicationDeadline.ToString("MMM dd, yyyy")
+                                            </div>
+                                            @if (isExpired)
+                                            {
+                                                <span class="badge bg-danger">Closed</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-info text-dark p-2">
+                                                <i class="fas fa-file-alt me-1"></i> @appCount Applied
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge @statusBadge">@item.Status</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <a href="/Organization/ScholarshipApplications/@item.Id" class="btn btn-sm btn-outline-primary me-1" title="View Submitted Applications">
+                                                <i class="fas fa-file-alt me-1"></i> Applications (@appCount)
+                                            </a>
+                                            <a href="/Organization/EditScholarship/@item.Id" class="btn btn-sm btn-outline-secondary me-1" title="Edit Scholarship">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="post" action="/Organization/DeleteScholarship/@item.Id" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this scholarship?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Scholarship">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm text-center py-5">
+                    <div class="card-body">
+                        <i class="fas fa-award fa-4x text-muted mb-3"></i>
+                        <h4 class="fw-bold">No Scholarships Found</h4>
+                        <p class="text-muted mb-4">You have not posted any scholarships yet or none match your search.</p>
+                        <a href="/Organization/CreateScholarship" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-1"></i> Post Your First Scholarship
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

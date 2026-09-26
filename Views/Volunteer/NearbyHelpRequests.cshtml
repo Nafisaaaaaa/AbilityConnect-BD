@@ -1,0 +1,308 @@
+@model SDP1.Models.VolunteerNearbyRequestsViewModel
+@{
+    ViewData["Title"] = "Nearby Help Requests";
+    var userName = ViewBag.UserName ?? "Volunteer";
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar volunteer-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile volunteer-profile">
+                    <img src="@(ViewBag.ProfilePicture ?? "/images/default-avatar.png")" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-primary">Volunteer</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Volunteer/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li class="active"><a href="/Volunteer/NearbyHelpRequests"><i class="fas fa-hands-helping"></i> Nearby Help Requests</a></li>
+                    <li><a href="/Volunteer/AssignedTasks"><i class="fas fa-tasks"></i> Assigned Tasks</a></li>
+                    <li><a href="/Volunteer/VolunteerHistory"><i class="fas fa-history"></i> Volunteer History</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4">
+                    <i class="fas fa-check-circle me-1"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4">
+                    <i class="fas fa-exclamation-circle me-1"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                <div>
+                    <h3 class="fw-bold mb-1"><i class="fas fa-hands-helping text-primary me-2"></i>Nearby Help Requests</h3>
+                    <p class="text-muted mb-0">Open support requests matched to your location (@(Model.CurrentVolunteer.City ?? Model.CurrentVolunteer.Location))</p>
+                </div>
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <a href="/Volunteer/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                    <span class="badge @(Model.CurrentVolunteer.IsAvailable ? "bg-primary" : "bg-secondary") fs-6 px-3 py-2">
+                        Status: @(Model.CurrentVolunteer.IsAvailable ? "Available for Tasks" : "Unavailable")
+                    </span>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm bg-white rounded-3 mb-4 p-3">
+                <form method="get" asp-action="NearbyHelpRequests" class="row g-2 align-items-center">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-muted mb-1">Filter City</label>
+                        <input type="text" name="city" class="form-control form-control-sm" placeholder="e.g. Dhaka" value="@Model.CityFilter" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold text-muted mb-1">Assistance Type</label>
+                        <select name="assistanceType" class="form-select form-select-sm">
+                            <option value="">All Assistance Types</option>
+                            <option value="Hospital Visits" selected="@(Model.AssistanceTypeFilter == "Hospital Visits")">Hospital Visits</option>
+                            <option value="Shopping Assistance" selected="@(Model.AssistanceTypeFilter == "Shopping Assistance")">Shopping Assistance</option>
+                            <option value="Travel Assistance" selected="@(Model.AssistanceTypeFilter == "Travel Assistance")">Travel Assistance</option>
+                            <option value="Document Submission" selected="@(Model.AssistanceTypeFilter == "Document Submission")">Document Submission</option>
+                            <option value="Daily Support" selected="@(Model.AssistanceTypeFilter == "Daily Support")">Daily Support</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-muted mb-1">Urgency</label>
+                        <select name="urgency" class="form-select form-select-sm">
+                            <option value="">All Urgencies</option>
+                            <option value="Emergency" selected="@(Model.UrgencyFilter == "Emergency")">Emergency</option>
+                            <option value="High" selected="@(Model.UrgencyFilter == "High")">High</option>
+                            <option value="Standard" selected="@(Model.UrgencyFilter == "Standard")">Standard</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end gap-1">
+                        <button type="submit" class="btn btn-sm btn-primary w-100">Filter</button>
+                        <a href="/Volunteer/NearbyHelpRequests" class="btn btn-sm btn-outline-secondary">Reset</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden bg-white">
+                <div class="card-header bg-white border-0 pt-3 px-4 pb-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-0">
+                            <i class="fas fa-map-marked-alt text-primary me-2"></i>Nearby Requests Map
+                        </h5>
+                        <small class="text-muted">Interactive map showing assistance requests in your vicinity.</small>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1">
+                        @Model.AvailableRequests.Count Request@(Model.AvailableRequests.Count == 1 ? "" : "s") Mapped
+                    </span>
+                </div>
+                <div class="card-body p-4 pt-2">
+                    <div id="volunteerRequestsMap" style="height: 420px; width: 100%; border-radius: 12px; border: 1px solid #dee2e6;"></div>
+                    <div class="d-flex flex-wrap gap-3 mt-2 text-muted small">
+                        <span><i class="fas fa-circle text-danger me-1"></i>Emergency Request</span>
+                        <span><i class="fas fa-circle text-warning me-1"></i>High Urgency</span>
+                        <span><i class="fas fa-circle text-primary me-1"></i>Standard Request</span>
+                        <span><i class="fas fa-map-pin text-info me-1"></i>Your Location</span>
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.AvailableRequests.Any())
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <i class="fas fa-check-circle text-primary fa-3x mb-3 opacity-50"></i>
+                    <h5 class="fw-bold text-dark">No Pending Requests In This Area</h5>
+                    <p class="text-muted small max-w-md mx-auto">
+                        All current requests have either been accepted or no open requests match your filter. Check back shortly as new requests arrive!
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4" id="requestsGrid">
+                    @foreach (var req in Model.AvailableRequests)
+                    {
+                        <div class="col-lg-6" id="request-card-@req.Id">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-column hover-card">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                        <i class="fas fa-tag me-1"></i>@req.AssistanceType
+                                    </span>
+                                    @if (req.Urgency == "Emergency")
+                                    {
+                                        <span class="badge bg-danger animate-pulse">Emergency</span>
+                                    }
+                                    else if (req.Urgency == "High")
+                                    {
+                                        <span class="badge bg-warning text-dark">High Urgency</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-dark border">Standard</span>
+                                    }
+                                </div>
+
+                                <h5 class="fw-bold text-dark mb-1">@req.Title</h5>
+                                
+                                <p class="text-secondary small mb-3 flex-grow-1">
+                                    @req.Description
+                                </p>
+
+                                <div class="p-3 bg-light rounded-3 mb-3 small">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <span class="text-muted d-block">Requested For:</span>
+                                            <span class="fw-semibold text-dark">
+                                                <i class="fas fa-calendar-alt text-primary me-1"></i>@req.RequestDate.ToString("MMM dd, yyyy")
+                                            </span>
+                                            <div class="text-muted small">@req.RequestTime</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block">Location:</span>
+                                            <span class="fw-semibold text-dark">
+                                                <i class="fas fa-map-marker-alt text-danger me-1"></i>@req.City, @req.District
+                                            </span>
+                                            <div class="text-muted small text-truncate">@req.Location</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                                    <div class="small text-muted">
+                                        <i class="fas fa-user me-1"></i>@(req.RequestedByUser?.FullName ?? "Disability User")
+                                    </div>
+
+                                    <form method="post" asp-action="AcceptRequest" asp-route-requestId="@req.Id">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary fw-bold px-4 rounded-3 shadow-sm">
+                                            <i class="fas fa-check-circle me-1"></i> Accept Request
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        const requestsData = [
+            @foreach (var req in Model.AvailableRequests.Where(r => r.Latitude.HasValue && r.Longitude.HasValue))
+            {
+                <text>
+                {
+                    id: @req.Id,
+                    title: "@Html.Raw(req.Title.Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", ""))",
+                    assistanceType: "@Html.Raw(req.AssistanceType)",
+                    urgency: "@Html.Raw(req.Urgency)",
+                    city: "@Html.Raw(req.City)",
+                    district: "@Html.Raw(req.District)",
+                    location: "@Html.Raw((req.Location ?? "").Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", ""))",
+                    date: "@req.RequestDate.ToString("MMM dd, yyyy")",
+                    time: "@req.RequestTime",
+                    user: "@Html.Raw((req.RequestedByUser?.FullName ?? "Disability User").Replace("\"", "\\\"").Replace("\n", " ").Replace("\r", ""))",
+                    lat: @req.Latitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    lng: @req.Longitude!.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                },
+                </text>
+            }
+        ];
+
+        const volunteerLat = @(Model.CurrentVolunteer?.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null");
+        const volunteerLng = @(Model.CurrentVolunteer?.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null");
+
+        const defaultCenter = (volunteerLat !== null && volunteerLng !== null)
+            ? [volunteerLat, volunteerLng]
+            : (requestsData.length > 0
+                ? [requestsData[0].lat, requestsData[0].lng]
+                : [23.8103, 90.4125]);
+
+        const map = L.map('volunteerRequestsMap').setView(defaultCenter, 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        function createPin(bgColor, iconClass) {
+            return L.divIcon({
+                className: 'custom-map-pin',
+                html: `<div style="background-color: ${bgColor}; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid #fff;"><i class="${iconClass}"></i></div>`,
+                iconSize: [34, 34],
+                iconAnchor: [17, 34],
+                popupAnchor: [0, -32]
+            });
+        }
+
+        const bounds = [];
+
+        if (volunteerLat !== null && volunteerLng !== null) {
+            const volIcon = createPin('#2563EB', 'fas fa-user-check');
+            const volMarker = L.marker([volunteerLat, volunteerLng], { icon: volIcon })
+                .bindPopup(`<div style="font-weight:700; color:#1E293B;">Your Location</div><div class="small text-muted">@Model.CurrentVolunteer?.FullName</div>`);
+            volMarker.addTo(map);
+            bounds.push([volunteerLat, volunteerLng]);
+        }
+
+        requestsData.forEach(item => {
+            let pinColor = '#2563EB'; // Standard
+            let urgencyBadge = '<span class="badge bg-primary">Standard</span>';
+            if (item.urgency === 'Emergency') {
+                pinColor = '#DC2626';
+                urgencyBadge = '<span class="badge bg-danger">Emergency</span>';
+            } else if (item.urgency === 'High') {
+                pinColor = '#D97706';
+                urgencyBadge = '<span class="badge bg-warning text-dark">High Urgency</span>';
+            }
+
+            const reqIcon = createPin(pinColor, 'fas fa-hand-holding-heart');
+            const popupHtml = `
+                <div style="min-width: 220px; font-family: system-ui, sans-serif; padding: 4px;">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="badge" style="background-color: #EAF4FF; color: #2563EB; font-size: 11px;">${item.assistanceType}</span>
+                        ${urgencyBadge}
+                    </div>
+                    <div style="font-weight: 700; color: #1E293B; font-size: 0.95rem; margin: 4px 0;">${item.title}</div>
+                    <div style="font-size: 0.8rem; color: #475569; margin-bottom: 2px;"><i class="fas fa-calendar-alt text-primary me-1"></i>${item.date} (${item.time})</div>
+                    <div style="font-size: 0.8rem; color: #475569; margin-bottom: 4px;"><i class="fas fa-map-marker-alt text-danger me-1"></i>${item.location || item.city}</div>
+                    <div style="font-size: 0.8rem; color: #64748B; margin-bottom: 8px;"><i class="fas fa-user me-1"></i>${item.user}</div>
+                    <a href="#request-card-${item.id}" class="btn btn-sm btn-primary w-100 rounded-pill fw-semibold" style="font-size: 0.75rem;">View & Accept</a>
+                </div>
+            `;
+
+            const marker = L.marker([item.lat, item.lng], { icon: reqIcon }).bindPopup(popupHtml);
+            marker.addTo(map);
+            bounds.push([item.lat, item.lng]);
+        });
+
+        if (bounds.length > 1) {
+            map.fitBounds(bounds, { padding: [40, 40] });
+        } else if (bounds.length === 1) {
+            map.setView(bounds[0], 13);
+        }
+    </script>
+}

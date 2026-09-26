@@ -1,0 +1,194 @@
+@model SDP1.Models.ScholarshipListViewModel
+@{
+    ViewData["Title"] = "Scholarships & Financial Aid";
+    var userRole = Context.Session.GetString("UserRole");
+    var dashboardUrl = userRole switch
+    {
+        "Disability" => "/Disability/Dashboard",
+        "Volunteer" => "/Volunteer/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        "Admin" => "/Admin/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="p-4 p-md-5 mb-4 rounded-3 text-white shadow-sm" style="background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-light text-primary px-3 py-2 mb-2 rounded-pill fw-semibold"><i class="fas fa-award me-1"></i> Education & Grant Opportunities</span>
+                <h1 class="display-6 fw-bold mb-2">Scholarships for Students with Disabilities</h1>
+                <p class="lead mb-0 text-light opacity-90">Access academic grants, tuition waivers, and skill training funding provided by inclusive organizations and trusts across Bangladesh.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <a href="@dashboardUrl" class="btn btn-outline-light fw-semibold rounded-pill px-3 me-2 mb-2">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+                @if (userRole == "Disability")
+                {
+                    <a href="/Services/MyRegistrations" class="btn btn-light text-primary fw-bold shadow-sm me-2 mb-2">
+                        <i class="fas fa-clipboard-check me-1"></i> My Applications
+                    </a>
+                    <a href="/Services/SavedOpportunities?type=Scholarship" class="btn btn-outline-light shadow-sm mb-2">
+                        <i class="fas fa-bookmark me-1"></i> Saved (@Model.SavedScholarshipIds.Count)
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-3 p-md-4">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label small fw-semibold text-muted">Search Scholarships</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" name="search" value="@Model.SearchKeyword" class="form-control border-start-0" placeholder="Search by scholarship title, subject, or benefits..." />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold text-muted">Funding Type</label>
+                    <select name="type" class="form-select">
+                        <option value="">All Funding Types</option>
+                        @foreach (var t in Model.AvailableTypes)
+                        {
+                            <option value="@t" selected="@(Model.ScholarshipType == t)">@t</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary fw-semibold w-100"><i class="fas fa-filter me-1"></i> Filter</button>
+                    <a href="/Services/Scholarships" class="btn btn-outline-secondary" title="Reset Filters"><i class="fas fa-redo"></i></a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="text-muted mb-0">Showing <strong>@Model.Scholarships.Count</strong> of <strong>@Model.TotalCount</strong> scholarship opportunities</p>
+        <div>
+            <a href="/Services/Scholarships?search=@Model.SearchKeyword&type=@Model.ScholarshipType&sort=deadline" class="btn btn-sm @(Model.SortOrder == "deadline" ? "btn-primary fw-bold" : "btn-outline-secondary")">
+                <i class="fas fa-hourglass-half me-1"></i> Deadline Soonest
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Scholarships.Any())
+    {
+        <div class="row g-4">
+            @foreach (var item in Model.Scholarships)
+            {
+                var isApplied = Model.AppliedScholarshipIds.Contains(item.Id);
+                var isSaved = Model.SavedScholarshipIds.Contains(item.Id);
+                var isPastDeadline = DateTime.UtcNow.Date > item.ApplicationDeadline.Date;
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-primary-subtle text-primary border border-primary fw-semibold">@item.ScholarshipType</span>
+                                @if (userRole == "Disability")
+                                {
+                                    <form method="post" action="/Services/ToggleSave" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="type" value="Scholarship" />
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                        <button type="submit" class="btn btn-sm btn-link p-0 text-decoration-none" title="@(isSaved ? "Remove Bookmark" : "Save Scholarship")">
+                                            <i class="@(isSaved ? "fas fa-bookmark text-primary" : "far fa-bookmark text-muted") fa-lg"></i>
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+
+                            <h5 class="card-title fw-bold mb-1">
+                                <a href="/Services/ScholarshipDetails/@item.Id" class="text-decoration-none text-dark hover-primary">@item.Title</a>
+                            </h5>
+                            <p class="text-muted small mb-2"><i class="fas fa-building me-1"></i> @(item.Organization?.OrganizationName ?? "Verified Foundation")</p>
+
+                            <div class="mb-3">
+                                <span class="badge bg-light text-dark border"><i class="fas fa-book-open me-1"></i> @item.FieldOfStudy</span>
+                            </div>
+
+                            <div class="bg-light p-3 rounded mb-3 small flex-grow-1">
+                                <div class="text-muted mb-1"><strong>Benefits & Coverage:</strong></div>
+                                <div class="text-dark">@(item.Benefits.Length > 100 ? item.Benefits.Substring(0, 97) + "..." : item.Benefits)</div>
+                            </div>
+
+                            <div class="small mb-3 @(isPastDeadline ? "text-danger" : "text-dark")">
+                                <i class="fas fa-hourglass-half me-1"></i> <strong>Deadline:</strong> @item.ApplicationDeadline.ToString("MMM dd, yyyy")
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                @if (isApplied)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                                        <i class="fas fa-check-circle me-1"></i> Applied
+                                    </span>
+                                }
+                                else if (isPastDeadline)
+                                {
+                                    <span class="badge bg-secondary">Closed</span>
+                                }
+                                else
+                                {
+                                    <span class="text-primary small fw-semibold"><i class="fas fa-file-signature me-1"></i> Apply Online</span>
+                                }
+                                <a href="/Services/ScholarshipDetails/@item.Id" class="btn btn-sm btn-outline-primary fw-semibold">
+                                    Details & Apply <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="mt-5 d-flex justify-content-center">
+                <ul class="pagination shadow-sm">
+                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="/Services/Scholarships?search=@Model.SearchKeyword&type=@Model.ScholarshipType&sort=@Model.SortOrder&page=@(Model.CurrentPage - 1)">Previous</a>
+                    </li>
+                    @for (int p = 1; p <= Model.TotalPages; p++)
+                    {
+                        <li class="page-item @(Model.CurrentPage == p ? "active" : "")">
+                            <a class="page-link" href="/Services/Scholarships?search=@Model.SearchKeyword&type=@Model.ScholarshipType&sort=@Model.SortOrder&page=@p">@p</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="/Services/Scholarships?search=@Model.SearchKeyword&type=@Model.ScholarshipType&sort=@Model.SortOrder&page=@(Model.CurrentPage + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm text-center py-5">
+            <div class="card-body">
+                <i class="fas fa-award fa-4x text-muted mb-3"></i>
+                <h4 class="fw-bold">No Scholarships Found</h4>
+                <p class="text-muted">No scholarship opportunities currently match your search. Check back soon as new grants are added frequently.</p>
+                <a href="/Services/Scholarships" class="btn btn-primary fw-semibold">Clear All Filters</a>
+            </div>
+        </div>
+    }
+</div>

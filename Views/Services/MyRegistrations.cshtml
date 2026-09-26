@@ -1,0 +1,217 @@
+@model SDP1.Models.MyRegistrationsViewModel
+@{
+    ViewData["Title"] = "My Registrations & Applications";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="fas fa-clipboard-check text-primary me-2"></i> My Registrations & Applications</h2>
+            <p class="text-muted mb-0">Track all your enrolled training courses, scholarship applications, and event bookings in one place.</p>
+        </div>
+        <a href="/Disability/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-primary">
+                <i class="fas fa-graduation-cap me-2"></i> Enrolled Training Programs (@Model.TrainingRegistrations.Count)
+            </h5>
+            <a href="/Services/Trainings" class="btn btn-sm btn-outline-primary">Browse Trainings</a>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.TrainingRegistrations.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Training Course</th>
+                                <th>Organization</th>
+                                <th>Schedule</th>
+                                <th>Delivery Mode</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reg in Model.TrainingRegistrations)
+                            {
+                                var t = reg.TrainingProgram;
+                                var statusBadge = reg.Status == "Attended" ? "bg-success" : (reg.Status == "Cancelled" ? "bg-danger" : "bg-primary");
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">@(t?.Title ?? "Training Course")</div>
+                                        <small class="text-muted">Registered: @reg.RegisteredAt.ToString("MMM dd, yyyy")</small>
+                                    </td>
+                                    <td>@(t?.Organization?.OrganizationName ?? "Organization")</td>
+                                    <td>
+                                        <div class="small"><i class="fas fa-calendar-alt text-primary me-1"></i> @t?.StartDate.ToString("MMM dd, yyyy")</div>
+                                        <small class="text-muted">Duration: @t?.Duration</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">@t?.DeliveryMode</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @statusBadge">@reg.Status</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="/Services/TrainingDetails/@reg.TrainingProgramId" class="btn btn-sm btn-outline-primary">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="p-4 text-center text-muted">
+                    <i class="fas fa-graduation-cap fa-2x mb-2 d-block"></i>
+                    You have not enrolled in any training programs yet.
+                    <div class="mt-2"><a href="/Services/Trainings" class="btn btn-sm btn-primary">Find Training Courses</a></div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-primary">
+                <i class="fas fa-award me-2 text-primary"></i> Submitted Scholarship Applications (@Model.ScholarshipApplications.Count)
+            </h5>
+            <a href="/Services/Scholarships" class="btn btn-sm btn-outline-primary fw-semibold">Browse Scholarships</a>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.ScholarshipApplications.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Scholarship Title</th>
+                                <th>Provider</th>
+                                <th>Applied Date</th>
+                                <th>Uploaded CV</th>
+                                <th>Application Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.ScholarshipApplications)
+                            {
+                                var s = app.Scholarship;
+                                var statusBadge = app.Status switch
+                                {
+                                    "Accepted" => "bg-success",
+                                    "Shortlisted" => "bg-info text-dark",
+                                    "Under Review" => "bg-warning text-dark",
+                                    "Rejected" => "bg-danger",
+                                    _ => "bg-secondary"
+                                };
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">@(s?.Title ?? "Scholarship")</div>
+                                        <small class="text-muted"><i class="fas fa-book me-1"></i> @s?.FieldOfStudy</small>
+                                    </td>
+                                    <td>@(s?.Organization?.OrganizationName ?? "Foundation")</td>
+                                    <td>
+                                        <small><i class="fas fa-clock text-muted me-1"></i> @app.AppliedAt.ToString("MMM dd, yyyy")</small>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted"><i class="fas fa-file-pdf text-danger me-1"></i> @app.CVOriginalFileName</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge @statusBadge fs-6">@app.Status</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="/Services/ScholarshipDetails/@app.ScholarshipId" class="btn btn-sm btn-outline-primary fw-semibold">
+                                            View Scholarship
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="p-4 text-center text-muted">
+                    <i class="fas fa-award fa-2x mb-2 d-block"></i>
+                    You have not submitted any scholarship applications yet.
+                    <div class="mt-2"><a href="/Services/Scholarships" class="btn btn-sm btn-primary fw-semibold">Explore Scholarships</a></div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-primary">
+                <i class="fas fa-calendar-alt me-2 text-primary"></i> Registered Awareness Events (@Model.EventRegistrations.Count)
+            </h5>
+            <a href="/Services/Events" class="btn btn-sm btn-outline-primary">Browse Events</a>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.EventRegistrations.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Event Title</th>
+                                <th>Host</th>
+                                <th>Event Date & Timing</th>
+                                <th>Location / Link</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reg in Model.EventRegistrations)
+                            {
+                                var ev = reg.AwarenessEvent;
+                                var statusBadge = reg.Status == "Attended" ? "bg-success" : (reg.Status == "Cancelled" ? "bg-danger" : "bg-primary");
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">@(ev?.Title ?? "Event")</div>
+                                        <small class="text-muted"><i class="fas fa-tag me-1"></i> @ev?.EventType</small>
+                                    </td>
+                                    <td>@(ev?.Organization?.OrganizationName ?? "Host Organization")</td>
+                                    <td>
+                                        <div class="small fw-semibold"><i class="fas fa-calendar-day text-primary me-1"></i> @ev?.EventDate.ToString("MMM dd, yyyy")</div>
+                                        <small class="text-muted">@ev?.StartTime - @ev?.EndTime</small>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> @ev?.Location</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge @statusBadge">@reg.Status</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="/Services/EventDetails/@reg.AwarenessEventId" class="btn btn-sm btn-outline-primary">
+                                            View Event
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="p-4 text-center text-muted">
+                    <i class="fas fa-calendar-alt fa-2x mb-2 d-block"></i>
+                    You have not registered for any awareness events yet.
+                    <div class="mt-2"><a href="/Services/Events" class="btn btn-sm btn-primary">Discover Events</a></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

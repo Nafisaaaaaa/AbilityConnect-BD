@@ -1,0 +1,261 @@
+@model SDP1.Models.JobApplicantsViewModel
+@{
+    ViewData["Title"] = "Applicants for " + Model.Job.Title;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Jobs/Manage" class="text-decoration-none">Manage Jobs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Applicants</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-sm border-0 mb-4 bg-white">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <span class="badge bg-primary mb-1">Hiring Dashboard</span>
+                    <h3 class="fw-bold text-dark mb-1">@Model.Job.Title</h3>
+                    <div class="text-muted small">
+                        <span><i class="fas fa-map-marker-alt text-danger me-1"></i>@Model.Job.Location</span>
+                        <span class="mx-2">•</span>
+                        <span>@Model.Job.WorkplaceType</span>
+                        <span class="mx-2">•</span>
+                        <span>Deadline: @Model.Job.ApplicationDeadline.ToString("MMM dd, yyyy")</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/Jobs/Manage" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Jobs
+                    </a>
+                    <a href="/Jobs/Details/@Model.Job.Id" class="btn btn-outline-primary" target="_blank">
+                        <i class="fas fa-external-link-alt me-1"></i> View Public Post
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mb-3 flex-wrap">
+        <a href="@Url.Action("Applicants", new { id = Model.Job.Id })"
+           class="btn btn-sm @(string.IsNullOrEmpty(Model.StatusFilter) ? "btn-primary" : "btn-light border")">
+            All Applicants (@Model.Applications.Count)
+        </a>
+        <a href="@Url.Action("Applicants", new { id = Model.Job.Id, statusFilter = "Pending" })"
+           class="btn btn-sm @(Model.StatusFilter == "Pending" ? "btn-warning text-dark" : "btn-light border")">
+            Pending
+        </a>
+        <a href="@Url.Action("Applicants", new { id = Model.Job.Id, statusFilter = "Reviewed" })"
+           class="btn btn-sm @(Model.StatusFilter == "Reviewed" ? "btn-info text-dark" : "btn-light border")">
+            Reviewed
+        </a>
+        <a href="@Url.Action("Applicants", new { id = Model.Job.Id, statusFilter = "Shortlisted" })"
+           class="btn btn-sm @(Model.StatusFilter == "Shortlisted" ? "btn-primary" : "btn-light border")">
+            Shortlisted
+        </a>
+        <a href="@Url.Action("Applicants", new { id = Model.Job.Id, statusFilter = "Accepted" })"
+           class="btn btn-sm @(Model.StatusFilter == "Accepted" ? "btn-success" : "btn-light border")">
+            Accepted
+        </a>
+        <a href="@Url.Action("Applicants", new { id = Model.Job.Id, statusFilter = "Rejected" })"
+           class="btn btn-sm @(Model.StatusFilter == "Rejected" ? "btn-danger" : "btn-light border")">
+            Rejected
+        </a>
+    </div>
+
+    @if (!Model.Applications.Any())
+    {
+        <div class="card shadow-sm border-0 text-center py-5 bg-white">
+            <div class="card-body">
+                <div class="mb-3 text-muted" style="font-size: 3.5rem;">
+                    <i class="fas fa-users-slash"></i>
+                </div>
+                <h4 class="fw-bold text-dark">No Applicants Yet</h4>
+                <p class="text-muted max-w-md mx-auto">
+                    @if (!string.IsNullOrEmpty(Model.StatusFilter))
+                    {
+                        <span>No applicants found with status '<strong>@Model.StatusFilter</strong>'.</span>
+                    }
+                    else
+                    {
+                        <span>No candidates have applied for this job posting yet. Candidate applications will appear here as soon as they apply.</span>
+                    }
+                </p>
+                @if (!string.IsNullOrEmpty(Model.StatusFilter))
+                {
+                    <a href="@Url.Action("Applicants", new { id = Model.Job.Id })" class="btn btn-outline-primary mt-2">
+                        View All Applicants
+                    </a>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm border-0 bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-4">Applicant</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Disability Profile</th>
+                            <th scope="col">Applied Date</th>
+                            <th scope="col">Resume</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" class="text-end pe-4">Manage Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var app in Model.Applications)
+                        {
+                            var statusBadge = app.Status switch
+                            {
+                                "Accepted" => "bg-success text-white",
+                                "Shortlisted" => "bg-primary text-white",
+                                "Reviewed" => "bg-info text-dark",
+                                "Rejected" => "bg-danger text-white",
+                                _ => "bg-warning text-dark"
+                            };
+
+                            <tr>
+                                <td class="ps-4 py-3">
+                                    <h6 class="fw-bold mb-0">@app.ApplicantFullName</h6>
+                                    @if (!string.IsNullOrEmpty(app.CoverLetter) || !string.IsNullOrEmpty(app.AccommodationRequested))
+                                    {
+                                        <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none small" data-bs-toggle="modal" data-bs-target="#appModal-@app.Id">
+                                            <i class="fas fa-eye me-1"></i> View Cover / Accommodations
+                                        </button>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="small"><i class="fas fa-envelope text-muted me-1"></i>@app.ApplicantEmail</div>
+                                    <div class="small text-muted"><i class="fas fa-phone text-muted me-1"></i>@app.ApplicantPhone</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="fas fa-universal-access me-1 text-primary"></i>
+                                        @(app.DisabilityUser?.DisabilityType ?? "Disability User")
+                                    </span>
+                                    @if (!string.IsNullOrEmpty(app.DisabilityUser?.Skills))
+                                    {
+                                        <div class="text-muted small mt-1" style="max-width: 180px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                                            Skills: @app.DisabilityUser.Skills
+                                        </div>
+                                    }
+                                </td>
+                                <td class="text-muted small">
+                                    @app.AppliedAt.ToString("MMM dd, yyyy")
+                                    <div class="text-xs">@app.AppliedAt.ToString("hh:mm tt")</div>
+                                </td>
+                                <td>
+                                    <a href="@app.ResumePath" target="_blank" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-file-pdf me-1"></i> Resume
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge @statusBadge px-2 py-1">@app.Status</span>
+                                    @if (!string.IsNullOrEmpty(app.OrganizationNotes))
+                                    {
+                                        <div class="small text-muted mt-1" title="@app.OrganizationNotes">
+                                            <i class="fas fa-sticky-note me-1 text-warning"></i>Note saved
+                                        </div>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <form method="post" asp-action="UpdateApplicantStatus" class="d-inline-flex gap-1 align-items-center">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="applicationId" value="@app.Id" />
+                                        <select name="status" class="form-select form-select-sm" style="width: 130px;">
+                                            <option value="Pending" selected="@(app.Status == "Pending")">Pending</option>
+                                            <option value="Reviewed" selected="@(app.Status == "Reviewed")">Reviewed</option>
+                                            <option value="Shortlisted" selected="@(app.Status == "Shortlisted")">Shortlist</option>
+                                            <option value="Accepted" selected="@(app.Status == "Accepted")">Accept</option>
+                                            <option value="Rejected" selected="@(app.Status == "Rejected")">Reject</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary" title="Update status">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <div class="modal fade" id="appModal-@app.Id" tabindex="-1" aria-labelledby="modalLabel-@app.Id" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-light">
+                                            <h5 class="modal-title fw-bold" id="modalLabel-@app.Id">
+                                                <i class="fas fa-user me-2 text-primary"></i>Candidate Notes: @app.ApplicantFullName
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body p-4">
+                                            @if (!string.IsNullOrEmpty(app.CoverLetter))
+                                            {
+                                                <div class="mb-3">
+                                                    <h6 class="fw-bold text-dark"><i class="fas fa-file-alt text-primary me-2"></i>Cover Letter / Note</h6>
+                                                    <div class="p-3 bg-light rounded text-secondary" style="white-space: pre-line;">
+                                                        @app.CoverLetter
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            @if (!string.IsNullOrEmpty(app.AccommodationRequested))
+                                            {
+                                                <div class="mb-3">
+                                                    <h6 class="fw-bold text-dark"><i class="fas fa-universal-access text-info me-2"></i>Workplace Accommodations Requested</h6>
+                                                    <div class="p-3 bg-light rounded text-secondary" style="white-space: pre-line;">
+                                                        @app.AccommodationRequested
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            <form method="post" asp-action="UpdateApplicantStatus">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="applicationId" value="@app.Id" />
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-semibold">Internal Hiring Manager Notes / Feedback</label>
+                                                    <textarea name="notes" class="form-control" rows="3" placeholder="Add internal notes for interview scheduling, feedback, or decision rationale...">@app.OrganizationNotes</textarea>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <label class="form-label fw-semibold mb-0 small">Status:</label>
+                                                        <select name="status" class="form-select form-select-sm">
+                                                            <option value="Pending" selected="@(app.Status == "Pending")">Pending</option>
+                                                            <option value="Reviewed" selected="@(app.Status == "Reviewed")">Reviewed</option>
+                                                            <option value="Shortlisted" selected="@(app.Status == "Shortlisted")">Shortlisted</option>
+                                                            <option value="Accepted" selected="@(app.Status == "Accepted")">Accepted</option>
+                                                            <option value="Rejected" selected="@(app.Status == "Rejected")">Rejected</option>
+                                                        </select>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary btn-sm px-3">
+                                                        Save Changes
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>showToast('@Html.Raw(TempData["SuccessMessage"])', 'success');</text>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>showToast('@Html.Raw(TempData["ErrorMessage"])', 'error');</text>
+        }
+    </script>
+}

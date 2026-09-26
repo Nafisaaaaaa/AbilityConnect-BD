@@ -1,0 +1,218 @@
+@model List<SDP1.Models.HealthcareAppointment>
+@{
+    ViewData["Title"] = "Manage Healthcare Appointments";
+    var currentFilter = ViewBag.CurrentStatusFilter as string ?? "All";
+    var isAdmin = ViewBag.IsAdmin as bool? ?? false;
+    var userRole = Context.Session.GetString("UserRole");
+    var dashboardUrl = userRole switch
+    {
+        "Admin" => "/Admin/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                <li class="breadcrumb-item"><a href="/Healthcare">Healthcare</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Manage Appointments</li>
+            </ol>
+        </nav>
+        <a href="@dashboardUrl" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #E8F0FE 0%, #FFFFFF 100%); border-left: 5px solid #4A90D9 !important; border-radius: 12px;">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <span class="badge bg-primary px-3 py-1 mb-2">Provider Appointment Management</span>
+                    <h3 class="fw-bold mb-1" style="color: #2D3748;">Healthcare Consultation Requests</h3>
+                    <p class="text-secondary mb-0">Review consultation requests from persons with disabilities, confirm schedules, and record clinical follow-up notes.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="/Healthcare" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-1"></i> Browse Providers
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <a href="@Url.Action("ManageAppointments", new { statusFilter = "All" })"
+           class="btn btn-sm @(currentFilter == "All" ? "btn-primary" : "btn-outline-secondary")">
+            All (@Model.Count)
+        </a>
+        <a href="@Url.Action("ManageAppointments", new { statusFilter = "Pending" })"
+           class="btn btn-sm @(currentFilter == "Pending" ? "btn-warning text-dark" : "btn-outline-warning")">
+            <i class="fas fa-clock me-1"></i> Pending
+        </a>
+        <a href="@Url.Action("ManageAppointments", new { statusFilter = "Confirmed" })"
+           class="btn btn-sm @(currentFilter == "Confirmed" ? "btn-success" : "btn-outline-success")">
+            <i class="fas fa-check-circle me-1"></i> Confirmed
+        </a>
+        <a href="@Url.Action("ManageAppointments", new { statusFilter = "Completed" })"
+           class="btn btn-sm @(currentFilter == "Completed" ? "btn-info text-white" : "btn-outline-info")">
+            <i class="fas fa-award me-1"></i> Completed
+        </a>
+        <a href="@Url.Action("ManageAppointments", new { statusFilter = "Cancelled" })"
+           class="btn btn-sm @(currentFilter == "Cancelled" ? "btn-secondary" : "btn-outline-secondary")">
+            <i class="fas fa-times me-1"></i> Cancelled
+        </a>
+        <a href="@Url.Action("ManageAppointments", new { statusFilter = "Rejected" })"
+           class="btn btn-sm @(currentFilter == "Rejected" ? "btn-danger" : "btn-outline-danger")">
+            <i class="fas fa-ban me-1"></i> Rejected
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+        <div class="card-body p-4">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-clipboard-check fa-4x mb-3 text-muted" style="opacity: 0.4;"></i>
+                    <h5 class="fw-bold text-secondary">No Appointments Found</h5>
+                    <p class="text-muted">There are no consultation requests matching this filter.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Patient Details</th>
+                                <th>Doctor / Provider</th>
+                                <th>Date & Slot</th>
+                                <th>Reason & Accommodations</th>
+                                <th>Status</th>
+                                <th class="text-end">Manage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var appt in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-dark">@(appt.DisabilityUser?.FullName ?? "Patient #" + appt.DisabilityUserId)</div>
+                                        <div class="small text-muted"><i class="fas fa-wheelchair me-1"></i> @(appt.DisabilityUser?.DisabilityType ?? "General Disability")</div>
+                                        <div class="small text-muted"><i class="fas fa-phone me-1"></i> @(appt.DisabilityUser?.PhoneNumber ?? "N/A")</div>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold text-dark">@(appt.HealthcareProvider?.Name ?? "Provider #" + appt.HealthcareProviderId)</div>
+                                        <span class="badge bg-light text-primary border" style="font-size: 0.72rem;">@(appt.HealthcareProvider?.ProviderType ?? "")</span>
+                                        <small class="text-muted d-block">@(appt.HealthcareProvider?.OrganizationOrClinic ?? "")</small>
+                                    </td>
+                                    <td>
+                                        <span class="fw-semibold text-dark d-block">@appt.AppointmentDate.ToString("MMM dd, yyyy")</span>
+                                        <small class="text-muted"><i class="fas fa-clock me-1"></i> @appt.TimeSlot</small>
+                                    </td>
+                                    <td>
+                                        <div class="small text-truncate" style="max-width: 220px;" title="@appt.ReasonForVisit">
+                                            <strong>Reason:</strong> @appt.ReasonForVisit
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(appt.PatientNotes))
+                                        {
+                                            <div class="small text-primary text-truncate" style="max-width: 220px;" title="@appt.PatientNotes">
+                                                <i class="fas fa-universal-access me-1"></i> @appt.PatientNotes
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(appt.DoctorNotes))
+                                        {
+                                            <div class="small text-info text-truncate" style="max-width: 220px;" title="@appt.DoctorNotes">
+                                                <i class="fas fa-notes-medical me-1"></i> Doctor Notes: @appt.DoctorNotes
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @switch (appt.Status)
+                                        {
+                                            case "Pending":
+                                                <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i> Pending</span>
+                                                break;
+                                            case "Confirmed":
+                                                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Confirmed</span>
+                                                break;
+                                            case "Completed":
+                                                <span class="badge bg-primary"><i class="fas fa-award me-1"></i> Completed</span>
+                                                break;
+                                            case "Cancelled":
+                                                <span class="badge bg-secondary"><i class="fas fa-times me-1"></i> Cancelled</span>
+                                                break;
+                                            case "Rejected":
+                                                <span class="badge bg-danger"><i class="fas fa-ban me-1"></i> Rejected</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-light text-dark border">@appt.Status</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#manageModal-@appt.Id">
+                                            <i class="fas fa-cog me-1"></i> Action
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <div class="modal fade" id="manageModal-@appt.Id" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content border-0 shadow" style="border-radius: 12px;">
+                                            <form asp-action="UpdateAppointmentStatus" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="AppointmentId" value="@appt.Id" />
+
+                                                <div class="modal-header border-0 pb-0">
+                                                    <h5 class="modal-title fw-bold text-dark">
+                                                        <i class="fas fa-calendar-check text-primary me-2"></i> Update Appointment #@appt.Id
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body py-3">
+                                                    <div class="p-3 bg-light rounded mb-3 small">
+                                                        <div><strong>Patient:</strong> @(appt.DisabilityUser?.FullName ?? "N/A")</div>
+                                                        <div><strong>Doctor:</strong> @(appt.HealthcareProvider?.Name ?? "N/A")</div>
+                                                        <div><strong>Schedule:</strong> @appt.AppointmentDate.ToString("MMM dd, yyyy") (@appt.TimeSlot)</div>
+                                                        <div><strong>Reason:</strong> @appt.ReasonForVisit</div>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold small text-secondary">Appointment Status *</label>
+                                                        <select name="Status" class="form-select" required>
+                                                            <option value="Confirmed" selected="@(appt.Status == "Confirmed")">Confirmed (Approved for Visit)</option>
+                                                            <option value="Completed" selected="@(appt.Status == "Completed")">Completed (Session Done)</option>
+                                                            <option value="Pending" selected="@(appt.Status == "Pending")">Pending (Under Review)</option>
+                                                            <option value="Rejected" selected="@(appt.Status == "Rejected")">Rejected</option>
+                                                            <option value="Cancelled" selected="@(appt.Status == "Cancelled")">Cancelled</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold small text-secondary">Doctor / Clinic Notes (Optional)</label>
+                                                        <textarea name="DoctorNotes" rows="3" class="form-control" placeholder="Add prescription advice, preparation guidelines, room number, or notes for the patient...">@appt.DoctorNotes</textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer border-0 pt-0">
+                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-save me-1"></i> Save Changes
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

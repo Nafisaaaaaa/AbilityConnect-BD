@@ -1,0 +1,170 @@
+@model SDP1.Models.ScholarshipApplicationInputModel
+@{
+    ViewData["Title"] = "Apply for " + Model.ScholarshipTitle;
+    var userRole = Context.Session.GetString("UserRole");
+    var dashboardUrl = userRole switch
+    {
+        "Disability" => "/Disability/Dashboard",
+        "Volunteer" => "/Volunteer/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        "Admin" => "/Admin/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <a href="/Services/ScholarshipDetails/@Model.ScholarshipId" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to Scholarship Overview
+        </a>
+        <a href="@dashboardUrl" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+            <i class="fas fa-home me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm overflow-hidden rounded-4">
+                <div class="card-header text-white p-4" style="background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);">
+                    <span class="badge bg-white bg-opacity-25 text-white mb-2"><i class="fas fa-award me-1"></i> Official Application</span>
+                    <h3 class="fw-bold mb-1">Scholarship Application Form</h3>
+                    <p class="mb-0 text-white-50">Applying for: <strong class="text-white">@Model.ScholarshipTitle</strong> (Provided by: @Model.OrganizationName)</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="ApplyScholarship" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ScholarshipId" />
+                        <input type="hidden" asp-for="ScholarshipTitle" />
+                        <input type="hidden" asp-for="OrganizationName" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="fas fa-user me-2"></i> 1. Personal & Contact Information
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="FullName" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                                <input asp-for="FullName" class="form-control" />
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="form-label fw-semibold">Contact Phone <span class="text-danger">*</span></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Address" class="form-label fw-semibold">Current City / District & Address <span class="text-danger">*</span></label>
+                                <input asp-for="Address" class="form-control" />
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="fas fa-graduation-cap me-2"></i> 2. Academic Background
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="HighestQualification" class="form-label fw-semibold">Highest Educational Qualification <span class="text-danger">*</span></label>
+                                <input asp-for="HighestQualification" class="form-control" placeholder="e.g., Bachelor of Science, HSC, Diploma" />
+                                <span asp-validation-for="HighestQualification" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Institution" class="form-label fw-semibold">School / College / University Name <span class="text-danger">*</span></label>
+                                <input asp-for="Institution" class="form-control" placeholder="e.g., University of Dhaka" />
+                                <span asp-validation-for="Institution" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="FieldOfStudy" class="form-label fw-semibold">Major / Department / Group <span class="text-danger">*</span></label>
+                                <input asp-for="FieldOfStudy" class="form-control" placeholder="e.g., Computer Science, Science, Commerce" />
+                                <span asp-validation-for="FieldOfStudy" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="PassingYear" class="form-label fw-semibold">Passing Year / Current Year <span class="text-danger">*</span></label>
+                                <input asp-for="PassingYear" class="form-control" placeholder="e.g., 2025 or 3rd Year" />
+                                <span asp-validation-for="PassingYear" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="AcademicResult" class="form-label fw-semibold">GPA / CGPA / Division</label>
+                                <input asp-for="AcademicResult" class="form-control" placeholder="e.g., 3.65 / 4.00" />
+                                <span asp-validation-for="AcademicResult" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="fas fa-tools me-2"></i> 3. Skills & Capabilities
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label asp-for="TechnicalSkills" class="form-label fw-semibold">Computer & Technical Skills <span class="text-danger">*</span></label>
+                                <input asp-for="TechnicalSkills" class="form-control" placeholder="e.g., Microsoft Word, Excel, Screen Reader (NVDA/JAWS), Web Browsing, Python" />
+                                <span asp-validation-for="TechnicalSkills" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="ProfessionalSkills" class="form-label fw-semibold">Professional / Soft Skills</label>
+                                <input asp-for="ProfessionalSkills" class="form-control" placeholder="e.g., English Communication, Problem Solving, Teamwork" />
+                                <span asp-validation-for="ProfessionalSkills" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="OtherSkills" class="form-label fw-semibold">Other Skills / Hobbies / Interests</label>
+                                <input asp-for="OtherSkills" class="form-control" placeholder="e.g., Content Writing, Graphic Editing, Volunteering" />
+                                <span asp-validation-for="OtherSkills" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="fas fa-comment-dots me-2"></i> 4. Motivation & Goals
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label asp-for="Motivation" class="form-label fw-semibold">Why are you applying for this scholarship? <span class="text-danger">*</span></label>
+                                <textarea asp-for="Motivation" rows="5" class="form-control" placeholder="Describe your financial background, educational ambitions, how this scholarship will assist your goals, and what impact it will create..."></textarea>
+                                <span asp-validation-for="Motivation" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-12">
+                                <label asp-for="RelevantExperience" class="form-label fw-semibold">Relevant Projects, Extracurriculars, or Work Experience</label>
+                                <textarea asp-for="RelevantExperience" rows="3" class="form-control" placeholder="Mention any leadership, project work, freelance experience, or community involvement..."></textarea>
+                                <span asp-validation-for="RelevantExperience" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">
+                            <i class="fas fa-file-upload me-2"></i> 5. CV / Resume Upload
+                        </h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-12">
+                                <label asp-for="CVFile" class="form-label fw-semibold">Upload Curriculum Vitae (PDF, DOC, DOCX) <span class="text-danger">*</span></label>
+                                <input asp-for="CVFile" type="file" class="form-control" accept=".pdf,.doc,.docx" />
+                                <div class="form-text text-muted">
+                                    <i class="fas fa-info-circle me-1"></i> Maximum file size: 5 MB. Allowed formats: .pdf, .doc, .docx.
+                                </div>
+                                <span asp-validation-for="CVFile" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-light rounded mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="declaration" required />
+                                <label class="form-check-label small text-dark" for="declaration">
+                                    I certify that all the information provided above is accurate and true to the best of my knowledge. I understand that false statements will result in immediate disqualification.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="/Services/ScholarshipDetails/@Model.ScholarshipId" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
+                                <i class="fas fa-paper-plane me-1"></i> Submit Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

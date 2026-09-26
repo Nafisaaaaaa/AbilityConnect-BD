@@ -1,0 +1,95 @@
+@{
+    ViewData["Title"] = "Volunteer Dashboard";
+    var userName = ViewBag.UserName ?? "Volunteer";
+    var profilePicture = ViewBag.ProfilePicture ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar volunteer-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile volunteer-profile">
+                    <img src="@profilePicture" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-success">Volunteer</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li class="active"><a href="/Volunteer/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Volunteer/NearbyHelpRequests"><i class="fas fa-hands-helping"></i> Nearby Help Requests</a></li>
+                    <li><a href="/Volunteer/AssignedTasks"><i class="fas fa-tasks"></i> Assigned Tasks</a></li>
+                    <li><a href="/Volunteer/VolunteerHistory"><i class="fas fa-history"></i> Volunteer History</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Profile/ChangePassword"><i class="fas fa-key"></i> Change Password</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="welcome-card volunteer-welcome d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h3>Welcome back, @userName! 🤝</h3>
+                    <p class="mb-0">You're making a difference in someone's life. Keep up the great work!</p>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <div class="welcome-date">
+                        <i class="fas fa-calendar-alt"></i> @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+                    </div>
+                    <form method="post" asp-action="ToggleAvailability" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm @(ViewBag.IsAvailable == true ? "btn-light text-success fw-semibold" : "btn-outline-light") shadow-sm">
+                            <i class="fas @(ViewBag.IsAvailable == true ? "fa-toggle-on" : "fa-toggle-off") me-1"></i>
+                            @(ViewBag.IsAvailable == true ? "Available for Tasks" : "Mark Available")
+                        </button>
+                    </form>
+                    <span class="badge @(ViewBag.IsVerified == true ? "bg-light text-success" : "bg-warning text-dark")">
+                        @(ViewBag.IsVerified == true ? "Verified Volunteer" : "Pending Verification")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .volunteer-sidebar .sidebar-nav li.active a {
+            background: #E8F5E9;
+            color: var(--success-color);
+            border-left-color: var(--success-color);
+        }
+
+        .volunteer-welcome {
+            background: linear-gradient(135deg, #2E7D32, #43A047);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            color: #ffffff;
+        }
+
+        .volunteer-welcome h3 {
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .volunteer-welcome p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .volunteer-welcome .welcome-date {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: #ffffff;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+}

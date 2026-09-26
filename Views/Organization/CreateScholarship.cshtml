@@ -1,0 +1,125 @@
+@model SDP1.Models.Scholarship
+@{
+    ViewData["Title"] = "Post New Scholarship";
+    var orgName = ViewBag.UserName ?? "Organization";
+    var logo = ViewBag.Logo ?? "/images/default-avatar.png";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar org-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile org-profile">
+                    <img src="@logo" alt="Organization" class="profile-img" />
+                    <h5>@orgName</h5>
+                    <span class="badge bg-primary">Organization</span>
+                    <span class="badge bg-success mt-1">Verified</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Organization/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Organization/ManageJobPosts"><i class="fas fa-briefcase"></i> Manage Job Posts</a></li>
+                    <li><a href="/Organization/TrainingPrograms"><i class="fas fa-graduation-cap"></i> Training Programs</a></li>
+                    <li class="active"><a href="/Organization/ManageScholarships"><i class="fas fa-award"></i> Scholarships</a></li>
+                    <li><a href="/Organization/ManageEvents"><i class="fas fa-calendar-alt"></i> Manage Events</a></li>
+                    <li><a href="/Organization/ReviewApplications"><i class="fas fa-users"></i> Review Applications</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="mb-4">
+                <a href="/Organization/ManageScholarships" class="btn btn-outline-secondary btn-sm mb-2">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Scholarships
+                </a>
+                <h2 class="fw-bold"><i class="fas fa-plus-circle text-primary me-2"></i> Post New Scholarship</h2>
+                <p class="text-muted">Create a financial aid or skill course scholarship opportunity for students with disabilities.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="CreateScholarship" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Title" class="form-label fw-semibold">Scholarship Title <span class="text-danger">*</span></label>
+                                <input asp-for="Title" class="form-control" placeholder="e.g., Higher Education Stipend for Students with Visual Impairment" />
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="ScholarshipType" class="form-label fw-semibold">Funding Type <span class="text-danger">*</span></label>
+                                <select asp-for="ScholarshipType" class="form-select">
+                                    <option value="Full Funding">Full Funding</option>
+                                    <option value="Tuition Waiver">Tuition Waiver</option>
+                                    <option value="Skill Course">Skill Course</option>
+                                    <option value="Degree Support">Degree Support</option>
+                                    <option value="Monthly Stipend">Monthly Stipend</option>
+                                </select>
+                                <span asp-validation-for="ScholarshipType" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="FieldOfStudy" class="form-label fw-semibold">Field / Subject of Study <span class="text-danger">*</span></label>
+                                <input asp-for="FieldOfStudy" class="form-control" placeholder="e.g., Computer Science, Business, General Education, Arts" />
+                                <span asp-validation-for="FieldOfStudy" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ApplicationDeadline" class="form-label fw-semibold">Application Deadline <span class="text-danger">*</span></label>
+                                <input asp-for="ApplicationDeadline" type="date" class="form-control" />
+                                <span asp-validation-for="ApplicationDeadline" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Location" class="form-label fw-semibold">Location / Jurisdiction <span class="text-danger">*</span></label>
+                                <input asp-for="Location" class="form-control" placeholder="e.g., Bangladesh (Nationwide) or Dhaka Division" />
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ContactInfo" class="form-label fw-semibold">Contact Email / Inquiries <span class="text-danger">*</span></label>
+                                <input asp-for="ContactInfo" class="form-control" placeholder="e.g., scholarships@foundation.org" />
+                                <span asp-validation-for="ContactInfo" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Benefits" class="form-label fw-semibold">Benefits & Grant Coverage <span class="text-danger">*</span></label>
+                                <textarea asp-for="Benefits" rows="2" class="form-control" placeholder="e.g., 50,000 BDT yearly stipend + laptop + accessible course materials"></textarea>
+                                <span asp-validation-for="Benefits" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Eligibility" class="form-label fw-semibold">Eligibility Requirements <span class="text-danger">*</span></label>
+                                <textarea asp-for="Eligibility" rows="2" class="form-control" placeholder="e.g., Open to undergraduate students with recognized disability certificate and minimum GPA 3.0"></textarea>
+                                <span asp-validation-for="Eligibility" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="RequiredQualifications" class="form-label fw-semibold">Required Academic Qualifications & Documents <span class="text-danger">*</span></label>
+                                <input asp-for="RequiredQualifications" class="form-control" placeholder="e.g., HSC/A-Levels completed, Valid Student ID, Up-to-date CV" />
+                                <span asp-validation-for="RequiredQualifications" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label fw-semibold">Detailed Description <span class="text-danger">*</span></label>
+                                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Provide background about this scholarship, selection process, and interview timeline..."></textarea>
+                                <span asp-validation-for="Description" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                                <a href="/Organization/ManageScholarships" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fas fa-check-circle me-1"></i> Post Scholarship
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

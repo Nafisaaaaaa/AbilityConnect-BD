@@ -1,0 +1,169 @@
+@model SDP1.Models.EventDetailsViewModel
+@{
+    ViewData["Title"] = Model.Event.Title;
+    var ev = Model.Event;
+    var userRole = Context.Session.GetString("UserRole");
+    var isPastDeadline = DateTime.UtcNow.Date > ev.RegistrationDeadline.Date;
+    var dashboardUrl = userRole switch
+    {
+        "Disability" => "/Disability/Dashboard",
+        "Volunteer" => "/Volunteer/Dashboard",
+        "Organization" => "/Organization/Dashboard",
+        "Admin" => "/Admin/Dashboard",
+        _ => "/"
+    };
+}
+
+<div class="container py-4">
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <a href="/Services/Events" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to All Events
+        </a>
+        @if (!string.IsNullOrEmpty(userRole))
+        {
+            <a href="@dashboardUrl" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+                <i class="fas fa-home me-1"></i> Back to Dashboard
+            </a>
+        }
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle me-2"></i> @TempData["InfoMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+                    <div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary fs-6 me-2">@ev.EventType</span>
+                        <span class="badge bg-light text-dark border fs-6">@ev.Status</span>
+                    </div>
+                    @if (userRole == "Disability")
+                    {
+                        <form method="post" action="/Services/ToggleSave">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="type" value="Event" />
+                            <input type="hidden" name="id" value="@ev.Id" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                <i class="@(Model.IsSaved ? "fas fa-bookmark text-primary" : "far fa-bookmark") me-1"></i>
+                                @(Model.IsSaved ? "Bookmarked" : "Bookmark")
+                            </button>
+                        </form>
+                    }
+                </div>
+
+                <h2 class="fw-bold mb-2">@ev.Title</h2>
+                <p class="text-muted fs-6 mb-4">
+                    <i class="fas fa-building text-primary me-1"></i> Hosted by: <strong>@(ev.Organization?.OrganizationName ?? "Host Organization")</strong>
+                </p>
+
+                <h5 class="fw-bold text-primary mb-2"><i class="fas fa-info-circle me-2"></i> Event Agenda & Overview</h5>
+                <div class="text-secondary mb-4" style="line-height: 1.7; white-space: pre-wrap;">@ev.Description</div>
+
+                <h5 class="fw-bold text-primary mb-2"><i class="fas fa-users me-2"></i> Target Audience & Eligibility</h5>
+                <div class="p-3 bg-light rounded mb-4 text-dark">
+                    <p class="mb-0"><i class="fas fa-check-circle text-primary me-2"></i> @ev.Eligibility</p>
+                </div>
+
+                <h5 class="fw-bold text-primary mb-2"><i class="fas fa-envelope-open me-2"></i> Contact & Queries</h5>
+                <p class="text-muted mb-0"><i class="fas fa-phone-alt me-2"></i> @ev.ContactInfo</p>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 sticky-top" style="top: 90px;">
+                <h5 class="fw-bold mb-3"><i class="fas fa-calendar-check text-primary me-2"></i> Event Schedule</h5>
+
+                <ul class="list-unstyled mb-4">
+                    <li class="py-2 border-bottom d-flex justify-content-between">
+                        <span class="text-muted"><i class="fas fa-calendar-day me-2"></i> Date:</span>
+                        <strong class="text-dark">@ev.EventDate.ToString("MMMM dd, yyyy")</strong>
+                    </li>
+                    <li class="py-2 border-bottom d-flex justify-content-between">
+                        <span class="text-muted"><i class="fas fa-clock me-2"></i> Timing:</span>
+                        <strong class="text-dark">@ev.StartTime - @ev.EndTime</strong>
+                    </li>
+                    <li class="py-2 border-bottom d-flex justify-content-between">
+                        <span class="text-muted"><i class="fas fa-hourglass-half me-2"></i> Deadline:</span>
+                        <strong class="@(isPastDeadline ? "text-danger" : "text-dark")">@ev.RegistrationDeadline.ToString("MMM dd, yyyy")</strong>
+                    </li>
+                    <li class="py-2 border-bottom d-flex justify-content-between">
+                        <span class="text-muted"><i class="fas fa-map-marker-alt me-2"></i> Venue / Link:</span>
+                        <strong class="text-dark text-end" style="max-width: 60%;">@ev.Location</strong>
+                    </li>
+                    <li class="py-2 d-flex justify-content-between">
+                        <span class="text-muted"><i class="fas fa-users me-2"></i> Attendees:</span>
+                        <strong class="text-dark">@Model.RegistrationCount Registered</strong>
+                    </li>
+                </ul>
+
+                @if (Model.IsRegistered)
+                {
+                    <div class="alert alert-primary d-flex align-items-center mb-3">
+                        <i class="fas fa-check-circle fa-2x me-3"></i>
+                        <div>
+                            <strong>You're Registered!</strong>
+                            <div class="small">We look forward to seeing you at the event.</div>
+                        </div>
+                    </div>
+                    <form method="post" action="/Services/CancelEventRegistration" onsubmit="return confirm('Are you sure you want to cancel your event attendance?');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@ev.Id" />
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-times-circle me-1"></i> Cancel Registration
+                        </button>
+                    </form>
+                }
+                else if (isPastDeadline)
+                {
+                    <div class="alert alert-secondary text-center mb-0">
+                        <i class="fas fa-lock me-1"></i> Event registrations are currently closed.
+                    </div>
+                }
+                else if (userRole == "Disability")
+                {
+                    <form method="post" action="/Services/RegisterEvent">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@ev.Id" />
+                        <button type="submit" class="btn btn-primary w-100 py-2 fs-6 fw-bold shadow-sm">
+                            <i class="fas fa-ticket-alt me-1"></i> Register Free for this Event
+                        </button>
+                    </form>
+                }
+                else if (userRole == null)
+                {
+                    <a href="/Account/Login?returnUrl=/Services/EventDetails/@ev.Id" class="btn btn-primary w-100 py-2 fw-bold">
+                        <i class="fas fa-sign-in-alt me-1"></i> Log In to Register
+                    </a>
+                    <small class="text-muted text-center d-block mt-2">Registration is free for disability community members.</small>
+                }
+                else
+                {
+                    <div class="alert alert-light border text-center mb-0 small">
+                        <i class="fas fa-info-circle me-1"></i> Logged in as @userRole.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

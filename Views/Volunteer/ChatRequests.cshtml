@@ -1,0 +1,91 @@
+@model IEnumerable<SDP1.Models.VolunteerSupportRequest>
+@{
+    ViewData["Title"] = "Active Chat Requests";
+    var userName = ViewBag.UserName ?? "Volunteer";
+}
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 dashboard-sidebar volunteer-sidebar">
+            <div class="sidebar-menu">
+                <div class="user-profile volunteer-profile">
+                    <img src="@(ViewBag.ProfilePicture ?? "/images/default-avatar.png")" alt="Profile" class="profile-img" />
+                    <h5>@userName</h5>
+                    <span class="badge bg-success">Volunteer</span>
+                </div>
+                <ul class="sidebar-nav">
+                    <li><a href="/Volunteer/Dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="/Volunteer/NearbyHelpRequests"><i class="fas fa-hands-helping"></i> Nearby Help Requests</a></li>
+                    <li><a href="/Volunteer/AssignedTasks"><i class="fas fa-tasks"></i> Assigned Tasks</a></li>
+                    <li><a href="/Volunteer/VolunteerHistory"><i class="fas fa-history"></i> Volunteer History</a></li>
+                    <li class="active"><a href="/Volunteer/ChatRequests"><i class="fas fa-comments"></i> Chat Requests</a></li>
+                    <li><a href="/Profile/Edit"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li><a href="/Account/Logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 dashboard-content">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h3 class="fw-bold mb-1"><i class="fas fa-comments text-primary me-2"></i>Active Chat Requests</h3>
+                    <p class="text-muted mb-0">Direct coordination channels with persons with disabilities you are assisting.</p>
+                </div>
+                <div>
+                    <a href="/Volunteer/Dashboard" class="btn btn-outline-primary fw-semibold rounded-pill px-3">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                    <i class="fas fa-comment-slash text-muted opacity-50 fa-3x mb-3"></i>
+                    <h5 class="fw-bold text-dark">No Active Chats</h5>
+                    <p class="text-muted small max-w-md mx-auto">
+                        You do not currently have any active tasks requiring chat. When you accept an open help request, direct real-time chat with the requester will appear here.
+                    </p>
+                    <div class="mt-2">
+                        <a href="/Volunteer/NearbyHelpRequests" class="btn btn-primary px-4">Browse Help Requests</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var task in Model)
+                    {
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white hover-card">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                        @task.AssistanceType
+                                    </span>
+                                    <span class="badge @(task.Status == "InProgress" ? "bg-info text-dark" : "bg-primary") px-2 py-1">
+                                        @task.Status
+                                    </span>
+                                </div>
+
+                                <h5 class="fw-bold text-dark mb-1">@task.Title</h5>
+                                <div class="small text-muted mb-3">
+                                    <i class="fas fa-user-circle me-1"></i>Requester: <strong>@(task.RequestedByUser?.FullName ?? "Disability User")</strong>
+                                    <span class="mx-1">•</span>
+                                    <i class="fas fa-phone me-1"></i>@(task.RequestedByUser?.PhoneNumber ?? "N/A")
+                                </div>
+
+                                <div class="p-2 rounded-3 bg-light small mb-3">
+                                    <i class="fas fa-calendar-alt text-primary me-1"></i>@task.RequestDate.ToString("MMM dd, yyyy") (@task.RequestTime)
+                                </div>
+
+                                <a href="/VolunteerSupport/Chat/@task.Id" class="btn btn-primary rounded-3 w-100 fw-semibold">
+                                    <i class="fas fa-comments me-2"></i> Open Real-Time Chat
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

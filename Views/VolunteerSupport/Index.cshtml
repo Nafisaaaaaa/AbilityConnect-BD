@@ -1,0 +1,234 @@
+@model SDP1.Models.VolunteerSupportRequestListViewModel
+@{
+    ViewData["Title"] = "My Volunteer Support Requests";
+}
+
+<div class="container py-4">
+    <div class="card border-0 shadow-sm rounded-4 mb-4 text-white overflow-hidden" style="background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);">
+        <div class="card-body p-4 p-md-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white bg-opacity-25 mb-3">
+                        <i class="fas fa-hands-helping"></i>
+                        <span class="small fw-semibold">Volunteer Assistance Network</span>
+                    </div>
+                    <h1 class="display-6 fw-bold mb-2">Volunteer Support Requests</h1>
+                    <p class="lead mb-0 text-white-50">
+                        Connect with verified, compassionate volunteers for hospital visits, shopping assistance, travel support, and daily activities.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <a href="/Disability/Dashboard" class="btn btn-outline-light fw-semibold rounded-pill px-3 me-2 mb-2">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                    <a href="/VolunteerSupport/Create" class="btn btn-light text-primary btn-lg px-4 fw-bold shadow-sm mb-2">
+                        <i class="fas fa-plus-circle me-2"></i> Request Volunteer Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-3 mb-4">
+        <div class="col-sm-4">
+            <a href="@Url.Action("Index", new { statusFilter = "Pending" })" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white hover-card @(Model.StatusFilter == "Pending" ? "border-start border-4 border-warning" : "")">
+                    <div class="d-flex align-items-center">
+                        <div class="p-3 bg-warning-subtle text-warning rounded-3 me-3">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small text-uppercase fw-semibold">Pending Volunteer</span>
+                            <h3 class="fw-bold text-dark mb-0">@Model.PendingCount</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-4">
+            <a href="@Url.Action("Index", new { statusFilter = "Accepted" })" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white hover-card @(Model.StatusFilter == "Accepted" || Model.StatusFilter == "InProgress" ? "border-start border-4 border-primary" : "")">
+                    <div class="d-flex align-items-center">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-3 me-3">
+                            <i class="fas fa-hand-holding-heart fa-2x"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small text-uppercase fw-semibold">Active & Matched</span>
+                            <h3 class="fw-bold text-dark mb-0">@Model.ActiveCount</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-4">
+            <a href="@Url.Action("Index", new { statusFilter = "Completed" })" class="text-decoration-none">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white hover-card @(Model.StatusFilter == "Completed" ? "border-start border-4 border-success" : "")">
+                    <div class="d-flex align-items-center">
+                        <div class="p-3 bg-success-subtle text-success rounded-3 me-3">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small text-uppercase fw-semibold">Completed</span>
+                            <h3 class="fw-bold text-dark mb-0">@Model.CompletedCount</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("Index", new { statusFilter = "All" })" class="btn btn-sm @(Model.StatusFilter == "All" ? "btn-dark" : "btn-light border")">All</a>
+            <a href="@Url.Action("Index", new { statusFilter = "Pending" })" class="btn btn-sm @(Model.StatusFilter == "Pending" ? "btn-primary fw-bold" : "btn-light border")">Pending</a>
+            <a href="@Url.Action("Index", new { statusFilter = "Accepted" })" class="btn btn-sm @(Model.StatusFilter == "Accepted" ? "btn-primary" : "btn-light border")">Accepted</a>
+            <a href="@Url.Action("Index", new { statusFilter = "InProgress" })" class="btn btn-sm @(Model.StatusFilter == "InProgress" ? "btn-info text-dark" : "btn-light border")">In Progress</a>
+            <a href="@Url.Action("Index", new { statusFilter = "Completed" })" class="btn btn-sm @(Model.StatusFilter == "Completed" ? "btn-success" : "btn-light border")">Completed</a>
+        </div>
+        <span class="text-muted small">Showing @Model.Requests.Count request(s)</span>
+    </div>
+
+    @if (!Model.Requests.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+            <i class="fas fa-hands-helping text-muted opacity-50 fa-3x mb-3"></i>
+            <h5 class="fw-bold text-dark">No Support Requests Found</h5>
+            <p class="text-muted small max-w-md mx-auto">
+                You haven't created any volunteer support requests in this category. Whenever you need assistance with travel, hospital visits, or daily tasks, submit a request.
+            </p>
+            <div class="mt-2">
+                <a href="/VolunteerSupport/Create" class="btn btn-primary px-4">
+                    <i class="fas fa-plus-circle me-1"></i> Create Support Request
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var request in Model.Requests)
+            {
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-column hover-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                    <i class="fas fa-tag me-1"></i>@request.AssistanceType
+                                </span>
+                                @if (request.Urgency == "Emergency")
+                                {
+                                    <span class="badge bg-danger ms-1 animate-pulse">Emergency</span>
+                                }
+                                else if (request.Urgency == "High")
+                                {
+                                    <span class="badge bg-warning text-dark ms-1">High Urgency</span>
+                                }
+                            </div>
+                            <span class="badge @(request.Status == "Completed" ? "bg-success" : request.Status == "Accepted" ? "bg-primary" : request.Status == "InProgress" ? "bg-info text-dark" : request.Status == "Cancelled" ? "bg-secondary" : "bg-warning text-dark") px-2 py-1">
+                                @request.Status
+                            </span>
+                        </div>
+
+                        <h5 class="fw-bold text-dark mb-1">
+                            <a href="/VolunteerSupport/Details/@request.Id" class="text-dark text-decoration-none hover-primary">
+                                @request.Title
+                            </a>
+                        </h5>
+
+                        <p class="text-secondary small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            @request.Description
+                        </p>
+
+                        <div class="p-3 bg-light rounded-3 mb-3 small">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <span class="text-muted d-block">When:</span>
+                                    <span class="fw-semibold text-dark">
+                                        <i class="fas fa-calendar-alt text-primary me-1"></i>@request.RequestDate.ToString("MMM dd, yyyy") (@request.RequestTime)
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="text-muted d-block">Where:</span>
+                                    <span class="fw-semibold text-dark">
+                                        <i class="fas fa-map-marker-alt text-danger me-1"></i>@request.City, @request.District
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (request.AssignedVolunteer != null)
+                        {
+                            <div class="p-3 bg-primary-subtle rounded-3 mb-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="small text-muted d-block">Assigned Volunteer:</span>
+                                    <span class="fw-bold text-primary">
+                                        <i class="fas fa-user-check me-1"></i>@request.AssignedVolunteer.FullName
+                                    </span>
+                                </div>
+                                <a href="/VolunteerSupport/Chat/@request.Id" class="btn btn-sm btn-primary rounded-pill px-3">
+                                    <i class="fas fa-comments me-1"></i> Chat
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="p-2 bg-light rounded-3 mb-3 small text-muted text-center">
+                                <i class="fas fa-spinner fa-spin text-warning me-1"></i> Matching nearby volunteers in @request.City...
+                            </div>
+                        }
+
+                        <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="small text-muted">Posted @request.CreatedAt.ToString("MMM dd")</span>
+                            <div class="d-flex gap-2">
+                                <a href="/VolunteerSupport/Details/@request.Id" class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                                @if (request.Status == "Pending" || request.Status == "Accepted")
+                                {
+                                    <form method="post" asp-action="Cancel" asp-route-id="@request.Id" class="d-inline" onsubmit="return confirm('Cancel this request?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+    }
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+    .animate-pulse {
+        animation: pulse 1.5s infinite;
+    }
+</style>

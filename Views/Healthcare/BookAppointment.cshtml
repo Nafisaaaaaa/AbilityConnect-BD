@@ -1,0 +1,117 @@
+@model SDP1.Models.BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Book Appointment - " + Model.ProviderName;
+    var minDate = DateTime.Today.ToString("yyyy-MM-dd");
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                <li class="breadcrumb-item"><a href="/Healthcare">Healthcare Finder</a></li>
+                <li class="breadcrumb-item"><a href="/Healthcare/Details/@Model.ProviderId">@Model.ProviderName</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Book Appointment</li>
+            </ol>
+        </nav>
+        <a href="/Disability/Dashboard" class="btn btn-outline-primary btn-sm fw-semibold rounded-pill px-3">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                <div class="p-4" style="background: linear-gradient(135deg, #E8F0FE 0%, #FFFFFF 100%); border-bottom: 1px solid #E2E8F0;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center justify-content-center text-primary rounded-circle"
+                             style="width: 55px; height: 55px; background: #FFFFFF; font-size: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <span class="badge bg-primary mb-1">@Model.ProviderType Appointment</span>
+                            <h4 class="fw-bold mb-0 text-dark">Book Consultation with @Model.ProviderName</h4>
+                            <small class="text-muted"><i class="fas fa-hospital me-1"></i> @Model.OrganizationOrClinic &nbsp;•&nbsp; <i class="fas fa-map-marker-alt me-1"></i> @Model.Address</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="row g-3 mb-4 p-3 rounded" style="background: #F8FAFC; border: 1px solid #E2E8F0;">
+                        <div class="col-md-6">
+                            <span class="text-muted small d-block"><i class="fas fa-clock text-info me-1"></i> Practice Hours:</span>
+                            <span class="fw-semibold text-dark small">@Model.AvailabilitySchedule</span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="text-muted small d-block"><i class="fas fa-money-bill-wave text-success me-1"></i> Consultation Fee:</span>
+                            @if (Model.ConsultationFee.HasValue && Model.ConsultationFee.Value > 0)
+                            {
+                                <span class="fw-semibold text-dark small">BDT @Model.ConsultationFee.Value.ToString("N0")</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">Free / Subsidized</span>
+                            }
+                        </div>
+                    </div>
+
+                    <form asp-action="BookAppointment" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="ProviderId" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="AppointmentDate" class="form-label fw-semibold text-secondary">
+                                <i class="fas fa-calendar-alt text-primary me-1"></i> Preferred Consultation Date *
+                            </label>
+                            <input asp-for="AppointmentDate" type="date" class="form-control" min="@minDate" required />
+                            <span asp-validation-for="AppointmentDate" class="text-danger small"></span>
+                            <small class="form-text text-muted">Appointments must be scheduled for today or a future date.</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="TimeSlot" class="form-label fw-semibold text-secondary">
+                                <i class="fas fa-clock text-primary me-1"></i> Select Available Time Slot *
+                            </label>
+                            <select asp-for="TimeSlot" class="form-select" required>
+                                <option value="">-- Choose a time slot --</option>
+                                @foreach (var slot in Model.PredefinedSlots)
+                                {
+                                    <option value="@slot">@slot</option>
+                                }
+                            </select>
+                            <span asp-validation-for="TimeSlot" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ReasonForVisit" class="form-label fw-semibold text-secondary">
+                                <i class="fas fa-notes-medical text-primary me-1"></i> Reason for Visit / Symptoms *
+                            </label>
+                            <textarea asp-for="ReasonForVisit" rows="3" class="form-control" placeholder="Please describe your symptoms, rehabilitation goals, or medical consultation needs..." required minlength="5" maxlength="500"></textarea>
+                            <span asp-validation-for="ReasonForVisit" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="PatientNotes" class="form-label fw-semibold text-secondary">
+                                <i class="fas fa-universal-access text-primary me-1"></i> Specific Disability Accommodations (Optional)
+                            </label>
+                            <textarea asp-for="PatientNotes" rows="2" class="form-control" placeholder="e.g. Wheelchair ramp access needed, companion accompanying, large print documents, sign language interpreter support, quiet sensory room..."></textarea>
+                            <span asp-validation-for="PatientNotes" class="text-danger small"></span>
+                            <small class="form-text text-muted">The clinic staff will prepare accommodations prior to your arrival.</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <a href="/Healthcare/Details/@Model.ProviderId" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-check-circle me-1"></i> Confirm Appointment Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
